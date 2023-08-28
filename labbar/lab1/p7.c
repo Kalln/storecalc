@@ -1,7 +1,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include <ctype.h>
+
+bool is_digit(char c) {
+    if ('0' <= c && c <= '9') {
+        return true;
+    } 
+    else {
+        return 0;
+    }
+}
 
 bool is_number(char *str) {
     // ta fram längden av str
@@ -13,7 +21,7 @@ bool is_number(char *str) {
     // loopa genom str, kolla om varje 
     // tecken är en siffra, om nej -> inte int
     for (int i = str[0] == '-'; i < len; i++) {
-        if (!isdigit(str[i])) {
+        if (!is_digit(str[i])) {
             return false;
         }
     }
