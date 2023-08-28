@@ -3,7 +3,7 @@
 #include <math.h>
 
 int main(int argc, char *argv[]){
-    // [antal rader, ökning vid varje rad]
+    
     if (argc < 2 || argc > 2) {
         printf("Usage: ./a.out number\n");
         return 0;
