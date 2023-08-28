@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 int main(int argc, char *argv[]){
     // [antal rader, ökning vid varje rad]
@@ -9,17 +10,18 @@ int main(int argc, char *argv[]){
     }
     else {
         int number = atoi(argv[1]);
+        int sqrt_number = floor(sqrt(number)) + 1;
 
-        for (int i = 2; i <= number; i++) {
-            for (int j = 2; j <= number; j++) {
-                if (i * j == number) {
-                    printf("%d is not a prime number\n", number);
-                    return 0;
-                }
+
+        for (int i = 2; i < sqrt_number; i++) {
+
+            if (number % i == 0) {
+                printf("%d is not a prime number\n", number);
+                return 0;
             }
 
         }
-        printf("%d is a prime number\n", number);
+        printf("%d is a prime number\n",  number);
         return 0;
     }
     
