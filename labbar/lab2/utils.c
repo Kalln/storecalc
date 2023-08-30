@@ -1,30 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include "utils.h"
 
-
-// hur fungerar den här?
+/*
+* clear_input_buffer removes stdin buffert from input that is 'waste'.
+*/
 void clear_input_buffer() {
     int c;
     do {
-        // hur vet den var i minnet den ska hämta symbolen?
-        // är tangentsbords buffret (stdin), vid en allokerad plats
-        // vid körning av programmet?
         c = getchar();
     }
     while(c != '\n' && c != EOF);
 }
+
+bool is_digit(char c) {
+    if ('0' <= c && c <= '9') {
+        return true;
+    } 
+    else {
+        return 0;
+    }
+}
+
+bool is_number(char *str) {
+    // ta fram längden av str
+    int len = strlen(str);
+    // kontrollera negativa tal
+    if (str[0] == '-' && str[1] == '\0') {
+        return false;
+    }
+    // loopa genom str, kolla om varje 
+    // tecken är en siffra, om nej -> inte int
+    for (int i = str[0] == '-'; i < len; i++) {
+        if (!is_digit(str[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 int ask_question_int(char *question) {
     int result = 0;
     int conversion = 0; 
     do {
         printf("%s\n", question);
-
-        // conversion blir 1 om det finns innehåll som är en int?
         conversion = scanf("%d", &result);
         
         clear_input_buffer();
-        putchar('\n');
     }
     while (conversion < 1);
     return result;
@@ -32,6 +56,7 @@ int ask_question_int(char *question) {
 
 /*
 * reads a string from user keyboard.
+* guarantees that the buf is <= buf_size -> it will cut of the input.
 *
 * buf {*char}       - pointer to the buffer were the string is added.
 * buf_size {int}    - the size of buf.
@@ -75,34 +100,18 @@ int read_string(char *buf, int buf_size) {
     return counter;
 }
 
-
-
-char *ask_question_string(char *question) {
-    char result[255];
+/*
+* Asks user for a question and returns the buf.
+* It will keep on asking if the user does not enter anything.
+*/
+char *ask_question_string(char *question, char *buf, int buf_siz) {
+    int size = 0;
 
     do {
         printf("%s\n", question);
-        scanf("%s", result);
+        size = read_string(buf, buf_siz);
     }
-    while (strlen(result) == 0);
+    while(size == 0);
 
-    return strdup(result);
-}
-
-
-int main(void) {
-    int buf_siz = 255;
-    int read = 0;
-    char buf[buf_siz];
-
-    puts("Läs in en sträng:");
-    read = read_string(buf, buf_siz);
-    printf("'%s' (%d tecken)\n", buf, read);
-
-    puts("Läs in en sträng till:");
-    read = read_string(buf, buf_siz);
-    printf("'%s' (%d tecken)\n", buf, read); 
-
-
-    return 0;
+    return buf;
 }
