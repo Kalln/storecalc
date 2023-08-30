@@ -40,6 +40,18 @@ bool is_number(char *str) {
     }
     return true;
 }
+void print(char *str) {
+    int len = string_length(str);
+
+    for (int i = 0; i <= len; i++) {
+        putchar(str[i]);
+    }
+}
+
+void println(char *str) {
+    print(str);
+    putchar('\n');
+}
 
 int ask_question_int(char *question) {
     int result = 0;
