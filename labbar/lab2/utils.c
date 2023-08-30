@@ -24,37 +24,59 @@ int ask_question_int(char *question) {
         conversion = scanf("%d", &result);
         
         clear_input_buffer();
-        
+        putchar('\n');
     }
     while (conversion < 1);
     return result;
 }
 
-// 
+/*
+* reads a string from user keyboard.
+*
+* buf {*char}       - pointer to the buffer were the string is added.
+* buf_size {int}    - the size of buf.
+* returns {int}     - amount of char in user input. 
+*/
 int read_string(char *buf, int buf_size) {
     int MAX_BUF_SIZE = buf_size - 1;
     int counter = 0;
-    char result = 0;
+    int conversion = 0;
+    char c;
 
-    /* Vi vill:
-        1. Vi har buffer och buffer size. Den får inte vara längre än buf_size - 1.
-        2. Läs in en string. Kontrollera om den är längre än MAX_BUF_SIZE
-        3. Om den är det return 0.
-        4. Om inte så ska vi läsa varje sträng -> kopiera till buf -> avsluta med '\0'
-    */
-
-   // will read string and scan
     do {
-        scanf("%s", result);
-        printf("%s", result);
-    }
-    while (strlen(result) == 0);
+        conversion = scanf("%c", &c);
 
-    return 1;
+        if (counter == MAX_BUF_SIZE) {
+            // If we have reached the buf_size, we will terminate the string,
+            // to prevent buffer overflow. This means that the user probably
+            // has entered to many characters and we will need to empty the stdin
+            // buffer to not make it a entry next time we run scanf.
+            buf[counter] = '\0';
+            clear_input_buffer();
+            break;
+        }
+        else if (c == '\n' || c == EOF) {
+            // If newline or EOF, we are done, so then we terminate the string.
+            // and break the loop.
+            buf[counter] = '\0';
+            break;
+        }
+        else {
+            // If no errors or cases appear, we add the char to the buf array,
+            // and increase the counter. This is the only case we counter++
+            // since other cases will break the loop.
+            buf[counter] = c;
+            counter++;
+        }
+
+    }
+    while (conversion == 1);
+
+    return counter;
 }
 
 
-//unused for now...
+
 char *ask_question_string(char *question) {
     char result[255];
 
@@ -73,9 +95,6 @@ int main(void) {
     int read = 0;
     char buf[buf_siz];
 
-    read = read_string(buf, buf_siz);
-
-/*     
     puts("Läs in en sträng:");
     read = read_string(buf, buf_siz);
     printf("'%s' (%d tecken)\n", buf, read);
@@ -84,7 +103,6 @@ int main(void) {
     read = read_string(buf, buf_siz);
     printf("'%s' (%d tecken)\n", buf, read); 
 
-*/
 
     return 0;
 }
