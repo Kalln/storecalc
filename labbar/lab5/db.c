@@ -100,7 +100,21 @@ void edit_db(item_t *items, int no_items) {
     print_item(&items[edit]);
     item_t new_item = input_item();
     items[edit] = new_item;
-    return;
+}
+
+void print_menu() {
+    printf("[L]ägga till en vara\n"
+        "[T]a bort en vara\n"
+        "[R]edigera en vara\n"
+        "Ån[g]ra senaste ändringen\n"
+        "Lista [h]ela varukatalogen\n"
+        "[A]vsluta");
+}
+
+char *ask_question_menu() {
+    print_menu();
+
+    
 }
 
 int main(int argc, char *argv[]) {
