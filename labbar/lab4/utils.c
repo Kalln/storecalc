@@ -143,14 +143,3 @@ int ask_question_int(char *question) {
 char *ask_question_string(char *question) {
     return ask_question(question, not_empty, (convert_func) strdup).string_value;
 }
-
-
-
-int main(int argc, char const *argv[])
-{
-    int read;
-
-    read = ask_question_int("TEST: ");
-    return 0;
-}
-
