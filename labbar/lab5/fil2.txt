@@ -1,0 +1,5 @@
+en till textfil
+för att prova
+att
+
+det fungerar med flera filer.

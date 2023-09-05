@@ -1,0 +1,10 @@
+hej, detta är ett test för att
+se om detta fungerar
+detta ska bli rad 3.
+
+nu rad 5
+
+och till sist rad7.
+         men kanske också rad 8.
+
+rad 10 blir sista raden jag skriver
