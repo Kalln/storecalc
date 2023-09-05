@@ -1,3 +1,8 @@
+/* 
+* UTILS VERSION 3.0
+* utils.c and utils.h, is for lab 3.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,6 +38,7 @@ bool is_digit(char c) {
 }
 
 bool is_number(char *str) {
+    if (!not_empty(str)) { return false; }
     // ta fram längden av str
     int len = strlen(str);
     // kontrollera negativa tal
@@ -121,7 +127,7 @@ answer_t ask_question(char *question, check_func check, convert_func convert) {
             break;
         }
     }
-    while(not_empty(buf));
+    while(true);
 
     answer_t result = convert(buf);
     return result;
