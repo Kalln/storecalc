@@ -1,3 +1,8 @@
+/* 
+* UTILS VERSION 4.0
+* utils.c and utils.h, is for lab 4.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,8 +14,6 @@
 bool not_empty(char *str) {
     return strlen(str) > 0;
 }
-
-
 
 /*
 * clear_input_buffer removes stdin buffert from input that is 'waste'.
@@ -33,6 +36,7 @@ bool is_digit(char c) {
 }
 
 bool is_number(char *str) {
+    if (!not_empty(str)) { return false; }
     // ta fram längden av str
     int len = strlen(str);
     // kontrollera negativa tal
@@ -112,7 +116,6 @@ answer_t ask_question(char *question, check_func check, convert_func convert) {
     int buf_siz = 255;
     char buf[buf_siz];
 
-
     do {
         printf("%s\n", question);
         read_string(buf, buf_siz);
@@ -121,7 +124,7 @@ answer_t ask_question(char *question, check_func check, convert_func convert) {
             break;
         }
     }
-    while(not_empty(buf));
+    while(true);
 
     answer_t result = convert(buf);
     return result;
@@ -143,4 +146,11 @@ char *ask_question_string(char *question) {
 
 
 
+int main(int argc, char const *argv[])
+{
+    int read;
+
+    read = ask_question_int("TEST: ");
+    return 0;
+}
 
