@@ -156,7 +156,7 @@ char *ask_question_string(char *question) {
     return ask_question(question, not_empty, (convert_func) strdup).string_value;
 }
 
-
 char *ask_question_shelf(char *question) {
     return ask_question(question, check_valid_shelf, (convert_func) strdup).string_value;
 }
+
