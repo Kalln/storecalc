@@ -149,7 +149,7 @@ char ask_question_menu() {
         char valu = 0;
 
         scanf("%c", &valu);
-        getchar();
+        clear_input_buffer();
         val = toupper(valu);
 
         if (val == 'L'

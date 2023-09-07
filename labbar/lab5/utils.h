@@ -28,4 +28,5 @@ char *ask_question_shelf(char *question);
 answer_t ask_question(char *question, check_func check, convert_func convert);
 
 void print(char *str);
+void clear_input_buffer();
 #endif

@@ -60,10 +60,9 @@ char *magick(char **arr1, char **arr2, char **arr3, int len) {
 
     // seed random number
     for (int i = 0; i < 3; i++) {
-        srand(i * time(NULL));
         //int num = rand() % 1024;
         //printf("Numbers generated: %d\n", rand() % len);
-        pick[i] = random() % len;
+        pick[i] = rand() % len;
     }
     // generate the buf
     char *str1 = arr1[pick[0]];
@@ -125,6 +124,7 @@ void edit_db(item_t *items, int no_items) {
 }
 
 int main(int argc, char *argv[]) {
+    srand(42);
   char *array1[] = { "Liten", "Stark", "Snabb", "Glad",
         "Vacker", "Tyst", "Rolig", "Smart",
         "Lugn", "Färgglad", "Vänlig", "Läcker",

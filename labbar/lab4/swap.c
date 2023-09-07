@@ -10,6 +10,7 @@ int main(void) {
     int x = 7;
     int y = 42;
 
+    printf("%d, %d\n", x, y);
     swap(&x, &y);
     printf("%d, %d\n", x, y);
 
