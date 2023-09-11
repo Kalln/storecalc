@@ -42,7 +42,7 @@ int main() {
     // the test in question. If you want to add another test, just
     // copy a line below and change the information
     if (
-        (CU_add_test(my_test_suite, "A simple test", test_create_destroy) == NULL) ||
+        (CU_add_test(my_test_suite, "hash table create and destroy", test_create_destroy) == NULL) ||
         0
     ) 
     {

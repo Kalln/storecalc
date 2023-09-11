@@ -2,7 +2,7 @@
 
 /**
  * @file hashtable.h
- * @author 
+ * @author Karl Widborg Kortelainen & William Paradell
  * @date 10 sep 2023
  * @brief Simple hash table that maps integer keys to string values.
  * 
