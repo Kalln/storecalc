@@ -27,3 +27,11 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
     free(ht);
     return;
 }
+
+void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value) {
+    //TODO: Stub
+}
+
+char ioopm_hash_table_lookup(void) {
+    return NULL;
+}

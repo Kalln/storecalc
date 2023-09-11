@@ -19,6 +19,18 @@ void test_create_destroy(void) {
     CU_ASSERT_PTR_NOT_NULL(ht);
     ioopm_hash_table_destroy(ht);
 }
+
+void test_insert_once(void) {
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    int k = 1;
+    if (ioopm_hash_table_lookup(h, k) == NULL) {
+        char *v = "entry 1";
+        ioopm_hash_table_insert(h, k, v);
+    }
+    CU_ASSERT_EQUAL(ioopm_hash_table_lookup(h, 1), "entry 1");
+
+    ioopm_hash_table_destroy(h);
+}
 // run the tests
 
 int main() {
@@ -43,6 +55,7 @@ int main() {
     // copy a line below and change the information
     if (
         (CU_add_test(my_test_suite, "hash table create and destroy", test_create_destroy) == NULL) ||
+        (CU_add_test(my_test_suite, "insert into hashtable", test_insert_once) == NULL) ||
         0
     ) 
     {
