@@ -55,12 +55,11 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 /// @param bucket bucket that key mapped to
 /// @param key key to be checked for in the bucket
 /// @return pointer to value with the key: key if it exist otherwise NULL
-static entry_t *find_entry_for_key(entry_t *bucket, int key)
+static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 {
-
-    while (bucket != NULL)
+    while (bucket->next != NULL)
     {
-        if (bucket->key == key)
+        if (bucket->next->key == key || bucket->next->key > key)
         {
             break;
         }
@@ -70,26 +69,25 @@ static entry_t *find_entry_for_key(entry_t *bucket, int key)
 }
 
 
-
-void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value) 
+void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 {
-    int bucket = key % 17;
-    entry_t *existing_entry = find_entry_for_key(ht->buckets[bucket], key);
+  /// Calculate the bucket for this entry
+  int bucket = key % 17;
+  /// Search for an existing entry for a key
+  entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
+  entry_t *next = entry->next;
 
-    if (existing_entry != NULL) /// i.e., it exists
+  /// Check if the next entry should be updated or not
+  if (next != NULL && next->key == key)
     {
-        existing_entry->value = value;
+      next->value = value;
     }
-    else
+  else
     {
-        /// Get a pointer to the first entry in the bucket
-        entry_t *first_entry = ht->buckets[bucket];
-        /// Create a new entry
-        entry_t *new_entry = create_entry(key, value, first_entry);
-        /// Make the new entry the first entry in the bucket
-        ht->buckets[bucket] = new_entry;
+      entry->next = create_entry(key, value, next);
     }
 }
+
 
 char *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 {
