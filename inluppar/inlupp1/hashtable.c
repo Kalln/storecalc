@@ -6,6 +6,10 @@
 // Karl Widborg Kortelainen & William Paradell
 
 typedef struct entry entry_t;
+#define Success(v)      (option_t) { .success = true, .value = v };
+#define Failure()       (option_t) { .success = false };
+#define Successful(o)   (o.success == true)
+#define Unsuccessful(o) (o.success == false)
 
 struct entry
 {
@@ -18,6 +22,7 @@ struct hash_table
 {
     entry_t *buckets[17];
 };
+
 
 /// @brief Creates an entry for hashtable.
 /// @param key key for new entry, (expects that there is no previous entry of this key).
@@ -72,6 +77,7 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 /// @return pointer to value with the key: key if it exist otherwise NULL
 static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 {
+
     while (bucket->next != NULL)
     {
         if (bucket->next->key == key || bucket->next->key > key)
@@ -87,7 +93,8 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 {
   /// Calculate the bucket for this entry
-  int bucket = key % 17;
+    int bucket = key % 17;
+    if (bucket < 0) { bucket = bucket + 17; }
   /// Search for an existing entry for a key
   entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
   entry_t *next = entry->next;
@@ -104,7 +111,24 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 }
 
 
-char *ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
+option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 {
-    return NULL;
+    int bucket_key = key >= 0 ? (key % 17) : ((key % 17) + 17);
+
+    /// Find the previous entry for key
+    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket_key], key);
+    entry_t *next = tmp->next;
+    
+    if (next && next->key == key)
+    {
+        /// If entry was found, return its value...
+        option_t option = {.success = true, .value = next->value };
+        return option;
+    }
+    else
+    {
+        option_t option = {.success = false};
+        return option;
+    }
+    
 }
