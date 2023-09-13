@@ -24,7 +24,7 @@ struct hash_table
 /// @param val value for the entry.
 /// @param first_entry first entry in the bucket.
 /// @return ptr to new entry.
-static entry_t *create_entry(int key, char* val, entry_t *first_entry)
+static entry_t *entry_create(int key, char* val, entry_t *first_entry)
 {
     entry_t *new_entry = calloc(1, sizeof(entry_t));
     new_entry->key = key;
@@ -33,12 +33,17 @@ static entry_t *create_entry(int key, char* val, entry_t *first_entry)
     return new_entry;
 }
 
+static void entry_destroy(entry_t *entry) 
+{
+    free(entry);
+}
+
 ioopm_hash_table_t *ioopm_hash_table_create(void)
 {
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
     for (int i = 0; i < 17; i++) 
     {
-        entry_t *ent = create_entry(0, NULL, NULL);
+        entry_t *ent = entry_create(0, NULL, NULL);
         result->buckets[i] = ent;
     }
 
@@ -46,7 +51,17 @@ ioopm_hash_table_t *ioopm_hash_table_create(void)
 }
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) 
-{
+{   
+    for (int i = 0; i < 17; i++)
+    {
+        entry_t *current_bucket = ht->buckets[i];
+        while (current_bucket != NULL)
+        {
+            entry_t *next_ptr = current_bucket->next;
+            entry_destroy(current_bucket);
+            current_bucket = next_ptr;
+        }
+    }
     free(ht);
     return;
 }
@@ -84,7 +99,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
     }
   else
     {
-      entry->next = create_entry(key, value, next);
+      entry->next = entry_create(key, value, next);
     }
 }
 
