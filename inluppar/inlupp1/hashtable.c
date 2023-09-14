@@ -78,58 +78,59 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 {
 
-    while (bucket->next != NULL)
+    while (bucket->next != NULL) 
     {
-        if (bucket->next->key == key || bucket->next->key > key)
+        if (bucket->next->key == key || bucket->next->key > key) 
         {
             break;
         }
         bucket = bucket->next;
     }
+
     return bucket;
 }
 
+int bucket_calc(int key) 
+{
+    /// since we don't have buckets under 0
+   return key > 0 ? (key % 17) : ((key % 17) + 17);
+}
 
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 {
   /// Calculate the bucket for this entry
-    int bucket = key % 17; // FIXME: Will not work for negative valued keys
-    if (bucket < 0) { bucket = bucket + 17; }
+    int bucket = bucket_calc(key);
   /// Search for an existing entry for a key
-  entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
-  entry_t *next = entry->next;
+    entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
+    entry_t *next = entry->next;
 
   /// Check if the next entry should be updated or not
-  if (next != NULL && next->key == key)
+    if (next != NULL && next->key == key) 
     {
-      next->value = value;
-    }
-  else
+        next->value = value;
+    } else 
     {
-      entry->next = entry_create(key, value, next);
+        entry->next = entry_create(key, value, next);
     }
 }
 
 
 option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 {
-    /*TODO: abstract this to a function that does this to not have to use this*/  
-    int bucket_key = key >= 0 ? (key % 17) : ((key % 17) + 17); /// since we don't have buckets under 0
+    int bucket = bucket_calc(key); 
 
     /// Find the previous entry for key
-    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket_key], key);
+    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket], key);
     entry_t *next = tmp->next;
     
     if (next && next->key == key)
     {
         /// If entry was found, return its value...
-        option_t option = {.success = true, .value = next->value };
-        return option;
-    }
-    else
+        return Success(next->value);
+    } else
     {
-        option_t option = {.success = false};
-        return option;
+        //option_t option = {.success = false};
+        return Failure();
     }
     
 }

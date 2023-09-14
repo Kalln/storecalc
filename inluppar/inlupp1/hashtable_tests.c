@@ -52,14 +52,23 @@ void test_ht_value_NULL()
     ioopm_hash_table_destroy(ht);
 }
 
+void test_negative_key()
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    ioopm_hash_table_insert(h, -1, "test");
+    CU_ASSERT_EQUAL(ioopm_hash_table_lookup(h, -1).success, true);
+    CU_ASSERT_EQUAL(ioopm_hash_table_lookup(h, -1).value, "test");
+    ioopm_hash_table_destroy(h);
+}
+
 void test_lookup_empty()
 {
    ioopm_hash_table_t *ht = ioopm_hash_table_create();
    
-   for (int i = 0; i < 18; ++i) /// 18 is a bit magical
-     {
+   for (int i = 0; i < 18; ++i) 
+    {
        CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, i).value);
-     }
+    }
    CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, -1).value);
    ioopm_hash_table_destroy(ht);
 }
@@ -92,6 +101,7 @@ int main() {
         (CU_add_test(my_test_suite, "insert into hashtable", test_insert_once) == NULL) ||
         (CU_add_test(my_test_suite, "lookup is empty", test_lookup_empty) == NULL) ||
         (CU_add_test(my_test_suite, "NULL is possible value", test_ht_value_NULL) == NULL) ||
+        (CU_add_test(my_test_suite, "negative is possible key", test_negative_key) == NULL) ||
         0
     ) 
     {
