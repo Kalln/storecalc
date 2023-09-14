@@ -55,17 +55,34 @@ ioopm_hash_table_t *ioopm_hash_table_create(void)
     return result;
 }
 
+// more effective and itterative version of bucket destroy.
+void bucket_destroy(entry_t *bucket_to_destroy) 
+{
+    while (bucket_to_destroy != NULL)
+        {
+            entry_t *next_ptr = bucket_to_destroy->next;
+            entry_destroy(bucket_to_destroy);
+            bucket_to_destroy = next_ptr;
+        }
+}
+
+// recursive version of bucket_destroy
+void bucket_destroy_rec(entry_t *bucket_to_destroy) {
+    if (bucket_to_destroy == NULL) {
+        return;
+    }
+    entry_t *next_ptr = bucket_to_destroy->next;
+    entry_destroy(bucket_to_destroy);
+    bucket_destroy_rec(next_ptr);
+}
+
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) 
 {   
     for (int i = 0; i < 17; i++)
     {
-        entry_t *current_bucket = ht->buckets[i];
-        while (current_bucket != NULL)
-        {
-            entry_t *next_ptr = current_bucket->next;
-            entry_destroy(current_bucket);
-            current_bucket = next_ptr;
-        }
+        // minnesläcka
+        bucket_destroy(ht->buckets[i]);
+
     }
     free(ht);
     return;
@@ -93,7 +110,9 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 int bucket_calc(int key) 
 {
     /// since we don't have buckets under 0
-   return key > 0 ? (key % 17) : ((key % 17) + 17);
+   return key >= 0 ? (key % 17) : ((key % 17) + 17); // korrekt
+   //return key > 0 ? (key % 17) : ((key % 17) + 17); // fel 2
+   //return key % 17; // fel 1
 }
 
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
