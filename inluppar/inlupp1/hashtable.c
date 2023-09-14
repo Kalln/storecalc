@@ -8,8 +8,10 @@
 typedef struct entry entry_t;
 #define Success(v)      (option_t) { .success = true, .value = v };
 #define Failure()       (option_t) { .success = false };
-#define Successful(o)   (o.success == true)
-#define Unsuccessful(o) (o.success == false)
+#define Successful(o)   (o.success == true) // TODO: use this definition
+#define Unsuccessful(o) (o.success == false) // TODO: use this definition
+
+#define amount_of_bucket 17
 
 struct entry
 {
@@ -20,7 +22,7 @@ struct entry
 
 struct hash_table 
 {
-    entry_t *buckets[17];
+    entry_t *buckets[amount_of_bucket];
 };
 
 
@@ -46,7 +48,7 @@ static void entry_destroy(entry_t *entry)
 ioopm_hash_table_t *ioopm_hash_table_create(void)
 {
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
-    for (int i = 0; i < 17; i++) 
+    for (int i = 0; i < amount_of_bucket; i++) 
     {
         entry_t *ent = entry_create(0, NULL, NULL);
         result->buckets[i] = ent;
@@ -56,7 +58,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(void)
 }
 
 // more effective and itterative version of bucket destroy.
-void bucket_destroy(entry_t *bucket_to_destroy) 
+static void bucket_destroy(entry_t *bucket_to_destroy) 
 {
     while (bucket_to_destroy != NULL)
         {
@@ -67,7 +69,7 @@ void bucket_destroy(entry_t *bucket_to_destroy)
 }
 
 // recursive version of bucket_destroy
-void bucket_destroy_rec(entry_t *bucket_to_destroy) {
+static void bucket_destroy_rec(entry_t *bucket_to_destroy) {
     if (bucket_to_destroy == NULL) {
         return;
     }
@@ -78,7 +80,7 @@ void bucket_destroy_rec(entry_t *bucket_to_destroy) {
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) 
 {   
-    for (int i = 0; i < 17; i++)
+    for (int i = 0; i < amount_of_bucket; i++)
     {
         // minnesläcka
         bucket_destroy(ht->buckets[i]);
@@ -107,10 +109,10 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
     return bucket;
 }
 
-int bucket_calc(int key) 
+static int bucket_calc(int key) 
 {
     /// since we don't have buckets under 0
-   return key >= 0 ? (key % 17) : ((key % 17) + 17); // korrekt
+   return key >= 0 ? (key % amount_of_bucket) : ((key % amount_of_bucket) + amount_of_bucket); // korrekt
    //return key > 0 ? (key % 17) : ((key % 17) + 17); // fel 2
    //return key % 17; // fel 1
 }
@@ -133,6 +135,22 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
     }
 }
 
+char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key) 
+{
+    int bucket = bucket_calc(key);
+    entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key);
+
+    if (prev_entry->next == NULL) {
+        
+        return NULL;
+    }
+    entry_t *to_remove = prev_entry->next;
+    char *val = to_remove->value;
+    prev_entry->next = to_remove->next;
+
+    free(to_remove);
+    return val;
+}
 
 option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 {

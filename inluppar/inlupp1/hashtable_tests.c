@@ -72,6 +72,37 @@ void test_lookup_empty()
    CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, -1).value);
    ioopm_hash_table_destroy(ht);
 }
+
+void test_remove_multiple_entries()
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    ioopm_hash_table_insert(h, 0, "hej");
+    ioopm_hash_table_insert(h, 17, "apa");
+    ioopm_hash_table_insert(h, 34, "hus");
+
+    CU_ASSERT_EQUAL(ioopm_hash_table_remove(h, 51), NULL);
+    CU_ASSERT_EQUAL(ioopm_hash_table_remove(h, 17), "apa");
+    CU_ASSERT_EQUAL(ioopm_hash_table_remove(h, 0), "hej");
+    CU_ASSERT_EQUAL(ioopm_hash_table_remove(h, 34), "hus");
+    
+
+    ioopm_hash_table_destroy(h);
+}
+void test_remove_single_entry()
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    ioopm_hash_table_insert(h, 1, "val");
+    CU_ASSERT_EQUAL(ioopm_hash_table_remove(h, 1), "val");
+    ioopm_hash_table_destroy(h);
+}
+
+void test_remove_null_entry()
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    CU_ASSERT_EQUAL(ioopm_hash_table_remove(h, 2), NULL);
+    ioopm_hash_table_destroy(h);
+}
+
 // run the tests
 
 int main() {
@@ -102,6 +133,9 @@ int main() {
         (CU_add_test(my_test_suite, "lookup is empty", test_lookup_empty) == NULL) ||
         (CU_add_test(my_test_suite, "NULL is possible value", test_ht_value_NULL) == NULL) ||
         (CU_add_test(my_test_suite, "negative is possible key", test_negative_key) == NULL) ||
+        (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: adds and removes 3 entires correctly", test_remove_multiple_entries) == NULL) ||
+        (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: remove one entry from ht", test_remove_single_entry) == NULL) ||
+        (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: returning NULL from not valid entry to remove", test_remove_null_entry) == NULL) ||
         0
     ) 
     {
