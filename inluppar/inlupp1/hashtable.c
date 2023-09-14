@@ -93,7 +93,7 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 {
   /// Calculate the bucket for this entry
-    int bucket = key % 17;
+    int bucket = key % 17; // FIXME: Will not work for negative valued keys
     if (bucket < 0) { bucket = bucket + 17; }
   /// Search for an existing entry for a key
   entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
@@ -113,7 +113,8 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 
 option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 {
-    int bucket_key = key >= 0 ? (key % 17) : ((key % 17) + 17);
+    /*TODO: abstract this to a function that does this to not have to use this*/  
+    int bucket_key = key >= 0 ? (key % 17) : ((key % 17) + 17); /// since we don't have buckets under 0
 
     /// Find the previous entry for key
     entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket_key], key);
