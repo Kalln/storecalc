@@ -18,6 +18,7 @@
 typedef struct hash_table ioopm_hash_table_t;
 typedef struct option option_t;
 
+// TODO: check where option struct should be? In hashtable.c?
 struct option
 {
   bool success;

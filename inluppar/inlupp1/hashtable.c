@@ -11,7 +11,7 @@ typedef struct entry entry_t;
 #define Successful(o)   (o.success == true) // TODO: use this definition
 #define Unsuccessful(o) (o.success == false) // TODO: use this definition
 
-#define amount_of_bucket 17
+#define no_buckets 17
 
 struct entry
 {
@@ -22,7 +22,7 @@ struct entry
 
 struct hash_table 
 {
-    entry_t *buckets[amount_of_bucket];
+    entry_t *buckets[no_buckets];
 };
 
 
@@ -48,7 +48,7 @@ static void entry_destroy(entry_t *entry)
 ioopm_hash_table_t *ioopm_hash_table_create(void)
 {
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
-    for (int i = 0; i < amount_of_bucket; i++) 
+    for (int i = 0; i < no_buckets; i++) 
     {
         entry_t *ent = entry_create(0, NULL, NULL);
         result->buckets[i] = ent;
@@ -68,7 +68,7 @@ static void bucket_destroy(entry_t *bucket_to_destroy)
         }
 }
 
-// recursive version of bucket_destroy
+// recursive version of bucket_destroy F13
 static void bucket_destroy_rec(entry_t *bucket_to_destroy) {
     if (bucket_to_destroy == NULL) {
         return;
@@ -80,9 +80,8 @@ static void bucket_destroy_rec(entry_t *bucket_to_destroy) {
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) 
 {   
-    for (int i = 0; i < amount_of_bucket; i++)
+    for (int i = 0; i < no_buckets; i++)
     {
-        // minnesläcka
         bucket_destroy(ht->buckets[i]);
 
     }
@@ -91,9 +90,9 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 }
 
 /// @brief Finds if a key has a corresponding value and returns a pointer to said value
-/// @param bucket bucket that key mapped to
-/// @param key key to be checked for in the bucket
-/// @return pointer to value with the key: key if it exist otherwise NULL
+/// @param bucket {entry_t *} - bucket that key mapped to
+/// @param key {int} - key to be checked for in the bucket
+/// @return {entry_t *} - pointer to value with the key: key if it exist otherwise NULL
 static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 {
 
@@ -108,11 +107,13 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 
     return bucket;
 }
-
+/// @brief calculates the bucket in hashtable 
+/// @param key {int}. this is used to calculate the bucket.
+/// @return {int} bucket in hashtable.
 static int bucket_calc(int key) 
 {
     /// since we don't have buckets under 0
-   return key >= 0 ? (key % amount_of_bucket) : ((key % amount_of_bucket) + amount_of_bucket); // korrekt
+   return key >= 0 ? (key % no_buckets) : ((key % no_buckets) + no_buckets); // korrekt
    //return key > 0 ? (key % 17) : ((key % 17) + 17); // fel 2
    //return key % 17; // fel 1
 }
