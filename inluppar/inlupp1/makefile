@@ -25,7 +25,5 @@ test: test1
 memtest: test1
 	valgrind --leak-check=full --error-exitcode=1 ./test1
 
-
-
 clean:
-	rm -f *.o myprog
+	rm -f *.o myprog test1
