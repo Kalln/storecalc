@@ -103,6 +103,21 @@ void test_remove_null_entry()
     ioopm_hash_table_destroy(h);
 }
 
+void test_hash_table_size_is_one(void)
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    ioopm_hash_table_insert(h, 0, "hello");
+    CU_ASSERT_EQUAL(ioopm_hash_table_size(h), 1);
+    ioopm_hash_table_destroy(h);
+}
+
+void test_hash_table_size_is_empty(void)
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    CU_ASSERT_EQUAL(ioopm_hash_table_size(h), 0);
+    ioopm_hash_table_destroy(h);
+}
+
 // run the tests
 
 int main() {
@@ -136,6 +151,8 @@ int main() {
         (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: adds and removes 3 entires correctly", test_remove_multiple_entries) == NULL) ||
         (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: remove one entry from ht", test_remove_single_entry) == NULL) ||
         (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: returning NULL from not valid entry to remove", test_remove_null_entry) == NULL) ||
+        (CU_add_test(my_test_suite, "[ ioopm_hash_table_size ]: returns size = 1 if only one entry", test_hash_table_size_is_one) == NULL) ||
+        (CU_add_test(my_test_suite, "[ ioopm_hash_table_size ]: returns size = 0 for no entries", test_hash_table_size_is_empty) == NULL) ||
         0
     ) 
     {

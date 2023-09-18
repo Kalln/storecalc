@@ -172,3 +172,59 @@ option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
     }
     
 }
+
+int ioopm_hash_table_size(ioopm_hash_table_t *ht)
+{
+    // 1. Set a counter to zero
+    // 2. Iterate over the buckets in the buckets array
+    //     2.1 For each bucket, iterate over its entries, incrementing the
+    //         counter by one for each step
+    // 3. Return the counter value
+
+    return NULL;
+}
+
+bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht)
+{
+    return NULL;
+}
+
+void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
+{
+    return;
+}
+
+int *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
+{
+    return NULL;
+}
+
+char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
+{
+    return NULL;
+}
+
+bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
+{
+    return NULL;
+}
+
+bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
+{
+    return NULL;
+}
+
+bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
+{
+    return NULL;
+}
+
+bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
+{
+    return NULL;
+}
+
+void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function apply_fun, void *arg)
+{
+    return NULL;
+}
