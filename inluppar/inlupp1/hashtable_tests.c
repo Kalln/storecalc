@@ -143,6 +143,63 @@ void test_hash_table_clear_empty()
     ioopm_hash_table_destroy(h);
 }
 
+void test_hash_table_find_keys()
+{
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    int keys[6] = {42, 10, 0, 99, 100, -1};
+    bool found[6] = {false};
+    
+    for (int i = 0; i < 6; i++)
+    {
+        ioopm_hash_table_insert(ht, keys[i], "wows!");
+    }
+    //int *ht_keys = ioopm_hash_table_keys(ht);
+    int ht_keys[6] = {-1, 100, 99, 0, 10, 42};
+    
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            if (ht_keys[i] == keys[j]) 
+            {
+                found[j] = true;
+            }
+        }
+    }
+    
+    for (int i = 0; i < 6; i++)
+    {
+        CU_ASSERT_TRUE(found[i]);
+    }
+    
+    ioopm_hash_table_destroy(ht);
+}
+
+void test_hash_table_values()
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    int keys[5] = {3, 4, 5, 6, 7};
+    char *values[5] = {"three", "four", "five", "six", "seven"};
+    
+    for (int i = 0; i < 5; i++)
+    {
+        ioopm_hash_table_insert(h, keys[i], values[i]);
+    }
+    
+
+
+    int *hash_keys = ioopm_hash_table_keys(h);
+    char **hash_values = ioopm_hash_table_values(h);
+   
+    
+    for (int j = 0; j < 5; j++)
+    {
+        CU_ASSERT_EQUAL(hash_keys[j], keys[j]);
+        CU_ASSERT_EQUAL(hash_values[j], values[j]);
+    }
+    ioopm_hash_table_destroy(h);
+}
+
 // run the tests
 
 int main() {
@@ -181,6 +238,8 @@ int main() {
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_is_empty ]: returns true for an empty hashtable", test_hash_table_is_empty) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_clear ]: clears a hashtable so that it's empty", test_hash_table_clear) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_clear ]: clears an empty hashtable correctly", test_hash_table_clear_empty) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_keys ]: find all keys", test_hash_table_find_keys) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_values ]: correctly extracts all values from the hashtable", test_hash_table_values) == NULL) ||
         0
     ) 
     {
