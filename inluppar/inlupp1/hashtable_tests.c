@@ -125,20 +125,21 @@ void test_hash_table_is_empty()
     ioopm_hash_table_destroy(h);
 }
 
-void test_hash_table_is_empty()
-{
-    ioopm_hash_table_t *h = ioopm_hash_table_create();
-    CU_ASSERT_TRUE(ioopm_hash_table_is_empty(h));
-    ioopm_hash_table_destroy(h);
-}
-
 void test_hash_table_clear()
 {
     ioopm_hash_table_t *h = ioopm_hash_table_create();
     ioopm_hash_table_insert(h, 0, "a");
-    CU_ASSERT_FALSE(test_hash_table_is_empty(h));
+    CU_ASSERT_FALSE(ioopm_hash_table_is_empty(h));
     ioopm_hash_table_clear(h);
-    CU_ASSERT_TRUE(est_hash_table_is_empty(h));
+    CU_ASSERT_TRUE(ioopm_hash_table_is_empty(h));
+    ioopm_hash_table_destroy(h);
+}
+
+void test_hash_table_clear_empty()
+{
+    ioopm_hash_table_t *h = ioopm_hash_table_create();
+    ioopm_hash_table_clear(h);
+    CU_ASSERT_TRUE(ioopm_hash_table_is_empty(h));
     ioopm_hash_table_destroy(h);
 }
 
@@ -153,8 +154,8 @@ int main() {
     }
 
 
-    CU_pSuite my_test_suite = CU_add_suite("hash table test suite", init_suite, clean_suite);
-    if (my_test_suite == NULL) 
+    CU_pSuite hashtable_test = CU_add_suite("hash table test", init_suite, clean_suite);
+    if (hashtable_test == NULL) 
     {
         // If the test suite could not be added, tear down CUnit and exit
         CU_cleanup_registry();
@@ -167,18 +168,19 @@ int main() {
     // the test in question. If you want to add another test, just
     // copy a line below and change the information
     if (
-        (CU_add_test(my_test_suite, "hash table create and destroy", test_create_destroy) == NULL) ||
-        (CU_add_test(my_test_suite, "insert into hashtable", test_insert_once) == NULL) ||
-        (CU_add_test(my_test_suite, "lookup is empty", test_lookup_empty) == NULL) ||
-        (CU_add_test(my_test_suite, "NULL is possible value", test_ht_value_NULL) == NULL) ||
-        (CU_add_test(my_test_suite, "negative is possible key", test_negative_key) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: adds and removes 3 entires correctly", test_remove_multiple_entries) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: remove one entry from ht", test_remove_single_entry) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_remove ]: returning NULL from not valid entry to remove", test_remove_null_entry) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_size ]: returns size = 1 if only one entry", test_hash_table_size_is_one) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_size ]: returns size = 0 for no entries", test_hash_table_size_is_empty) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_is_empty ]: returns true for an empty hashtable", test_hash_table_is_empty) == NULL) ||
-        (CU_add_test(my_test_suite, "[ ioopm_hash_table_clear ]: clears a hashtable so that it's empty", test_hash_table_clear) == NULL) ||
+        (CU_add_test(hashtable_test, "hash table create and destroy", test_create_destroy) == NULL) ||
+        (CU_add_test(hashtable_test, "insert into hashtable", test_insert_once) == NULL) ||
+        (CU_add_test(hashtable_test, "lookup is empty", test_lookup_empty) == NULL) ||
+        (CU_add_test(hashtable_test, "NULL is possible value", test_ht_value_NULL) == NULL) ||
+        (CU_add_test(hashtable_test, "negative is possible key", test_negative_key) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_remove ]: adds and removes 3 entires correctly", test_remove_multiple_entries) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_remove ]: remove one entry from ht", test_remove_single_entry) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_remove ]: returning NULL from not valid entry to remove", test_remove_null_entry) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_size ]: returns size = 1 if only one entry", test_hash_table_size_is_one) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_size ]: returns size = 0 for no entries", test_hash_table_size_is_empty) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_is_empty ]: returns true for an empty hashtable", test_hash_table_is_empty) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_clear ]: clears a hashtable so that it's empty", test_hash_table_clear) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_clear ]: clears an empty hashtable correctly", test_hash_table_clear_empty) == NULL) ||
         0
     ) 
     {

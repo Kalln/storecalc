@@ -23,6 +23,7 @@ struct entry
 struct hash_table 
 {
     entry_t *buckets[no_buckets];
+    int size;
 };
 
 
@@ -53,6 +54,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(void)
         entry_t *ent = entry_create(0, NULL, NULL);
         result->buckets[i] = ent;
     }
+    result->size = 0;
 
     return result;
 }
@@ -133,6 +135,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
     } else 
     {
         entry->next = entry_create(key, value, next);
+        ht->size += 1;
     }
 }
 
@@ -150,6 +153,7 @@ char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key)
     prev_entry->next = to_remove->next;
 
     free(to_remove);
+    ht->size -= 1;
     return val;
 }
 
@@ -175,22 +179,21 @@ option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 
 int ioopm_hash_table_size(ioopm_hash_table_t *ht)
 {
-    // 1. Set a counter to zero
-    // 2. Iterate over the buckets in the buckets array
-    //     2.1 For each bucket, iterate over its entries, incrementing the
-    //         counter by one for each step
-    // 3. Return the counter value
-
-    return NULL;
+   return ht->size;
 }
 
 bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht)
 {
-    return NULL;
+    return ioopm_hash_table_size(ht) == 0;
 }
 
 void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
 {
+    for (int i = 0; i < no_buckets; i++)
+    {
+        bucket_destroy(ht->buckets[i]->next);
+    }
+
     return;
 }
 
