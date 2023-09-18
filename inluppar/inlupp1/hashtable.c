@@ -192,8 +192,9 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
     for (int i = 0; i < no_buckets; i++)
     {
         bucket_destroy(ht->buckets[i]->next);
+        ht->buckets[i]->next = NULL;
     }
-
+    ht->size = 0;
     return;
 }
 
