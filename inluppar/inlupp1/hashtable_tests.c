@@ -177,10 +177,12 @@ void test_hash_table_find_keys()
 
 void test_hash_table_values()
 {
+    const arr_size = 5;
     ioopm_hash_table_t *h = ioopm_hash_table_create();
-    int keys[5] = {3, 4, 5, 6, 7};
-    char *values[5] = {"three", "four", "five", "six", "seven"};
-    
+    int keys[arr_size] = {3, 4, 5, 6, 7};
+    char *values[arr_size] = {"three", "four", "five", "six", "seven"};
+    bool found[arr_size] = {false};
+
     for (int i = 0; i < 5; i++)
     {
         ioopm_hash_table_insert(h, keys[i], values[i]);
@@ -192,11 +194,23 @@ void test_hash_table_values()
     char **hash_values = ioopm_hash_table_values(h);
    
     
-    for (int j = 0; j < 5; j++)
+    for (int j = 0; j < arr_size; j++)
     {
-        CU_ASSERT_EQUAL(hash_keys[j], keys[j]);
-        CU_ASSERT_EQUAL(hash_values[j], values[j]);
+        for (int k = 0; k < arr_size; k++)
+        {
+            if (values[j] == hash_values[k] && keys[j] == hash_keys[k])
+            {
+                found[j] = true;
+            }
+        }
+        
     }
+
+    for (int i = 0; i < arr_size; i++)
+    {
+        CU_ASSERT_TRUE(found[i]);
+    }
+
     ioopm_hash_table_destroy(h);
 }
 
