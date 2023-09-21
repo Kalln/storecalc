@@ -222,7 +222,7 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
     int count = 0;
     for (int i = 0; i < no_buckets; i++)
     {
-        entry_t *cursor = ht->buckets[i]->next;
+        entry_t *cursor = ht->buckets[i]->next; // Since dummy bucket
         while (cursor != NULL)
         {
             // TANKE: kan vi spara minne genom skapa en ny pekare till 
@@ -264,15 +264,37 @@ void ioopm_destroy_hash_table_values(char **values)
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 {
-    int *ht_keys = ioopm_hash_table_keys(ht);
-    for (int i = 0; i < ioopm_hash_table_size(ht); i++)
-    {
-        if (ht_keys[i] == key) {
-            free(ht_keys);
+
+    int bucket_key = bucket_calc(key);
+    entry_t *cursor = ht->buckets[bucket_key]->next;
+    // Vi sorterar nycklarana i storleksordning i våra buckets, 
+    // så vi behöver nu som max bara kolla en bucket upp till storleken av nyckeln vi kollar
+    while (cursor != NULL)
+    {  
+        int current_key = cursor->key;
+        if (key == current_key)
+        {
             return true;
-        }
+        } 
+        else if (key < current_key)
+        {
+            return false;
+        } 
+
+        cursor = cursor->next;
     }
-    free(ht_keys);
+
+    // Ittererar "åtminstone" mer än en gång över alla värden
+    // int *ht_keys = ioopm_hash_table_keys(ht);
+    // for (int i = 0; i < ioopm_hash_table_size(ht); i++)
+    // {
+    //     if (ht_keys[i] == key) {
+    //         free(ht_keys);
+    //         return true;
+    //     }
+    // }
+    // free(ht_keys);
+
     return false;
     
 }
@@ -280,9 +302,23 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 {
     char **ht_val = ioopm_hash_table_values(ht);
-    for (int i = 0; i < ioopm_hash_table_size(ht); i++)
+    int size = ioopm_hash_table_size(ht);
+
+    if (value == NULL)
     {
-        if (strcmp(ht_val[i], value)) {
+        for (int i = 0; i < size; i++)
+        {
+            if (ht_val[i][0], value) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(ht_val[i], value) == 0) {
             free(ht_val);
             return true;
         }
