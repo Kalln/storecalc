@@ -310,6 +310,7 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
         {
             if (ht_val[i][0], value) 
             {
+                free(ht_val);
                 return true;
             }
         }
