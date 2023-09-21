@@ -77,6 +77,10 @@ int *ioopm_hash_table_keys(ioopm_hash_table_t *ht);
 /// @return an array of values for hash table h
 char **ioopm_hash_table_values(ioopm_hash_table_t *ht);
 
+/// @brief free all values in the array created by ioopm_hash_table_values
+/// @param values array to be freed
+void ioopm_destroy_hash_table_values(char **values);
+
 /// @brief check if a hash table has an entry with a given key
 /// @param h hash table operated upon
 /// @param key the key sought

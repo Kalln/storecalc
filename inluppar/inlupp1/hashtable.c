@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <string.h>
 
 // Karl Widborg Kortelainen & William Paradell
 
@@ -200,12 +201,50 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
 
 int *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
 {
-    return NULL;
+    int *keys = calloc(ioopm_hash_table_size(ht), sizeof(int));
+    int count = 0;
+    for (int i = 0; i < no_buckets; i++)
+    {
+        entry_t *cursor = ht->buckets[i]->next;
+        while (cursor != NULL)
+        {
+            keys[count++] = cursor->key;
+            cursor = cursor->next;
+
+        }
+    }
+    return keys;
 }
 
 char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
 {
-    return NULL;
+    char **values = calloc(ioopm_hash_table_size(ht), sizeof(char *));
+    int count = 0;
+    for (int i = 0; i < no_buckets; i++)
+    {
+        entry_t *cursor = ht->buckets[i]->next;
+        while (cursor != NULL)
+        {
+            char *str_ptr = cursor->value;
+            int length = strlen(str_ptr);
+            char *current_value = calloc(length + 1, sizeof(char));
+            strcpy(current_value, str_ptr);
+            values[count++] = current_value;
+            cursor = cursor->next;
+
+        }
+    }
+    return values;
+}
+
+void ioopm_destroy_hash_table_values(char **values)
+{
+    int length = strlen(values) + 1;
+    for (int i = 0; i < length; i++)
+    {
+        free(values[i]);
+    }
+    free(values);
 }
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)

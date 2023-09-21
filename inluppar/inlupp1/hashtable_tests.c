@@ -1,5 +1,7 @@
 #include <CUnit/Basic.h>
 #include "hashtable.h"
+#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 
 int init_suite(void) 
@@ -146,15 +148,15 @@ void test_hash_table_clear_empty()
 void test_hash_table_find_keys()
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
-    int keys[6] = {42, 10, 0, 99, 100, -1};
+    int keys[] = {42, 10, 0, 99, 100, -1};
     bool found[6] = {false};
     
     for (int i = 0; i < 6; i++)
     {
         ioopm_hash_table_insert(ht, keys[i], "wows!");
     }
-    //int *ht_keys = ioopm_hash_table_keys(ht);
-    int ht_keys[6] = {-1, 100, 99, 0, 10, 42};
+    int *ht_keys = ioopm_hash_table_keys(ht);
+    //int ht_keys[6] = {-1, 100, 99, 0, 10, 42};
     
     for (int i = 0; i < 6; i++)
     {
@@ -172,16 +174,17 @@ void test_hash_table_find_keys()
         CU_ASSERT_TRUE(found[i]);
     }
     
+    free(ht_keys);
     ioopm_hash_table_destroy(ht);
 }
 
 void test_hash_table_values()
 {
-    const arr_size = 5;
+    //const arr_size = 5;
     ioopm_hash_table_t *h = ioopm_hash_table_create();
-    int keys[arr_size] = {3, 4, 5, 6, 7};
-    char *values[arr_size] = {"three", "four", "five", "six", "seven"};
-    bool found[arr_size] = {false};
+    int keys[5] = {3, 4, 5, 6, 7};
+    char *values[5] = {"three", "four", "five", "six", "seven"};
+    bool found[5] = {false};
 
     for (int i = 0; i < 5; i++)
     {
@@ -194,11 +197,11 @@ void test_hash_table_values()
     char **hash_values = ioopm_hash_table_values(h);
    
     
-    for (int j = 0; j < arr_size; j++)
+    for (int j = 0; j < 5; j++)
     {
-        for (int k = 0; k < arr_size; k++)
+        for (int k = 0; k < 5; k++)
         {
-            if (values[j] == hash_values[k] && keys[j] == hash_keys[k])
+            if (strcmp(values[j], hash_values[k]) && keys[j] == hash_keys[k])
             {
                 found[j] = true;
             }
@@ -206,11 +209,12 @@ void test_hash_table_values()
         
     }
 
-    for (int i = 0; i < arr_size; i++)
+    for (int i = 0; i < 5; i++)
     {
         CU_ASSERT_TRUE(found[i]);
     }
-
+    free(hash_keys);
+    //ioopm_destroy_hash_table_values(hash_values);
     ioopm_hash_table_destroy(h);
 }
 
