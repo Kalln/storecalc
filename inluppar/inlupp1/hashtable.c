@@ -268,10 +268,11 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
     for (int i = 0; i < ioopm_hash_table_size(ht); i++)
     {
         if (ht_keys[i] == key) {
+            free(ht_keys);
             return true;
         }
     }
-
+    free(ht_keys);
     return false;
     
 }
@@ -282,10 +283,11 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
     for (int i = 0; i < ioopm_hash_table_size(ht); i++)
     {
         if (strcmp(ht_val[i], value)) {
+            free(ht_val);
             return true;
         }
     }
-
+    free(ht_val);
     return false;
 
 }
