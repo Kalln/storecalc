@@ -225,12 +225,27 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
         entry_t *cursor = ht->buckets[i]->next;
         while (cursor != NULL)
         {
+            // TANKE: kan vi spara minne genom skapa en ny pekare till 
+            // cursor-> value? På detta sätt har vi endast strängarna 
+            // på en plats och inte två. Det innebär att vi endast behöver 
+            // frigöra **values minnen vid ett senare tillfälle och inte också
+            // strängarna...?
+            /// tex.
+
             char *str_ptr = cursor->value;
-            int length = strlen(str_ptr);
-            char *current_value = calloc(length + 1, sizeof(char));
-            strcpy(current_value, str_ptr);
-            values[count++] = current_value;
+            values[count++] = str_ptr;
             cursor = cursor->next;
+
+            /// Gör vi såhär de identiska men inte ekvivalensa.
+            /// och vi slipper frigöra minnet vid ett senare tillfälle. MÅL H19
+            // edit. detta fungerade och vi har nu inga minnesläckor.
+
+            // char *str_ptr = cursor->value;
+            // int length = strlen(str_ptr);
+            // char *current_value = calloc(length + 1, sizeof(char));
+            // strcpy(current_value, str_ptr);
+            // values[count++] = current_value;
+            // cursor = cursor->next;
 
         }
     }

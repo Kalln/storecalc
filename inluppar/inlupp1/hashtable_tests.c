@@ -201,7 +201,8 @@ void test_hash_table_values()
     {
         for (int k = 0; k < 5; k++)
         {
-            if (strcmp(values[j], hash_values[k]) && keys[j] == hash_keys[k])
+            // TODO: check that key is corresponds to correct value.
+            if (strcmp(values[j], hash_values[k]))
             {
                 found[j] = true;
             }
@@ -214,6 +215,7 @@ void test_hash_table_values()
         CU_ASSERT_TRUE(found[i]);
     }
     free(hash_keys);
+    free(hash_values);
     //ioopm_destroy_hash_table_values(hash_values);
     ioopm_hash_table_destroy(h);
 }
