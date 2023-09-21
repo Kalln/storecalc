@@ -264,12 +264,30 @@ void ioopm_destroy_hash_table_values(char **values)
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 {
-    return NULL;
+    int *ht_keys = ioopm_hash_table_keys(ht);
+    for (int i = 0; i < ioopm_hash_table_size(ht); i++)
+    {
+        if (ht_keys[i] == key) {
+            return true;
+        }
+    }
+
+    return false;
+    
 }
 
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 {
-    return NULL;
+    char **ht_val = ioopm_hash_table_values(ht);
+    for (int i = 0; i < ioopm_hash_table_size(ht); i++)
+    {
+        if (strcmp(ht_val[i], value)) {
+            return true;
+        }
+    }
+
+    return false;
+
 }
 
 bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
