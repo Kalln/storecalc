@@ -229,9 +229,9 @@ void test_hash_table_has_value(void)
     }
 
     CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, "three"));
-    CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, "one"));
+    CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, "one")); // FIXME: Should return false.
     CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, "six"));
-    // TODO: NULL creates segfault
+    // FIXME: NULL creates segfault
     //CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, NULL));
 
     ioopm_hash_table_destroy(ht);
@@ -240,6 +240,22 @@ void test_hash_table_has_value(void)
 
 void test_hash_table_has_key(void) 
 {
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    int keys[5] = {3, 4, 5, 6, 7};
+    char *values[5] = {"three", "four", "five", "six", "seven"};
+
+    for (int i = 0; i < 5; i++)
+    {
+        ioopm_hash_table_insert(ht, keys[i], values[i]);
+    }
+
+    CU_ASSERT_TRUE(ioopm_hash_table_has_key(ht, 3));
+    CU_ASSERT_TRUE(ioopm_hash_table_has_key(ht, 7));
+    CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, 0));
+    CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, 10));
+    CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, NULL));
+
+    ioopm_hash_table_destroy(ht);
 
 }
 
@@ -284,6 +300,7 @@ int main() {
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_keys ]: find all keys", test_hash_table_find_keys) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_values ]: correctly extracts all values from the hashtable", test_hash_table_values) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_has_values ]: both not existing and existing values work", test_hash_table_has_value) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_has_keys ]: both not existing and existing keys work", test_hash_table_has_key) == NULL) ||
         0
     ) 
     {
