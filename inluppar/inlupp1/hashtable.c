@@ -314,6 +314,7 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
                 return true;
             }
         }
+        free(ht_val);
         return false;
     }
 
