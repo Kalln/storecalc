@@ -332,15 +332,48 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 
 bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
 {
-    return NULL;
+    for (int i = 0; i < no_buckets; i++)
+    {
+        entry_t *cursor = ht->buckets[i]->next;
+        while (cursor != NULL)
+        {
+            if (!pred(cursor->key, cursor->value, arg))
+            {
+                return false;
+            }
+            cursor = cursor->next;
+        }
+    }
+    return true;
 }
 
 bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
 {
-    return NULL;
+    for (int i = 0; i < no_buckets; i++)
+    {
+        entry_t *cursor = ht->buckets[i]->next;
+        while (cursor != NULL)
+        {
+            if (pred(cursor->key, cursor->value, arg))
+            {
+                return true;
+            }
+            cursor = cursor->next;
+        }
+    }
+    return false;
 }
 
 void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function apply_fun, void *arg)
 {
-    return NULL;
+
+    for (int i = 0; i < no_buckets; i++)
+    {
+        entry_t *cursor = ht->buckets[i]->next;
+        while (cursor != NULL)
+        {   
+            apply_fun(cursor->key, cursor->value, arg);
+            cursor = cursor->next;
+        }
+    }
 }

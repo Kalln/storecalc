@@ -258,6 +258,52 @@ void test_hash_table_has_key(void)
 
 }
 
+bool all_keys_are_divisible_by_two(int key, char *unused, void *x)
+{
+    return key % 2 == 0;
+}
+
+bool all_keys_are_lesser_than_nine(int key, char *unused, void *x)
+{
+    return key < 9;
+}
+
+bool any_key_is_greater_than_nine(int key, char *unused, void *x)
+{
+    return key < 1;
+}
+
+bool any_key_is_divisible_by_two(int key, char *unused, void *x)
+{
+    return key % 2 == 0;
+}
+
+void test_hash_table_all(void)
+{
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    int keys[5] = {3, 4, 5, 6, 7};
+    for (int i = 0; i < 5; i++)
+    {
+        ioopm_hash_table_insert(ht, keys[i], "hello");
+    }
+    CU_ASSERT_FALSE(ioopm_hash_table_all(ht, all_keys_are_divisible_by_two, NULL));
+    CU_ASSERT_TRUE(ioopm_hash_table_all(ht, all_keys_are_lesser_than_nine, NULL));
+    ioopm_hash_table_destroy(ht);
+}
+
+void test_hash_table_any(void)
+{
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+    int keys[5] = {3, 4, 5, 6, 7};
+    for (int i = 0; i < 5; i++)
+    {
+        ioopm_hash_table_insert(ht, keys[i], "hello");
+    }
+    CU_ASSERT_TRUE(ioopm_hash_table_any(ht, any_key_is_divisible_by_two, NULL));
+    CU_ASSERT_FALSE(ioopm_hash_table_any(ht, any_key_is_greater_than_nine, NULL));
+    ioopm_hash_table_destroy(ht);
+}
+
 // run the tests
 
 int main() {
@@ -300,6 +346,8 @@ int main() {
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_values ]: correctly extracts all values from the hashtable", test_hash_table_values) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_has_values ]: both not existing and existing values work", test_hash_table_has_value) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_has_keys ]: both not existing and existing keys work", test_hash_table_has_key) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_all ]: Works for a false statement and a true statement", test_hash_table_all) == NULL) ||
+        (CU_add_test(hashtable_test, "[ ioopm_hash_table_any ]: Works for a false statement and a true statement", test_hash_table_any) == NULL) ||
         0
     ) 
     {
