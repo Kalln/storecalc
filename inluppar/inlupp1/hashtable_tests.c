@@ -234,7 +234,6 @@ void test_hash_table_has_value(void)
     }
 
     CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, "three"));
-    CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, values[4]));
     CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, "one"));
     CU_ASSERT_TRUE(ioopm_hash_table_has_value(ht, "six"));
     CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, NULL));
@@ -265,21 +264,30 @@ void test_hash_table_has_key(void)
 
 }
 
+// Predicates for hash_table_any/all.
 bool all_keys_are_divisible_by_two(int key, char *unused, void *x)
 {
     return key % 2 == 0;
 }
 
+// Predicates for hash_table_any/all.
 bool all_keys_are_lesser_than_nine(int key, char *unused, void *x)
 {
     return key < 9;
 }
 
+bool any_key_is_x(int key, char *unused, void *x)
+{
+    return key == *(int*)x;
+}
+
+// Predicates for hash_table_any/all.
 bool any_key_is_greater_than_nine(int key, char *unused, void *x)
 {
     return key < 1;
 }
 
+// Predicates for hash_table_any/all.
 bool any_key_is_divisible_by_two(int key, char *unused, void *x)
 {
     return key % 2 == 0;

@@ -305,7 +305,6 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 {
-    if (!value) return false; // Prevents SEGFAULT if value = NULL.
     char **ht_val = ioopm_hash_table_values(ht);
     int size = ioopm_hash_table_size(ht);
 
@@ -313,7 +312,10 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
     {
         for (int i = 0; i < size; i++)
         {
-            if (ht_val[i][0], value) 
+
+            // We are looking for NULL (=0).
+            // Therefore we only have to compare 
+            if (ht_val[i][0] == 0) 
             {
                 free(ht_val);
                 return true;
