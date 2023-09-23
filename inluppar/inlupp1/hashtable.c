@@ -116,9 +116,7 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 static int bucket_calc(int key) 
 {
     /// since we don't have buckets under 0
-   return key >= 0 ? (key % no_buckets) : ((key % no_buckets) + no_buckets); // korrekt
-   //return key > 0 ? (key % 17) : ((key % 17) + 17); // fel 2
-   //return key % 17; // fel 1
+    return key >= 0 ? (key % no_buckets) : ((key % no_buckets) + no_buckets); // korrekt
 }
 
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
@@ -199,6 +197,7 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
         bucket_destroy(ht->buckets[i]->next);
         ht->buckets[i]->next = NULL;
     }
+
     ht->size = 0;
     return;
 }
@@ -207,16 +206,18 @@ int *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
 {
     int *keys = calloc(ioopm_hash_table_size(ht), sizeof(int));
     int count = 0;
+
     for (int i = 0; i < no_buckets; i++)
     {
         entry_t *cursor = ht->buckets[i]->next;
+
         while (cursor != NULL)
         {
             keys[count++] = cursor->key;
             cursor = cursor->next;
-
         }
     }
+
     return keys;
 }
 
@@ -224,41 +225,26 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
 {
     char **values = calloc(ioopm_hash_table_size(ht), sizeof(char *));
     int count = 0;
+
     for (int i = 0; i < no_buckets; i++)
     {
-        entry_t *cursor = ht->buckets[i]->next; // Since dummy bucket
+        entry_t *cursor = ht->buckets[i]->next; // Dummy bucket is always first, so next is first entry.
+        
         while (cursor != NULL)
         {
-            // TANKE: kan vi spara minne genom skapa en ny pekare till 
-            // cursor-> value? På detta sätt har vi endast strängarna 
-            // på en plats och inte två. Det innebär att vi endast behöver 
-            // frigöra **values minnen vid ett senare tillfälle och inte också
-            // strängarna...?
-            /// tex.
-
             char *str_ptr = cursor->value;
             values[count++] = str_ptr;
             cursor = cursor->next;
-
-            /// Gör vi såhär de identiska men inte ekvivalensa.
-            /// och vi slipper frigöra minnet vid ett senare tillfälle. MÅL H19
-            // edit. detta fungerade och vi har nu inga minnesläckor.
-
-            // char *str_ptr = cursor->value;
-            // int length = strlen(str_ptr);
-            // char *current_value = calloc(length + 1, sizeof(char));
-            // strcpy(current_value, str_ptr);
-            // values[count++] = current_value;
-            // cursor = cursor->next;
-
         }
     }
+
     return values;
 }
 
 void ioopm_destroy_hash_table_values(char **values)
 {
     int length = strlen(*values) + 1;
+
     for (int i = 0; i < length; i++)
     {
         free(values[i]);
@@ -268,19 +254,19 @@ void ioopm_destroy_hash_table_values(char **values)
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 {
-
     int bucket_key = bucket_calc(key);
     entry_t *cursor = ht->buckets[bucket_key]->next;
+
     // Vi sorterar nycklarana i storleksordning i våra buckets, 
     // så vi behöver nu som max bara kolla en bucket upp till storleken av nyckeln vi kollar
     while (cursor != NULL)
     {  
         int current_key = cursor->key;
+
         if (key == current_key)
         {
             return true;
-        } 
-        else if (key < current_key)
+        } else if (key < current_key)
         {
             return false;
         } 
@@ -288,19 +274,7 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
         cursor = cursor->next;
     }
 
-    // Ittererar "åtminstone" mer än en gång över alla värden
-    // int *ht_keys = ioopm_hash_table_keys(ht);
-    // for (int i = 0; i < ioopm_hash_table_size(ht); i++)
-    // {
-    //     if (ht_keys[i] == key) {
-    //         free(ht_keys);
-    //         return true;
-    //     }
-    // }
-    // free(ht_keys);
-
     return false;
-    
 }
 
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)

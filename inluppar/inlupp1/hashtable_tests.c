@@ -307,7 +307,7 @@ char *concat_string(char *str1, char *str2)
 }
 
 /// @brief Used in a testcase for hash_table_apply_to_all. It will concatinate value + string_add
-/// @param key ???
+/// @param key ??? not really used..
 /// @param value ptr to value in hashtable.
 /// @param string_add added to value
 void apply_string_to_value(int key, char **value, void *string_add) 
@@ -331,6 +331,7 @@ void test_hash_table_all(void)
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
     int keys[5] = {3, 4, 5, 6, 7};
+
     for (int i = 0; i < 5; i++)
     {
         ioopm_hash_table_insert(ht, keys[i], strdup("hello"));
@@ -343,12 +344,15 @@ void test_hash_table_all(void)
 void test_hash_table_any(void)
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
+
     int keys[5] = {3, 4, 5, 6, 7};
     int not_exist[5] = {8, 9, 10, 11, 12};
+
     for (int i = 0; i < 5; i++)
     {
         ioopm_hash_table_insert(ht, keys[i], strdup("hello"));
     }
+
     CU_ASSERT_TRUE(ioopm_hash_table_any(ht, any_key_is_divisible_by_two, NULL));
     CU_ASSERT_FALSE(ioopm_hash_table_any(ht, any_key_is_greater_than_nine, NULL));
 
