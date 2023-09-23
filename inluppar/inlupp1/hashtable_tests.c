@@ -278,6 +278,10 @@ bool all_keys_are_lesser_than_nine(int key, char *unused, void *x)
 
 bool any_key_is_x(int key, char *unused, void *x)
 {
+    if (x == NULL)
+    {
+        return false;
+    }
     return key == *(int*)x;
 }
 
@@ -365,9 +369,8 @@ void test_hash_table_any(void)
         CU_ASSERT_EQUAL(ioopm_hash_table_any(ht, any_key_is_x, &not_exist[i]), ioopm_hash_table_has_key(ht, not_exist[i]))
         
     }
-
-    //FIXME: NULL is not an accepted value. Maybe this is more an issue with "any_key_is_x" function than anything else.
-    //CU_ASSERT_EQUAL(ioopm_hash_table_any(ht, any_key_is_x, NULL), ioopm_hash_table_has_key(ht, NULL));
+    // NULL handled correctly.
+    CU_ASSERT_EQUAL(ioopm_hash_table_any(ht, any_key_is_x, NULL), ioopm_hash_table_has_key(ht, NULL));
     
     ioopm_hash_table_destroy(ht);
 }

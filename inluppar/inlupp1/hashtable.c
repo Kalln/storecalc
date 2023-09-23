@@ -131,8 +131,11 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
     /// Check if the next entry should be updated or not
     if (next != NULL && next->key == key) 
     {
-        // TODO: Allocate memory and free old value. Possible memoryleak?
-        next->value = value;
+        char *old_val = next->value;
+        char *new_val = calloc(strlen(value) + 1, sizeof(char));
+        strcpy(new_val, value);
+        next->value = new_val;
+        free(old_val);
     } else 
     {
         // Allocate memory for value?
