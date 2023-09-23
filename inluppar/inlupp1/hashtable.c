@@ -301,26 +301,11 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 {
+    if (!value) return false; // Prevents SEGFAULT if value = NULL.
     char **ht_val = ioopm_hash_table_values(ht);
-    int size = ioopm_hash_table_size(ht);
-
-    if (value == NULL)
+    for (int i = 0; i < ioopm_hash_table_size(ht); i++)
     {
-        for (int i = 0; i < size; i++)
-        {
-            if (ht_val[i][0], value) 
-            {
-                free(ht_val);
-                return true;
-            }
-        }
-        free(ht_val);
-        return false;
-    }
-
-    for (int i = 0; i < size; i++)
-    {
-        if (strcmp(ht_val[i], value) == 0) {
+        if (strcmp(ht_val[i], value)) {
             free(ht_val);
             return true;
         }
