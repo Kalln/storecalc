@@ -458,8 +458,9 @@ int main()
     // Use CU_BRM_NORMAL to only print errors and a summary
     CU_basic_set_mode(CU_BRM_VERBOSE);
 
-    CU_set_output_filename("test_results");
-    CU_automated_run_tests();
+  // Add outputfile and run tests automatically.
+  CU_set_output_filename("test_results");
+  CU_automated_run_tests();
 
     // This is where the tests are actually run!
     CU_basic_run_tests();
