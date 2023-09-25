@@ -9,8 +9,9 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@main
       - name: Run tests
-        run:  make test
-          working-directory: ./inluppar/inlupp1
+        run:  |
+        ls
+        make test
       
       - name: Install test report dependencies
         run: sudo apt-get install xsltproc
