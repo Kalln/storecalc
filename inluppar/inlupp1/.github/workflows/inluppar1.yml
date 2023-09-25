@@ -9,7 +9,10 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@main
       - name: Run tests
-        run: make test
+        run: |
+        cd ..
+        cd ..
+        make test
       
       - name: Install test report dependencies
         run: sudo apt-get install xsltproc
