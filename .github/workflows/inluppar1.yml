@@ -10,8 +10,8 @@ jobs:
         uses: actions/checkout@main
       - name: Run tests
         run: |
-        gcc -Wall -g inluppar/inlupp1/hashtable.c inluppar/inlupp1/hashtable_tests.c -o test -lcunit
-        ./test
+          gcc -Wall -g inluppar/inlupp1/hashtable.c inluppar/inlupp1/hashtable_tests.c -o test -lcunit
+          ./test
       
       - name: Install test report dependencies
         run: sudo apt-get install xsltproc
