@@ -331,12 +331,13 @@ bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *ar
     }
     return true;
 }
-
 bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
 {
     for (int i = 0; i < no_buckets; i++)
     {
+
         entry_t *cursor = ht->buckets[i]->next;
+
         while (cursor != NULL)
         {
             if (pred(cursor->key, cursor->value, arg))

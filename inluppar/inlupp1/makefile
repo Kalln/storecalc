@@ -1,7 +1,7 @@
 main: myprog
 
 C_COMPILER     = gcc
-C_OPTIONS      = -Wall -pedantic -g
+C_OPTIONS      = -Wall -pedantic -g -lgcov
 C_LINK_OPTIONS = -lm 
 CUNIT_LINK     = -lcunit
 
