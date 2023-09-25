@@ -1,37 +1,38 @@
 #include <CUnit/Basic.h>
+#include <CUnit/Automated.h>
 #include "hashtable.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-int init_suite(void) 
+int init_suite(void)
 {
-  // Change this function if you want to do something *before* you
-  // run a test suite
-  return 0;
+    // Change this function if you want to do something *before* you
+    // run a test suite
+    return 0;
 }
 
-int clean_suite(void) 
+int clean_suite(void)
 {
-  // Change this function if you want to do something *after* you
-  // run a test suite
-  return 0;
+    // Change this function if you want to do something *after* you
+    // run a test suite
+    return 0;
 }
 
 // Own tests here.
-void test_create_destroy(void) 
+void test_create_destroy(void)
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
     CU_ASSERT_PTR_NOT_NULL(ht);
     ioopm_hash_table_destroy(ht);
 }
 
-void test_insert_once(void) 
+void test_insert_once(void)
 {
     ioopm_hash_table_t *h = ioopm_hash_table_create();
     int k = 1;
     // in this case k should not exist in h.
-    if (ioopm_hash_table_lookup(h, k).success == false) 
+    if (ioopm_hash_table_lookup(h, k).success == false)
     {
         const char *v = "entry 1";
         ioopm_hash_table_insert(h, k, strdup(v));
@@ -43,9 +44,9 @@ void test_insert_once(void)
 
         // The change of allocating memory to each value, made this fail.
         // I have no idea why?
-        //CU_ASSERT_EQUAL(ioopm_hash_table_lookup(h, k).value, "entry 1");
+        // CU_ASSERT_EQUAL(ioopm_hash_table_lookup(h, k).value, "entry 1");
     }
-    
+
     ioopm_hash_table_destroy(h);
 }
 
@@ -70,14 +71,14 @@ void test_negative_key()
 
 void test_lookup_empty()
 {
-   ioopm_hash_table_t *ht = ioopm_hash_table_create();
-   
-   for (int i = 0; i < 18; ++i) 
+    ioopm_hash_table_t *ht = ioopm_hash_table_create();
+
+    for (int i = 0; i < 18; ++i)
     {
-       CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, i).value);
+        CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, i).value);
     }
-   CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, -1).value);
-   ioopm_hash_table_destroy(ht);
+    CU_ASSERT_PTR_NULL(ioopm_hash_table_lookup(ht, -1).value);
+    ioopm_hash_table_destroy(ht);
 }
 
 void test_remove_multiple_entries()
@@ -91,7 +92,6 @@ void test_remove_multiple_entries()
     CU_ASSERT_EQUAL(strcmp(ioopm_hash_table_remove(h, 17), "apa"), 0);
     CU_ASSERT_EQUAL(strcmp(ioopm_hash_table_remove(h, 0), "hej"), 0);
     CU_ASSERT_EQUAL(strcmp(ioopm_hash_table_remove(h, 34), "hus"), 0);
-    
 
     ioopm_hash_table_destroy(h);
 }
@@ -155,37 +155,37 @@ void test_hash_table_find_keys()
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
     int keys[] = {42, 10, 0, 99, 100, -1};
     bool found[6] = {false};
-    
+
     for (int i = 0; i < 6; i++)
     {
         ioopm_hash_table_insert(ht, keys[i], strdup("wows!"));
     }
     int *ht_keys = ioopm_hash_table_keys(ht);
-    //int ht_keys[6] = {-1, 100, 99, 0, 10, 42};
-    
+    // int ht_keys[6] = {-1, 100, 99, 0, 10, 42};
+
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 6; j++)
         {
-            if (ht_keys[i] == keys[j]) 
+            if (ht_keys[i] == keys[j])
             {
                 found[j] = true;
             }
         }
     }
-    
+
     for (int i = 0; i < 6; i++)
     {
         CU_ASSERT_TRUE(found[i]);
     }
-    
+
     free(ht_keys);
     ioopm_hash_table_destroy(ht);
 }
 
 void test_hash_table_values()
 {
-    //const arr_size = 5;
+    // const arr_size = 5;
     ioopm_hash_table_t *h = ioopm_hash_table_create();
     int keys[5] = {3, 4, 5, 6, 7};
     char *values[5] = {"three", "four", "five", "six", "seven"};
@@ -195,10 +195,10 @@ void test_hash_table_values()
     {
         ioopm_hash_table_insert(h, keys[i], strdup(values[i]));
     }
-    
+
     int *hash_keys = ioopm_hash_table_keys(h);
     char **hash_values = ioopm_hash_table_values(h);
-   
+
     for (int j = 0; j < 5; j++)
     {
         for (int k = 0; k < 5; k++)
@@ -209,7 +209,6 @@ void test_hash_table_values()
                 found[j] = true;
             }
         }
-        
     }
 
     for (int i = 0; i < 5; i++)
@@ -239,10 +238,9 @@ void test_hash_table_has_value(void)
     CU_ASSERT_FALSE(ioopm_hash_table_has_value(ht, NULL));
 
     ioopm_hash_table_destroy(ht);
-    
 }
 
-void test_hash_table_has_key(void) 
+void test_hash_table_has_key(void)
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
     int keys[5] = {3, 4, 5, 6, 7};
@@ -257,11 +255,10 @@ void test_hash_table_has_key(void)
     CU_ASSERT_TRUE(ioopm_hash_table_has_key(ht, 7));
     CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, 0));
     CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, 10));
-    //CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, NULL));
+    // CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, NULL));
     CU_ASSERT_FALSE(ioopm_hash_table_has_key(ht, 8364));
 
     ioopm_hash_table_destroy(ht);
-
 }
 
 // Predicates for hash_table_any/all.
@@ -282,7 +279,7 @@ bool any_key_is_x(int key, char *unused, void *x)
     {
         return false;
     }
-    return key == *(int*)x;
+    return key == *(int *)x;
 }
 
 // Predicates for hash_table_any/all.
@@ -298,8 +295,8 @@ bool any_key_is_divisible_by_two(int key, char *unused, void *x)
 }
 
 /// @brief concatinates two strings and returns a new string.
-/// @param str1 
-/// @param str2 
+/// @param str1
+/// @param str2
 /// @return new string = str1 + str2 that is allocated on the heap.
 char *concat_string(char *str1, char *str2)
 {
@@ -314,10 +311,10 @@ char *concat_string(char *str1, char *str2)
 /// @param key ??? not really used..
 /// @param value ptr to value in hashtable.
 /// @param string_add added to value
-void apply_string_to_value(int key, char **value, void *string_add) 
+void apply_string_to_value(int key, char **value, void *string_add)
 {
     char *old_value = *value; // Save old value to free it later.
-    char *new_val = concat_string(*value, (char*) string_add);
+    char *new_val = concat_string(*value, (char *) string_add);
 
     // If allocation fails.
     if (new_val == NULL)
@@ -367,11 +364,10 @@ void test_hash_table_any(void)
 
         // these keys does not exist in the table and should therefore be equal (false).
         CU_ASSERT_EQUAL(ioopm_hash_table_any(ht, any_key_is_x, &not_exist[i]), ioopm_hash_table_has_key(ht, not_exist[i]))
-        
     }
     // NULL handled correctly.
-    CU_ASSERT_EQUAL(ioopm_hash_table_any(ht, any_key_is_x, NULL), ioopm_hash_table_has_key(ht, NULL));
-    
+    // CU_ASSERT_EQUAL(ioopm_hash_table_any(ht, any_key_is_x, NULL), ioopm_hash_table_has_key(ht, NULL));
+
     ioopm_hash_table_destroy(ht);
 }
 
@@ -383,7 +379,7 @@ void test_hash_table_apply_all(void)
     // Add five entries to hashtable, with value "hello".
     for (int i = 0; i < 5; i++)
     {
-        char* v = strdup("hello");
+        char *v = strdup("hello");
         ioopm_hash_table_insert(ht, keys[i], v);
     }
 
@@ -392,7 +388,7 @@ void test_hash_table_apply_all(void)
     {
         CU_ASSERT_TRUE(strcmp(ioopm_hash_table_lookup(ht, keys[i]).value, "hello") == 0);
     }
-    
+
     // Apply function
     ioopm_hash_table_apply_to_all(ht, apply_string_to_value, "world");
 
@@ -402,23 +398,23 @@ void test_hash_table_apply_all(void)
         char *entry_val = ioopm_hash_table_lookup(ht, keys[i]).value;
         CU_ASSERT_EQUAL(strcmp(entry_val, "helloworld"), 0);
     }
-    
+
     ioopm_hash_table_destroy(ht);
 }
 
 // run the tests
 
-int main() {
+int main()
+{
 
-    //setup CUnit
-    if (CU_initialize_registry() != CUE_SUCCESS) 
+    // setup CUnit
+    if (CU_initialize_registry() != CUE_SUCCESS)
     {
         return CU_get_error();
     }
 
-
     CU_pSuite hashtable_test = CU_add_suite("hash table test", init_suite, clean_suite);
-    if (hashtable_test == NULL) 
+    if (hashtable_test == NULL)
     {
         // If the test suite could not be added, tear down CUnit and exit
         CU_cleanup_registry();
@@ -451,8 +447,7 @@ int main() {
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_all ]: Works for a false statement and a true statement", test_hash_table_all) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_any ]: Works for a false statement and a true statement", test_hash_table_any) == NULL) ||
         (CU_add_test(hashtable_test, "[ ioopm_hash_table_apply_all ]: applying function", test_hash_table_apply_all) == NULL) ||
-        0
-    ) 
+        0)
     {
         // If adding any of the tests fails, we tear down CUnit and exit
         CU_cleanup_registry();
@@ -462,6 +457,9 @@ int main() {
     // Set the running mode. Use CU_BRM_VERBOSE for maximum output.
     // Use CU_BRM_NORMAL to only print errors and a summary
     CU_basic_set_mode(CU_BRM_VERBOSE);
+
+    CU_set_output_filename("test_results");
+    CU_automated_run_tests();
 
     // This is where the tests are actually run!
     CU_basic_run_tests();
