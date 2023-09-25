@@ -33,16 +33,21 @@ void test_append_link_list(void)
     CU_ASSERT_FALSE( ioopm_linked_list_contains(lt, -1));
     ioopm_linked_list_append(lt, -1);
     CU_ASSERT_TRUE( ioopm_linked_list_contains(lt, -1));
+    ioopm_linked_list_append(lt, 100);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(0), -1);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(1), 100);
     ioopm_linked_list_destroy(lt);
+
 }
 
 void test_prepend_link_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
-    
+
     ioopm_linked_list_prepend(lt, 10);
-    // Hur kontrollera sista?
     ioopm_linked_list_prepend(lt, 40);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(0), 40);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(1), 10);
     // Hur kontrollera sista? 
 
     ioopm_linked_list_destroy(lt);
@@ -58,12 +63,10 @@ void test_insert_link_list(void)
 
 void test_remove_elem_link_list(void)
 {
+    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_linked_list_append(lt, 200);
+    CU_ASSERT_TRUE(ioopm_linked_list_contains(200));
     
-}
-
-void test_get_elem_by_index_link_list(void)
-{
-
 }
 
 void test_elem_contains_in_link_list(void)
