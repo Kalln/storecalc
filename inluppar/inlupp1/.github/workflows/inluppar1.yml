@@ -10,8 +10,7 @@ jobs:
         uses: actions/checkout@main
       - name: Run tests
         run:  |
-        ls
-        make test
+         gcc -Wall -g ../../hashtable.c ../../hashtable_tests.c -o test -lcunit
       
       - name: Install test report dependencies
         run: sudo apt-get install xsltproc
