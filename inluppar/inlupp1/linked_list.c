@@ -32,6 +32,18 @@ ioopm_list_t *ioopm_linked_list_create()
     return lt;
 }
 
+void ioopm_linked_list_append(ioopm_list_t *list, int value)
+{
+    // creates new last entry with specified value
+    elem_t *new_last;
+    new_last->next = NULL;
+    new_last->val = value;
+
+    // Update last and increment size
+    list->last->next = new_last;
+    list->last = new_last;
+    list->size += 1;
+}
 
 
 
