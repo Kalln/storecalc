@@ -19,4 +19,4 @@ jobs:
       - name: Transform and display Test Report
         id: transform
         run: |
-          xsltproc inluppar/inlupp1/test_report_converter.xsl test_results-Results.xml >> "$GITHUB_STEP_SUMMARY"
+          xsltproc inluppar/inlupp1/test_report_converter.xsl inluppar/inlupp1/test_results-Results.xml >> "$GITHUB_STEP_SUMMARY"
