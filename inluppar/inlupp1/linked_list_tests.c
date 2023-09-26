@@ -34,8 +34,8 @@ void test_append_link_list(void)
     ioopm_linked_list_append(lt, -1);
     CU_ASSERT_TRUE( ioopm_linked_list_contains(lt, -1));
     ioopm_linked_list_append(lt, 100);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(0), -1);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(1), 100);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 0), -1);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 1), 100);
     ioopm_linked_list_destroy(lt);
 
 }
@@ -46,11 +46,26 @@ void test_prepend_link_list(void)
 
     ioopm_linked_list_prepend(lt, 10);
     ioopm_linked_list_prepend(lt, 40);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(0), 40);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(1), 10);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 0), 40);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 1), 10);
     // Hur kontrollera sista? 
 
     ioopm_linked_list_destroy(lt);
+}
+
+void test_get_value(void)
+{
+    ioopm_list_t *lt = ioopm_linked_list_create();
+
+    for (int i = 0; i < 10; i++)
+    {
+        ioopm_linked_list_append(lt, i);
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, i), i);
+    }
 }
 
 void test_insert_link_list(void)
@@ -69,9 +84,9 @@ void test_remove_elem_link_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
     ioopm_linked_list_append(lt, 200);
-    CU_ASSERT_TRUE(ioopm_linked_list_contains(200));
+    CU_ASSERT_TRUE(ioopm_linked_list_contains(lt, 200));
     ioopm_linked_list_remove(lt, 0);
-    CU_ASSERT_FALSE(ioopm_linked_list_contains(200));
+    CU_ASSERT_FALSE(ioopm_linked_list_contains(lt, 200));
     ioopm_linked_list_destroy(lt);
 }
 
@@ -83,7 +98,7 @@ void test_link_list_size(void)
         ioopm_linked_list_append(lt, i);
     }
     CU_ASSERT_EQUAL(ioopm_linked_list_size(lt), 10);
-    ioopm_linked_list_destroy();
+    ioopm_linked_list_destroy(lt);
 }
 
 void test_linked_list_empty(void)
@@ -140,6 +155,7 @@ int main() {
         (CU_add_test(linked_list_test, "[ioopm_linked_list_[create / destroy]] linked list create and destroy", test_create_empty_list) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_append] linked list append", test_append_link_list) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_prepend] linked list prepend", test_prepend_link_list) == NULL) ||
+        (CU_add_test(linked_list_test, "[ioopm_linked_list_get] Gets the the right value", test_get_value) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_insert] insert into a linked list", test_insert_link_list) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_remove] removes a value", test_remove_elem_link_list) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_size] correctly returns size of a linked list", test_link_list_size) == NULL) ||
