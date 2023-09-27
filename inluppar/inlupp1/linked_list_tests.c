@@ -4,6 +4,20 @@
 #include <string.h>
 #include <stdbool.h>
 
+typedef struct elem elem_t;
+struct elem 
+{
+    int val;
+    elem_t *next;
+};
+
+struct list 
+{
+    elem_t *first;
+    elem_t *last;
+    int size;
+};
+
 int init_suite(void) 
 {
   // Change this function if you want to do something *before* you
@@ -23,19 +37,36 @@ int clean_suite(void)
 void test_create_empty_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
+
     CU_ASSERT_PTR_NOT_NULL(lt);
+
     ioopm_linked_list_destroy(lt);
 }
 
 void test_append_link_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
-    CU_ASSERT_FALSE( ioopm_linked_list_contains(lt, -1));
+
+    // We have no elements in our list. Should be dummy objects
+    CU_ASSERT_EQUAL(lt->last->val, NULL);
+    CU_ASSERT_EQUAL(lt->first->val, NULL);
+    
+    // Append a value to the list. Should be the first and last element, since we only have one element. 
     ioopm_linked_list_append(lt, -1);
-    CU_ASSERT_TRUE( ioopm_linked_list_contains(lt, -1));
+    //CU_ASSERT_PTR_NOT_NULL(lt->last);
+    //CU_ASSERT_PTR_NOT_NULL(lt->last);
+    CU_ASSERT_EQUAL(lt->first->val, -1); // TODO: same as line 60.
+    CU_ASSERT_EQUAL(lt->last->val, -1);
+    CU_ASSERT_EQUAL(lt->first, lt->last); // TODO: Last and first should be the same object. Now dummy object is first.
+    
+    // Append 100 to the list. This is now the last element. And first element should -1 not 100.
     ioopm_linked_list_append(lt, 100);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 0), -1);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 1), 100);
+    CU_ASSERT_EQUAL(lt->last->val, 100);
+    CU_ASSERT_EQUAL(lt->first->val, -1); // TODO: same as line 60.
+    CU_ASSERT_NOT_EQUAL(lt->first, lt->last); // These should NOT be equal.
+    CU_ASSERT_EQUAL(lt->first->next, lt->last); // First elements next should be the last element. // TODO: same as line 60.
+    CU_ASSERT_EQUAL(lt->last->next, NULL); // Last elements next should be NULL.
+
     ioopm_linked_list_destroy(lt);
 
 }
@@ -43,12 +74,14 @@ void test_append_link_list(void)
 void test_prepend_link_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
-
+ 
     ioopm_linked_list_prepend(lt, 10);
     ioopm_linked_list_prepend(lt, 40);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 0), 40);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 1), 10);
-    // Hur kontrollera sista? 
+
+    // Our list looks like this: 40 -> 10 -> NULL.
+    CU_ASSERT_EQUAL(lt->first->val, 40);
+    CU_ASSERT_EQUAL(lt->first->next->val, 10);
+    CU_ASSERT_EQUAL(lt->last->val, 10); // TODO: probably same issue as in append function.
 
     ioopm_linked_list_destroy(lt);
 }
@@ -57,11 +90,13 @@ void test_get_value(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
 
+    // Insert 10 values (0-9).
     for (int i = 0; i < 10; i++)
     {
         ioopm_linked_list_append(lt, i);
     }
 
+    // Check that values are correct.
     for (int i = 0; i < 10; i++)
     {
         CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, i), i);
@@ -71,18 +106,26 @@ void test_get_value(void)
 void test_insert_link_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
+
+    // Insert into list: 0->1->2->...->9->NULL.
     for (int i = 0; i < 10; i++)
     {
         ioopm_linked_list_append(lt, i);
     }
+
     ioopm_linked_list_insert(lt, 3, 100);
+    // Now list looks like: 0->1->2->100->...->9->NULL.
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 2), 2);
     CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 3), 100);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 4), 3);
+
     ioopm_linked_list_destroy(lt);
 }
 
 void test_remove_elem_link_list(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
+
     ioopm_linked_list_append(lt, 200);
     CU_ASSERT_TRUE(ioopm_linked_list_contains(lt, 200));
     ioopm_linked_list_remove(lt, 0);
@@ -161,9 +204,9 @@ int main() {
         (CU_add_test(linked_list_test, "[ioopm_linked_list_size] correctly returns size of a linked list", test_link_list_size) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_is_empty] returns true for an empty list", test_linked_list_empty) == NULL) ||
         (CU_add_test(linked_list_test, "[ioopm_linked_list_clear] correctly clears a list without freeing the list_pointer", test_clear_link_list) == NULL) ||
-        (CU_add_test(linked_list_test, "[ioopm_linked_list_all] linked list create and destroy", test_linked_list_show_all) == NULL) ||
-        (CU_add_test(linked_list_test, "[ioopm_linked_list_any] linked list create and destroy", test_linked_list_any) == NULL) ||
-        (CU_add_test(linked_list_test, "[ioopm_linked_list_to_all] linked list create and destroy", test_link_list_apply_to_all) == NULL) ||
+        (CU_add_test(linked_list_test, "[ioopm_linked_list_all] elements is true according to predicate", test_linked_list_show_all) == NULL) ||
+        (CU_add_test(linked_list_test, "[ioopm_linked_list_any] atleast one element true according to predicate", test_linked_list_any) == NULL) ||
+        (CU_add_test(linked_list_test, "[ioopm_linked_list_to_all] applied a function to all elements in list", test_link_list_apply_to_all) == NULL) ||
         0
     ) 
     {

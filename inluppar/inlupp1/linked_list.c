@@ -59,6 +59,10 @@ ioopm_list_t *ioopm_linked_list_create()
 {
     ioopm_list_t *lt = calloc(1, sizeof(ioopm_list_t));
     elem_t *dummy = element_create(0, NULL);
+
+    // maybe do lt->first = lt->last = NULL;
+    // then we can check if list is empty by checking if first is NULL
+    
     lt->first = dummy;
     lt->last = dummy;
     lt->size = 0;
