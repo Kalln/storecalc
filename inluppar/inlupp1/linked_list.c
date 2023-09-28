@@ -75,19 +75,37 @@ void ioopm_linked_list_append(ioopm_list_t *list, int value)
     // creates new last element with specified value
     elem_t *new_last = element_create(value, NULL);
 
-    // Update last and increment size
-    list->last->next = new_last;
-    list->last = new_last;
+    if (list->size == 0)
+    {
+        // remove dummy node...
+        free(list->first);
+
+        list->first = new_last;
+        list->last = new_last;
+    } else 
+    {
+        list->last->next = new_last;
+        list->last = new_last;
+    }
+
     list->size += 1;
 }
 
 void ioopm_linked_list_prepend(ioopm_list_t *list, int value)
 {
-    // Creates new first element with specified value
-    elem_t *new_first = element_create(value, list->first->next);
+    elem_t *new_first = element_create(value, list->first);
 
-    // Update first and increment size
-    list->first->next = new_first;
+    // Creates new first element with specified value
+    if (list->size == 0) {
+        // remove dummy node...
+        free(list->first);
+        list->first = new_first;
+        list->last = new_first; 
+    } else 
+    {
+        list->first = new_first;
+    }
+
     list->size += 1;
 }
 
@@ -115,7 +133,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value)
         elem_t *cursor = list->first->next;
         elem_t *prev_elem = list->first;
 
-        for (int i = 0; i < index; i++) //Step through the list until desired index reached
+        for (int i = 0; i < index - 1; i++) //Step through the list until desired index reached
         {
             cursor = cursor->next;
             prev_elem = prev_elem->next;
@@ -131,8 +149,16 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
     int size = ioopm_linked_list_size(list);
     check_index_exit(index, size-1); //Does nothing if index is in the correct range
 
-    elem_t *value_to_remove = list->first->next;
+    elem_t *value_to_remove = list->first;
     elem_t *prev_value = list->first;
+
+    if (list->size == 1) // We need a special case for when we only have one element in the list.
+    {
+        elem_t *dummy = element_create(0, NULL);
+        
+        list->first = dummy;
+        list->last = dummy;
+    }
 
     for (int i = 0; i < index; i++) //Step through the list until desired index reached
     {
@@ -140,10 +166,12 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
         prev_value = prev_value->next;
     }
     
-    prev_value->next = value_to_remove->next;
-    list->size -= 1;
+    if (list->size < 1) prev_value->next = value_to_remove->next;
 
-    return value_to_remove->val;
+    list->size -= 1;
+    int val = value_to_remove->val;
+    free(value_to_remove);
+    return val;
 }
 
 int ioopm_linked_list_get(ioopm_list_t *list, int index)
@@ -151,16 +179,29 @@ int ioopm_linked_list_get(ioopm_list_t *list, int index)
     int size = ioopm_linked_list_size(list);
     check_index_exit(index, size-1); //Does nothing if index is in the correct range
 
-    elem_t *value_to_check = list->first->next;
-    int i = 0;
 
-    while ((i++) != index) value_to_check = value_to_check->next;
-    return value_to_check->val;
+    // elem_t *value_to_check = list->first->next;
+    //int i = 0;
+    //while ((i++) != index) value_to_check = value_to_check->next;
+    //return value_to_check->val;
+
+
+    if(index == 0) return list->first->val; // If we are looking for the first element, we can just return it since we have the ptr.
+    if(index == size-1) return list->last->val; // Same argument but for last element.
+
+    // Cursor that will loop until the index we want. And return that value.
+    elem_t *cursor = list->first->next; 
+    for (int i = 0; i < index - 1; i++)
+    {   
+        cursor = cursor->next;
+    }
+
+    return cursor->val;
 }
 
 bool ioopm_linked_list_contains(ioopm_list_t *list, int element)
 {
-    elem_t *cursor = list->first->next;
+    elem_t *cursor = list->first;
     while (cursor != NULL)
     {
         if (cursor->val == element) return true;
