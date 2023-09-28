@@ -25,10 +25,13 @@ test: test1
 lt_test: linked_list_tests.o linked_list.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
+iter_test: iterator_tests.o linked_list.o
+	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
+
 memtest: test1
 	valgrind --leak-check=full --error-exitcode=1 ./test1
 
 clean:
 	rm -f *.o myprog test1 lt_test
 
-.PHONY: test clean
+.PHONY: test clean lt_test
