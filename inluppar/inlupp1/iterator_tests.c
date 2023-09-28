@@ -97,8 +97,8 @@ void test_iter_insert(void)
         ioopm_linked_list_append(lt, i);
     }
     
-    ioopm_iterator_next(lt);
-    ioopm_iterator_insert(lt, 200);
+    ioopm_iterator_next(iter);
+    ioopm_iterator_insert(iter, 200); // hade lt istället för iter, fungerar nu
 
     CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 1), 200);
     
@@ -118,7 +118,7 @@ void test_iter_reset(void)
     ioopm_iterator_next(iter);
     CU_ASSERT_EQUAL((*(iter->current))->val, 1);
     
-    ioopm_iterator_reset(lt);
+    ioopm_iterator_reset(iter); // Vi förde med lt istället för iter
     
     CU_ASSERT_EQUAL((*(iter->current))->val, 0);
     

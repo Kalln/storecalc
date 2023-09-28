@@ -296,11 +296,16 @@ bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter)
 
 int ioopm_iterator_next(ioopm_list_iterator_t *iter)
 {
-    elem_t *elem = *(iter->current);
-    elem = elem->next;
-    iter->current = &elem;
+    // elem_t *elem = *(iter->current);
+    // elem = elem->next;
+    // iter->current = &elem;
+    
+    // Verkar inte som att den gillade att vi använde elem!
+    // Fixade sig så fort vi direkt använder addressen
 
-    return elem->val;
+    iter->current = &((*(iter)->current)->next); // Ansätter current till addressen till pekaren som pekar på next
+
+    return (*(iter)->current)->val;
 }
 
 void ioopm_iterator_destroy(ioopm_list_iterator_t *iter)
@@ -326,7 +331,7 @@ int ioopm_iterator_remove(ioopm_list_iterator_t *iter)
     ioopm_iterator_reset(iter);
     
     while((*(iter->current))->next != elem_to_remove) ioopm_iterator_next(iter);
-    (*(iter->current))->next = &(elem_to_remove->next);
+    ((*(iter->current))->next) = &(elem_to_remove->next);
     ioopm_iterator_next(iter);
     
     element_destroy(elem_to_remove);
