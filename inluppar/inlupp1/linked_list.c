@@ -1,9 +1,15 @@
 #include "linked_list.h"
+#include "iterator.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 typedef struct elem elem_t;
 
+struct ioopm_list_iterator
+{
+    ioopm_list_t *list;
+    elem_t **current;
+};
 
 struct elem 
 {
@@ -80,40 +86,25 @@ void ioopm_linked_list_append(ioopm_list_t *list, int value)
 {
     // creates new last element with specified value
     elem_t *new_last = element_create(value, NULL);
-
-    if (list->size == 0)
-    {
-        // remove dummy node...
-        free(list->first);
-
-        list->first = new_last;
-        list->last = new_last;
-    } else 
-    {
-        list->last->next = new_last;
-        list->last = new_last;
-    }
+    
+    list->last->next = new_last;
+    list->last = new_last;
 
     list->size += 1;
 }
 
 void ioopm_linked_list_prepend(ioopm_list_t *list, int value)
 {
-    
-
     // Creates new first element with specified value
-    if (list->size == 0) {
-        elem_t *new_first = element_create(value, NULL);
-        // remove dummy node...
-        free(list->first);
-        list->first = new_first;
-        list->last = new_first; 
-    } else 
+    elem_t *new_first = element_create(value, list->first->next);
+
+    if (ioopm_linked_list_size(list) == 0)
     {
-        elem_t *new_first = element_create(value, list->first);
-        list->first = new_first;
+        list->last = new_first;
     }
 
+    // Update first and increment size
+    list->first->next = new_first;
     list->size += 1;
 }
 
@@ -138,6 +129,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value)
     } 
     else 
     {
+        index++;
         elem_t *cursor = list->first->next;
         elem_t *prev_elem = list->first;
 
@@ -194,12 +186,12 @@ int ioopm_linked_list_get(ioopm_list_t *list, int index)
     //return value_to_check->val;
 
 
-    if(index == 0) return list->first->val; // If we are looking for the first element, we can just return it since we have the ptr.
+    if(index == 0) return list->first->next->val; // If we are looking for the first element, we can just return it since we have the ptr.
     if(index == size-1) return list->last->val; // Same argument but for last element.
 
     // Cursor that will loop until the index we want. And return that value.
     elem_t *cursor = list->first->next; 
-    for (int i = 0; i < index - 1; i++)
+    for (int i = 0; i < index; i++)
     {   
         cursor = cursor->next;
     }
@@ -279,4 +271,71 @@ void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function
         fun(NOT_USED_KEY, &cursor->val, extra);
         cursor = cursor->next;
     }
+}
+
+/**
+ * 
+ *  ITERATOR
+ * 
+ */
+
+ioopm_list_iterator_t *ioopm_list_iterator(ioopm_list_t *list)
+{
+    ioopm_list_iterator_t *iter = calloc(1, sizeof(ioopm_list_iterator_t));
+    iter->list = list;
+    iter->current = &(list->first->next);
+    return iter;
+}
+
+bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter)
+{
+    if (*(iter->current) != NULL && (*(iter->current))->next != NULL) return true;
+    return false;
+
+}
+
+int ioopm_iterator_next(ioopm_list_iterator_t *iter)
+{
+    elem_t *elem = *(iter->current);
+    elem = elem->next;
+    iter->current = &elem;
+
+    return elem->val;
+}
+
+void ioopm_iterator_destroy(ioopm_list_iterator_t *iter)
+{
+    free(iter);
+}
+
+int ioopm_iterator_current(ioopm_list_iterator_t *iter)
+{
+    elem_t *elem = *(iter->current);
+    return elem->val;
+}
+
+void ioopm_iterator_reset(ioopm_list_iterator_t *iter)
+{
+    iter->current = &(iter->list->first->next);
+}
+
+int ioopm_iterator_remove(ioopm_list_iterator_t *iter)
+{
+    elem_t *elem_to_remove = *(iter->current);
+    int value_of_elem_remove = elem_to_remove->val;
+    ioopm_iterator_reset(iter);
+    
+    while((*(iter->current))->next != elem_to_remove) ioopm_iterator_next(iter);
+    (*(iter->current))->next = &(elem_to_remove->next);
+    ioopm_iterator_next(iter);
+    
+    element_destroy(elem_to_remove);
+
+    return value_of_elem_remove;
+}
+
+void ioopm_iterator_insert(ioopm_list_iterator_t *iter, int element)
+{
+    // TODO: IF TIME
+    return;
 }

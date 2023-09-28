@@ -55,16 +55,16 @@ void test_append_link_list(void)
     ioopm_linked_list_append(lt, -1);
     //CU_ASSERT_PTR_NOT_NULL(lt->last);
     //CU_ASSERT_PTR_NOT_NULL(lt->last);
-    CU_ASSERT_EQUAL(lt->first->val, -1); 
+    CU_ASSERT_EQUAL(lt->first->val, NULL); 
     CU_ASSERT_EQUAL(lt->last->val, -1);
-    CU_ASSERT_EQUAL(lt->first, lt->last); 
+    CU_ASSERT_EQUAL(lt->first->next, lt->last); 
     
     // Append 100 to the list. This is now the last element. And first element should -1 not 100.
     ioopm_linked_list_append(lt, 100);
     CU_ASSERT_EQUAL(lt->last->val, 100);
-    CU_ASSERT_EQUAL(lt->first->val, -1); 
-    CU_ASSERT_NOT_EQUAL(lt->first, lt->last); // These should NOT be equal.
-    CU_ASSERT_EQUAL(lt->first->next, lt->last); 
+    CU_ASSERT_EQUAL(lt->first->next->val, -1); 
+    CU_ASSERT_NOT_EQUAL(lt->first->next, lt->last); // These should NOT be equal.
+    CU_ASSERT_EQUAL(lt->first->next->next, lt->last); 
     CU_ASSERT_EQUAL(lt->last->next, NULL); // Last elements next should be NULL.
 
     ioopm_linked_list_destroy(lt);
@@ -79,8 +79,8 @@ void test_prepend_link_list(void)
     ioopm_linked_list_prepend(lt, 40);
 
     // Our list looks like this: 40 -> 10 -> NULL.
-    CU_ASSERT_EQUAL(lt->first->val, 40);
-    CU_ASSERT_EQUAL(lt->first->next->val, 10);
+    CU_ASSERT_EQUAL(lt->first->next->val, 40);
+    CU_ASSERT_EQUAL(lt->first->next->next->val, 10);
     CU_ASSERT_EQUAL(lt->last->val, 10); 
 
     ioopm_linked_list_destroy(lt);
