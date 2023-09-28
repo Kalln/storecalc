@@ -52,7 +52,13 @@ static void element_destroy(elem_t *elem)
 void ioopm_linked_list_destroy(ioopm_list_t *lt)
 {
 
-    //TODO: free all elem in list.
+    elem_t *cursor = lt->first;
+    while (cursor != NULL)
+    {
+        elem_t *next = cursor->next; // save ptr to next, before free current elem
+        element_destroy(cursor); // free current elem
+        cursor = next; // make next elem, current elem
+    }
     free(lt);
 }
 ioopm_list_t *ioopm_linked_list_create()
@@ -93,16 +99,18 @@ void ioopm_linked_list_append(ioopm_list_t *list, int value)
 
 void ioopm_linked_list_prepend(ioopm_list_t *list, int value)
 {
-    elem_t *new_first = element_create(value, list->first);
+    
 
     // Creates new first element with specified value
     if (list->size == 0) {
+        elem_t *new_first = element_create(value, NULL);
         // remove dummy node...
         free(list->first);
         list->first = new_first;
         list->last = new_first; 
     } else 
     {
+        elem_t *new_first = element_create(value, list->first);
         list->first = new_first;
     }
 
@@ -211,10 +219,64 @@ bool ioopm_linked_list_contains(ioopm_list_t *list, int element)
     return false;
 }
 
+bool ioopm_linked_list_is_empty(ioopm_list_t *list)
+{
+    return list->size == 0;
+}
 
+void ioopm_linked_list_clear(ioopm_list_t *list)
+{
+    // Start in the first element.
+    elem_t *cursor = list->first;
+    while (cursor != NULL)
+    {
+        // We save ptr to next element before we free the current one.
+        elem_t *next = cursor->next;
+        free(cursor);
+        cursor = next;
+    }
+    elem_t *dummy = element_create(0, NULL);
+        
+    list->first = dummy;
+    list->last = dummy;
+    list->size = 0;
+}
 
+bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
+{
+    elem_t *cursor = list->first;
+    int NOT_USED_KEY = 0; // TODO: Maybe it will be more clear what key does later..?
 
+    while (cursor != NULL)
+    {
+        if (!prop(NOT_USED_KEY, &cursor->val, extra)) return false;
+        cursor = cursor->next;
+    }
 
+    return true;
+}
+bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
+{
+    elem_t *cursor = list->first;
+    int NOT_USED_KEY = 0; // TODO: Maybe it will be more clear what key does later..?
 
+    while (cursor != NULL)
+    {
+        if (prop(NOT_USED_KEY, &cursor->val, extra)) return true;
+        cursor = cursor->next;
+    }
 
+    return false;
+}
 
+void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function fun, void *extra)
+{
+    elem_t *cursor = list->first;
+    int NOT_USED_KEY = 0; // TODO: Maybe it will be more clear what key does later..?
+
+    while (cursor != NULL)
+    {
+        fun(NOT_USED_KEY, &cursor->val, extra);
+        cursor = cursor->next;
+    }
+}

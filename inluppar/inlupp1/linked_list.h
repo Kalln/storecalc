@@ -2,8 +2,8 @@
 #include <stdbool.h>
 
 
-typedef bool(*ioopm_int_predicate)(int key, int value, void *extra);
-typedef void(*ioopm_apply_int_function)(int key, int value, void *extra);
+typedef bool(*ioopm_int_predicate)(int key, int *value, void *extra);
+typedef void(*ioopm_apply_int_function)(int key, int *value, void *extra);
 typedef struct list ioopm_list_t;
 
 /// @brief Creates a new empty list
