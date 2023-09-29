@@ -2,6 +2,7 @@
 
 #define int_elem(x) (elem_t) { .val=(x) }
 #define ptr_elem(x) (elem_t) { .str=(x) }
+#define void_elem(x) (elem_t) { .void_ptr=(x) }
 
 typedef union elem
 {

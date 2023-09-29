@@ -16,6 +16,8 @@ typedef struct entry entry_t;
 #define Unsuccessful(o) (o.success == false) // TODO: use this definition
 
 #define no_buckets 17
+#define ioopm_int_str_ht_insert(ht, i, s) \
+   ioopm_hash_table_insert(ht, int_elem(i), ptr_elem(s))
 
 struct entry
 {
@@ -70,7 +72,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function)
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
     for (int i = 0; i < no_buckets; i++)
     {
-        entry_t *ent = entry_create(0, NULL, NULL); // ska vi tillåta NULL som en del av vår elem_t union? Hur annars skapa dummy entry?
+        entry_t *ent = entry_create(int_elem(0), ptr_elem(NULL), NULL);
         result->buckets[i] = ent;
     }
     result->size = 0;
@@ -106,14 +108,25 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 static entry_t *find_previous_entry_for_key(entry_t *bucket, elem_t key, ioopm_eq_function eq)
 {
 
+    // Tänker vi aldrig kan göra speed versionen utan att först kolla på vilken typ av elem vi hanterar, men känner då att det
+    // blir onödigt.
     while (bucket->next != NULL)
     {
-        if (eq(bucket->next->key, key) || bucket->next->key > key)
+        if (eq(bucket->next->key, key))
         {
             break;
         }
         bucket = bucket->next;
     }
+
+    // while (bucket->next != NULL)
+    // {
+    //     if (eq(bucket->next->key, key) || bucket->next->key > key)
+    //     {
+    //         break;
+    //     }
+    //     bucket = bucket->next;
+    // }
 
     return bucket;
 }
@@ -128,7 +141,7 @@ static size_t bucket_calc(ioopm_hash_function hash, elem_t key)
 
 }
 
-void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t *value)
+void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value)
 {
     /// Calculate the bucket for this entry
     const size_t bucket = bucket_calc(ht->ht_function, key);
@@ -139,13 +152,21 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t *value)
 
     /// Check if the next entry should be updated or not
     
-    if (next != NULL && next->key == key)
+    if (next != NULL && ht->eq_function(next->key, key))
     {
-        char *old_val = next->value;
-        char *new_val = calloc(strlen(value) + 1, sizeof(char));
-        strcpy(new_val, value);
-        next->value = new_val;
-        free(old_val);
+        elem_t old_val = next->value;
+
+        if (next->key.str != NULL && value.str != NULL) // If we handle a string
+        {
+        elem_t *new_val = calloc(strlen(value.str) + 1, sizeof(elem_t));
+        strcpy(new_val->str, value.str);
+        next->value.str = new_val->str;
+        free(old_val.str);
+        }
+        else if (next->key.val != NULL) //If we handle an integer value
+        {
+            old_val.val = value.val;
+        }
     }
     else
     {
@@ -156,10 +177,10 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t *value)
     }
 }
 
-char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key)
+elem_t *ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
 {
-    const size_t bucket = bucket_calc(key);
-    entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key);
+    const size_t bucket = bucket_calc(ht->ht_function, key);
+    entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key, ht->ht_function);
 
     if (prev_entry->next == NULL)
     {
@@ -167,26 +188,38 @@ char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key)
         return NULL;
     }
     entry_t *to_remove = prev_entry->next;
-    char *val = to_remove->value;
-    prev_entry->next = to_remove->next;
-
-    free(to_remove);
-    ht->size -= 1;
-    return val;
+    if (to_remove->value.str != NULL)
+    {
+        elem_t *val1 = to_remove->value.str;
+        elem_t *val;
+        strcpy(val->str, val1);
+        prev_entry->next = to_remove->next;
+        free(to_remove);
+        ht->size -= 1;
+        return val;
+    } else
+    {
+        elem_t *val = to_remove->value.val;
+        free(to_remove);
+        ht->size -= 1;
+        return val;
+    }
 }
 
-option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
+option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key)
 {
-    const size_t bucket = bucket_calc(key);
+    const size_t bucket = bucket_calc(ht->ht_function, key);
 
     /// Find the previous entry for key
-    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket], key);
+    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket], key, ht->ht_function);
     entry_t *next = tmp->next;
 
-    if (next && next->key == key)
+    if (next && ht->eq_function(next->key, key))
     {
+        
         /// If entry was found, return its value...
-        return Success(next->value);
+        // TODO: Kolla om denna fungerar, kan behöva lägga till för fler
+        return Success(next->value.str);
     }
     else
     {
@@ -241,13 +274,13 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
     ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
         entry_t *cursor = ht->buckets[i]->next;
 
         while (cursor != NULL)
         {
-            ioopm_linked_list_append(lt, int_elem(cursor->key)); // Puts the value last in the linked list
+            ioopm_linked_list_append(lt, cursor->key); // Puts the value last in the linked list
             cursor = cursor->next;
         }
     }
