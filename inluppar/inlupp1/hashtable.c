@@ -1,8 +1,10 @@
 #include "hashtable.h"
 #include <stdlib.h>
 #include <stddef.h>
-#include <stdbool.h>
 #include <string.h>
+#include "linked_list.h"
+#include <stdbool.h>
+
 
 // Karl Widborg Kortelainen & William Paradell
 
@@ -82,7 +84,7 @@ static void bucket_destroy(entry_t *bucket_to_destroy)
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 {
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
         bucket_destroy(ht->buckets[i]);
     }
@@ -111,7 +113,7 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 /// @brief calculates the bucket in hashtable
 /// @param key {int}. this is used to calculate the bucket.
 /// @return {int} bucket in hashtable.
-static int bucket_calc(int key)
+static size_t bucket_calc(int key)
 {
     /// since we don't have buckets under 0
     return key >= 0 ? (key % no_buckets) : ((key % no_buckets) + no_buckets); // korrekt
@@ -120,7 +122,7 @@ static int bucket_calc(int key)
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 {
     /// Calculate the bucket for this entry
-    int bucket = bucket_calc(key);
+    const size_t bucket = bucket_calc(key);
 
     /// Search for an existing entry for a key
     entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
@@ -146,7 +148,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
 
 char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key)
 {
-    int bucket = bucket_calc(key);
+    const size_t bucket = bucket_calc(key);
     entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key);
 
     if (prev_entry->next == NULL)
@@ -165,7 +167,7 @@ char *ioopm_hash_table_remove(ioopm_hash_table_t *ht, int key)
 
 option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
 {
-    int bucket = bucket_calc(key);
+    const size_t bucket = bucket_calc(key);
 
     /// Find the previous entry for key
     entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket], key);
@@ -183,7 +185,7 @@ option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, int key)
     }
 }
 
-int ioopm_hash_table_size(ioopm_hash_table_t *ht)
+size_t ioopm_hash_table_size(ioopm_hash_table_t *ht)
 {
     return ht->size;
 }
@@ -195,7 +197,7 @@ bool ioopm_hash_table_is_empty(ioopm_hash_table_t *ht)
 
 void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
 {
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
         bucket_destroy(ht->buckets[i]->next);
         ht->buckets[i]->next = NULL;
@@ -205,23 +207,42 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
     return;
 }
 
-int *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
-{
-    int *keys = calloc(ioopm_hash_table_size(ht), sizeof(int));
-    int count = 0;
+// int *ioopm_hash_table_keysd(ioopm_hash_table_t *ht)
+// {
+//     int *keys = calloc(ioopm_hash_table_size(ht), sizeof(int));
+//     int count = 0;
 
+//     for (size_t i = 0; i < no_buckets; i++)
+//     {
+//         entry_t *cursor = ht->buckets[i]->next;
+
+//         while (cursor != NULL)
+//         {
+//             keys[count++] = cursor->key;
+//             cursor = cursor->next;
+//         }
+//     }
+
+//     return keys;
+// }
+
+ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
+{
+    ioopm_list_t *lt = ioopm_linked_list_create();
+
+    
     for (int i = 0; i < no_buckets; i++)
     {
         entry_t *cursor = ht->buckets[i]->next;
 
         while (cursor != NULL)
         {
-            keys[count++] = cursor->key;
+            ioopm_linked_list_append(lt, cursor->key); // Puts the value last in the linked list
             cursor = cursor->next;
         }
     }
 
-    return keys;
+    return lt;
 }
 
 char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
@@ -246,9 +267,9 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
 
 void ioopm_destroy_hash_table_values(char **values)
 {
-    int length = strlen(*values) + 1;
+    const size_t length = strlen(*values) + 1;
 
-    for (int i = 0; i < length; i++)
+    for (size_t i = 0; i < length; i++)
     {
         free(values[i]);
     }
@@ -257,7 +278,7 @@ void ioopm_destroy_hash_table_values(char **values)
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 {
-    int bucket_key = bucket_calc(key);
+    const size_t bucket_key = bucket_calc(key);
     entry_t *cursor = ht->buckets[bucket_key]->next;
 
     // Vi sorterar nycklarana i storleksordning i våra buckets,
@@ -284,11 +305,11 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 {
     char **ht_val = ioopm_hash_table_values(ht);
-    int size = ioopm_hash_table_size(ht);
+    const size_t size = ioopm_hash_table_size(ht);
 
     if (value == NULL)
     {
-        for (int i = 0; i < size; i++)
+        for (size_t i = 0; i < size; i++)
         {
 
             // We are looking for NULL (=0).
@@ -303,7 +324,7 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
         return false;
     }
 
-    for (int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
     {
         if (strcmp(ht_val[i], value) == 0)
         {
@@ -317,7 +338,7 @@ bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
 
 bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
 {
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
         entry_t *cursor = ht->buckets[i]->next;
         while (cursor != NULL)
@@ -333,7 +354,7 @@ bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *ar
 }
 bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg)
 {
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
 
         entry_t *cursor = ht->buckets[i]->next;
@@ -353,7 +374,7 @@ bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *ar
 void ioopm_hash_table_apply_to_all(ioopm_hash_table_t *ht, ioopm_apply_function apply_fun, void *arg)
 {
 
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
         entry_t *cursor = ht->buckets[i]->next;
         while (cursor != NULL)

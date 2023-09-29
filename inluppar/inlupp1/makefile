@@ -16,7 +16,7 @@ myprog.final: file1.o file2.o file3.o
 	
 
 # TESTS
-test1: hashtable_tests.o hashtable.o
+test1: hashtable_tests.o hashtable.o linked_list.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
 test: test1
@@ -30,6 +30,9 @@ iter_test: iterator_tests.o linked_list.o
 
 memtest: test1
 	valgrind --leak-check=full --error-exitcode=1 ./test1
+
+iter_memtest: iter_test
+	valgrind --leak-check=full --error-exitcode=1 ./iter_test
 
 clean:
 	rm -f *.o myprog test1 lt_test

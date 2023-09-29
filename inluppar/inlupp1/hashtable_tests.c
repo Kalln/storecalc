@@ -1,6 +1,8 @@
 #include <CUnit/Basic.h>
 #include <CUnit/Automated.h>
+#include "linked_list.h"
 #include "hashtable.h"
+#include "iterator.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -153,21 +155,22 @@ void test_hash_table_clear_empty()
 void test_hash_table_find_keys()
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create();
-    int keys[] = {42, 10, 0, 99, 100, -1};
+    int keys[6] = {-1, 100, 99, 0, 10, 42};
     bool found[6] = {false};
 
     for (int i = 0; i < 6; i++)
     {
         ioopm_hash_table_insert(ht, keys[i], strdup("wows!"));
     }
-    int *ht_keys = ioopm_hash_table_keys(ht);
+
+    ioopm_list_t *ht_keys = ioopm_hash_table_keys(ht);
     // int ht_keys[6] = {-1, 100, 99, 0, 10, 42};
 
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 6; j++)
         {
-            if (ht_keys[i] == keys[j])
+            if (ioopm_linked_list_get(ht_keys, i) == keys[j])
             {
                 found[j] = true;
             }
@@ -179,7 +182,7 @@ void test_hash_table_find_keys()
         CU_ASSERT_TRUE(found[i]);
     }
 
-    free(ht_keys);
+    ioopm_linked_list_destroy(ht_keys);
     ioopm_hash_table_destroy(ht);
 }
 
@@ -196,15 +199,15 @@ void test_hash_table_values()
         ioopm_hash_table_insert(h, keys[i], strdup(values[i]));
     }
 
-    int *hash_keys = ioopm_hash_table_keys(h);
+    ioopm_list_t *hash_keys = ioopm_hash_table_keys(h);
     char **hash_values = ioopm_hash_table_values(h);
 
     for (int j = 0; j < 5; j++)
     {
         for (int k = 0; k < 5; k++)
         {
-            // TODO: check that key is corresponds to correct value.
-            if (strcmp(values[j], hash_values[k]))
+            // TODO: check that key corresponds to correct value.
+            if (strcmp(values[j], hash_values[k]) == 0)
             {
                 found[j] = true;
             }
@@ -215,7 +218,7 @@ void test_hash_table_values()
     {
         CU_ASSERT_TRUE(found[i]);
     }
-    free(hash_keys);
+    ioopm_linked_list_destroy(hash_keys);
     free(hash_values);
     //ioopm_destroy_hash_table_values(hash_values);
     ioopm_hash_table_destroy(h);

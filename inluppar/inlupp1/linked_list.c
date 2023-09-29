@@ -2,6 +2,7 @@
 #include "iterator.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stddef.h>
 
 typedef struct elem elem_t;
 
@@ -133,7 +134,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value)
         elem_t *cursor = list->first->next;
         elem_t *prev_elem = list->first;
 
-        for (int i = 0; i < index - 1; i++) //Step through the list until desired index reached
+        for (size_t i = 0; i < index - 1; i++) //Step through the list until desired index reached
         {
             cursor = cursor->next;
             prev_elem = prev_elem->next;
@@ -160,7 +161,7 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
         list->last = dummy;
     }
 
-    for (int i = 0; i < index; i++) //Step through the list until desired index reached
+    for (size_t i = 0; i < index; i++) //Step through the list until desired index reached
     {
         value_to_remove = value_to_remove->next;
         prev_value = prev_value->next;
@@ -191,7 +192,7 @@ int ioopm_linked_list_get(ioopm_list_t *list, int index)
 
     // Cursor that will loop until the index we want. And return that value.
     elem_t *cursor = list->first->next; 
-    for (int i = 0; i < index; i++)
+    for (size_t i = 0; i < index; i++)
     {   
         cursor = cursor->next;
     }
