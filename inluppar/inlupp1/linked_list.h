@@ -1,10 +1,11 @@
 #pragma once
 #include <stdbool.h>
 
-
-typedef bool(*ioopm_int_predicate)(int key, int *value, void *extra);
-typedef void(*ioopm_apply_int_function)(int key, int *value, void *extra);
+typedef union elem elem_t;
+typedef bool(*ioopm_int_predicate)(elem_t key, elem_t value, void *extra);
+typedef void(*ioopm_apply_int_function)(elem_t key, elem_t *value, void *extra);
 typedef struct list ioopm_list_t;
+
 
 /// @brief Creates a new empty list
 /// @return an empty linked list

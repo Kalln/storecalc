@@ -4,17 +4,25 @@
 #include <string.h>
 #include <stdbool.h>
 
-typedef struct elem elem_t;
-struct elem 
+
+typedef struct link link_t;
+union elem
 {
+    char *str;
     int val;
-    elem_t *next;
+    void *void_ptr;
+};
+
+struct link 
+{
+    elem_t val;
+    link_t *next;
 };
 
 struct list 
 {
-    elem_t *first;
-    elem_t *last;
+    link_t *first;
+    link_t *last;
     int size;
 };
 

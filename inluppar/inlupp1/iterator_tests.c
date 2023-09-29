@@ -181,6 +181,7 @@ int main() {
         (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_reset] Resets the pointer to the start of the list", test_iter_reset) == NULL) ||
         0
     ) 
+    
     {
         // If adding any of the tests fails, we tear down CUnit and exit
         CU_cleanup_registry();
