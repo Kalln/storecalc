@@ -331,7 +331,7 @@ int ioopm_iterator_remove(ioopm_list_iterator_t *iter)
     ioopm_iterator_reset(iter);
     
     while((*(iter->current))->next != elem_to_remove) ioopm_iterator_next(iter);
-    ((*(iter->current))->next) = &(elem_to_remove->next);
+    ((*(iter->current))->next) = (elem_to_remove->next);
     ioopm_iterator_next(iter);
     
     element_destroy(elem_to_remove);
@@ -341,6 +341,11 @@ int ioopm_iterator_remove(ioopm_list_iterator_t *iter)
 
 void ioopm_iterator_insert(ioopm_list_iterator_t *iter, int element)
 {
-    // TODO: IF TIME
-    return;
+    elem_t *next_elem = *(iter->current);
+    elem_t *new_elem = element_create(element, next_elem);
+
+    ioopm_iterator_reset(iter);
+    while((*(iter->current))->next != next_elem) ioopm_iterator_next(iter);
+    (*iter->current)->next = new_elem;
+    ioopm_iterator_next(iter);    
 }

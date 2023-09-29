@@ -125,6 +125,7 @@ void test_iter_reset(void)
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);
 }
+
 void test_current(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create();
@@ -134,14 +135,11 @@ void test_current(void)
         ioopm_linked_list_append(lt, 5*i);
     }
     ioopm_iterator_next(iter);
-    CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 0);
-
-    ioopm_iterator_next(iter);
     CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 5);
 
     ioopm_iterator_next(iter);
     CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 10);
-    
+
     ioopm_iterator_next(iter);
     CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 15);
     
@@ -177,8 +175,9 @@ int main() {
         (CU_add_test(iterator_test_suite, "[ioopm_list_iterator] Create and destroy an iterator", test_create_iter) == NULL) ||
         (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_has_next] Tests that iterator correctly tells if next is not NULL", test_iter_has_next) == NULL) ||
         (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_next] Checks that iterator correctly jumps to the next value if there is one", test_iter_next) == NULL) ||
+        (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_next] Loops through and checks multiple values", test_current) == NULL) ||
         (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_remove] Removes an existing value", test_iter_remove) == NULL) ||
-        //(CU_add_test(iterator_test_suite, "[ioopm_list_iterator_insert] Inserts and updates pointers", test_iter_insert) == NULL) ||
+        (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_insert] Inserts and updates pointers", test_iter_insert) == NULL) ||
         (CU_add_test(iterator_test_suite, "[ioopm_list_iterator_reset] Resets the pointer to the start of the list", test_iter_reset) == NULL) ||
         0
     ) 
