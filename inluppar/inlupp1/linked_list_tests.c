@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "common.h"
 
 
 typedef struct link link_t;
@@ -23,7 +24,8 @@ struct list
 {
     link_t *first;
     link_t *last;
-    int size;
+    size_t size;
+    ioopm_eq_function eq_function;
 };
 
 int init_suite(void) 
@@ -40,11 +42,14 @@ int clean_suite(void)
   return 0;
 }
 
+
+
+
 // Own tests here.
 
 void test_create_empty_list(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     CU_ASSERT_PTR_NOT_NULL(lt);
 
@@ -53,24 +58,22 @@ void test_create_empty_list(void)
 
 void test_append_link_list(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     // We have no elements in our list. Should be dummy objects
-    CU_ASSERT_EQUAL(lt->last->val, NULL);
-    CU_ASSERT_EQUAL(lt->first->val, NULL);
+    CU_ASSERT_TRUE(lt->eq_function(lt->last->val, int_elem(0)));
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->val, int_elem(0)));
     
     // Append a value to the list. Should be the first and last element, since we only have one element. 
-    ioopm_linked_list_append(lt, -1);
-    //CU_ASSERT_PTR_NOT_NULL(lt->last);
-    //CU_ASSERT_PTR_NOT_NULL(lt->last);
-    CU_ASSERT_EQUAL(lt->first->val, NULL); 
-    CU_ASSERT_EQUAL(lt->last->val, -1);
+    ioopm_linked_list_append(lt, int_elem(-1));
+    //CU_ASSERT_TRUE(lt->eq_function(lt->first->val, NULL)); 
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->next->val, int_elem(-1)));
     CU_ASSERT_EQUAL(lt->first->next, lt->last); 
     
     // Append 100 to the list. This is now the last element. And first element should -1 not 100.
-    ioopm_linked_list_append(lt, 100);
-    CU_ASSERT_EQUAL(lt->last->val, 100);
-    CU_ASSERT_EQUAL(lt->first->next->val, -1); 
+    ioopm_linked_list_append(lt, int_elem(100));
+    CU_ASSERT_TRUE(lt->eq_function(lt->last->val, int_elem(100)));
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->next->val, int_elem(-1))); 
     CU_ASSERT_NOT_EQUAL(lt->first->next, lt->last); // These should NOT be equal.
     CU_ASSERT_EQUAL(lt->first->next->next, lt->last); 
     CU_ASSERT_EQUAL(lt->last->next, NULL); // Last elements next should be NULL.
@@ -81,33 +84,33 @@ void test_append_link_list(void)
 
 void test_prepend_link_list(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
  
-    ioopm_linked_list_prepend(lt, 10);
-    ioopm_linked_list_prepend(lt, 40);
+    ioopm_linked_list_prepend(lt, int_elem(10));
+    ioopm_linked_list_prepend(lt, int_elem(40));
 
     // Our list looks like this: 40 -> 10 -> NULL.
-    CU_ASSERT_EQUAL(lt->first->next->val, 40);
-    CU_ASSERT_EQUAL(lt->first->next->next->val, 10);
-    CU_ASSERT_EQUAL(lt->last->val, 10); 
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->next->val, int_elem(40)));
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->next->next->val, int_elem(10)));
+    CU_ASSERT_TRUE(lt->eq_function(lt->last->val, int_elem(10))); 
 
     ioopm_linked_list_destroy(lt);
 }
 
 void test_get_value(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     // Insert 10 values (0-9).
     for (int i = 0; i < 10; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
 
     // Check that values are correct.
     for (int i = 0; i < 10; i++)
     {
-        CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, i), i);
+        CU_ASSERT_TRUE(lt->eq_function(ioopm_linked_list_get(lt, i), int_elem(i)));
     }
 
     ioopm_linked_list_destroy(lt);
@@ -115,42 +118,42 @@ void test_get_value(void)
 
 void test_insert_link_list(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     // Insert into list: 0->1->2->...->9->NULL.
     for (int i = 0; i < 10; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
 
-    ioopm_linked_list_insert(lt, 3, 100);
+    ioopm_linked_list_insert(lt, 3, int_elem(100));
     // Now list looks like: 0->1->2->100->...->9->NULL.
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 2), 2);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 3), 100);
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 4), 3);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 2).val, 2);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 3).val, 100);
+    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 4).val, 3);
 
     ioopm_linked_list_destroy(lt);
 }
 
 void test_remove_elem_link_list(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
-    ioopm_linked_list_append(lt, 200);
-    CU_ASSERT_TRUE(ioopm_linked_list_contains(lt, 200));
+    ioopm_linked_list_append(lt, int_elem(200));
+    CU_ASSERT_TRUE(ioopm_linked_list_contains(lt, int_elem(200)));
     ioopm_linked_list_remove(lt, 0);
-    CU_ASSERT_FALSE(ioopm_linked_list_contains(lt, 200));
+    CU_ASSERT_FALSE(ioopm_linked_list_contains(lt, int_elem(200)));
 
     ioopm_linked_list_destroy(lt);
 }
 
 void test_link_list_size(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     for (int i = 0; i < 10; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
     CU_ASSERT_EQUAL(ioopm_linked_list_size(lt), 10);
 
@@ -159,11 +162,11 @@ void test_link_list_size(void)
 
 void test_linked_list_empty(void)
 {  
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     CU_ASSERT_TRUE(ioopm_linked_list_is_empty(lt));
 
-    ioopm_linked_list_append(lt, 10);
+    ioopm_linked_list_append(lt, int_elem(10));
     CU_ASSERT_FALSE(ioopm_linked_list_is_empty(lt));
 
     ioopm_linked_list_destroy(lt);
@@ -171,11 +174,11 @@ void test_linked_list_empty(void)
 
 void test_clear_link_list(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     for (int i = 0; i < 10; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
     ioopm_linked_list_clear(lt);
 
@@ -192,14 +195,14 @@ void test_clear_link_list(void)
  * 
  * 
 */
-bool all_values_are_less_then_10(int key, int *value, void *extra)
+bool all_values_are_less_then_10(elem_t key, elem_t value, void *extra)
 {
-    return *value < 10;
+    return value.val < 10;
 }
 
-bool any_value_is_x(int key, int *value, void *x)
+bool any_value_is_x(elem_t key, elem_t value, void *x)
 {
-    return *value == (int *) x;
+    return value.val & (size_t) x;
 }
 /**
  * 
@@ -208,22 +211,23 @@ bool any_value_is_x(int key, int *value, void *x)
  * 
 */
 
-void add_5_to_all_values(int key, int *value, void *extra)
+void add_5_to_all_values(elem_t key, elem_t *value, void *extra)
 {
-    *value = *value + 5;
+    int added_value = value->val;
+    value->val = added_value + 5;
 }
 
 void test_linked_list_show_all(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     for (int i = 0; i < 5; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
     
     CU_ASSERT_TRUE(ioopm_linked_list_all(lt, all_values_are_less_then_10, NULL));
-    ioopm_linked_list_append(lt, 150);
+    ioopm_linked_list_append(lt, int_elem(150));
     CU_ASSERT_FALSE(ioopm_linked_list_all(lt, all_values_are_less_then_10, NULL));
 
     ioopm_linked_list_destroy(lt);
@@ -231,35 +235,35 @@ void test_linked_list_show_all(void)
 
 void test_linked_list_any(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
-    CU_ASSERT_FALSE(ioopm_linked_list_any(lt, any_value_is_x, 10));
+    CU_ASSERT_FALSE(ioopm_linked_list_any(lt, any_value_is_x, (void *) 10));
 
     for (int i = 8; i < 12; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
 
-    CU_ASSERT_TRUE(ioopm_linked_list_any(lt, any_value_is_x, 10));
+    CU_ASSERT_TRUE(ioopm_linked_list_any(lt, any_value_is_x, (void *) 10));
 
     ioopm_linked_list_destroy(lt);
 }
 
 void test_link_list_apply_to_all(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
     for (size_t i = 0; i < 5; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
 
-    CU_ASSERT_EQUAL(lt->last->val, 4);
-    CU_ASSERT_EQUAL(lt->first->val, 0);
+    CU_ASSERT_TRUE(lt->eq_function(lt->last->val, int_elem(4)));
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->next->val, int_elem(0)));
 
     ioopm_linked_list_apply_to_all(lt, add_5_to_all_values, NULL);
     
-    CU_ASSERT_EQUAL(lt->last->val, 9);
-    CU_ASSERT_EQUAL(lt->first->val, 5);
+    CU_ASSERT_TRUE(lt->eq_function(lt->last->val, int_elem(9)));
+    CU_ASSERT_TRUE(lt->eq_function(lt->first->next->val, int_elem(5)));
     
     ioopm_linked_list_destroy(lt);
 }

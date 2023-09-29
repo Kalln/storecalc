@@ -4,17 +4,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "common.h"
 
-typedef struct elem elem_t;
-struct elem 
+typedef struct link link_t;
+union elem
 {
+    char *str;
     int val;
-    elem_t *next;
+    void *void_ptr;
 };
+
+struct link 
+{
+    elem_t val;
+    link_t *next;
+};
+
 struct ioopm_list_iterator
 {
     ioopm_list_t *list;
-    elem_t **current;
+    link_t **current;
 };
 
 int init_suite(void) 
@@ -35,13 +44,13 @@ int clean_suite(void)
 
 void test_create_iter(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
-    ioopm_linked_list_append(lt, 2);
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
+    ioopm_linked_list_append(lt, int_elem(2));
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
     
     CU_ASSERT_PTR_NOT_NULL(iter);
-    elem_t *elem = *(iter->current);
-    CU_ASSERT_EQUAL(elem->val, 2);
+    link_t *elem = *(iter->current);
+    CU_ASSERT_TRUE(int_eq(elem->val, int_elem(2)));
     
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);
@@ -49,13 +58,13 @@ void test_create_iter(void)
 
 void test_iter_has_next(void)
 {
-    ioopm_list_t *list = ioopm_linked_list_create();
+    ioopm_list_t *list = ioopm_linked_list_create(int_eq);
     ioopm_list_iterator_t *iter = ioopm_list_iterator(list);
     
     CU_ASSERT_FALSE(ioopm_iterator_has_next(iter));
-    ioopm_linked_list_append(list, 2);
+    ioopm_linked_list_append(list, int_elem(2));
     CU_ASSERT_FALSE(ioopm_iterator_has_next(iter));
-    ioopm_linked_list_append(list, 3);
+    ioopm_linked_list_append(list, int_elem(3));
     CU_ASSERT_TRUE(ioopm_iterator_has_next(iter));
     
     ioopm_iterator_destroy(iter);
@@ -64,15 +73,15 @@ void test_iter_has_next(void)
 
 void test_iter_next(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
     for (size_t i = 0; i < 3; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
     
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
-    CU_ASSERT_EQUAL(ioopm_iterator_next(iter), 1);
-    CU_ASSERT_EQUAL(ioopm_iterator_next(iter), 2);
+    CU_ASSERT_TRUE(int_eq(ioopm_iterator_next(iter), int_elem(1)));
+    CU_ASSERT_TRUE(int_eq(ioopm_iterator_next(iter), int_elem(2)));
     
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);
@@ -80,7 +89,7 @@ void test_iter_next(void)
 
 void test_iter_remove(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
 
     ioopm_iterator_destroy(iter);
@@ -89,18 +98,18 @@ void test_iter_remove(void)
 
 void test_iter_insert(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
     
     for (int i = 0; i < 10; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
     
     ioopm_iterator_next(iter);
-    ioopm_iterator_insert(iter, 200); // hade lt istället för iter, fungerar nu
+    ioopm_iterator_insert(iter, int_elem(200)); // hade lt istället för iter, fungerar nu
 
-    CU_ASSERT_EQUAL(ioopm_linked_list_get(lt, 1), 200);
+    CU_ASSERT_TRUE(int_eq(ioopm_linked_list_get(lt, 1), int_elem(200)));
     
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);
@@ -108,19 +117,19 @@ void test_iter_insert(void)
 
 void test_iter_reset(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
     for (size_t i = 0; i < 3; i++)
     {
-        ioopm_linked_list_append(lt, i);
+        ioopm_linked_list_append(lt, int_elem(i));
     }
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
-    CU_ASSERT_EQUAL((*(iter->current))->val, 0);
+    CU_ASSERT_TRUE(int_eq((*(iter->current))->val, int_elem(0)));
     ioopm_iterator_next(iter);
-    CU_ASSERT_EQUAL((*(iter->current))->val, 1);
+    CU_ASSERT_TRUE(int_eq((*(iter->current))->val, int_elem(1)));
     
     ioopm_iterator_reset(iter); // Vi förde med lt istället för iter
     
-    CU_ASSERT_EQUAL((*(iter->current))->val, 0);
+    CU_ASSERT_TRUE(int_eq((*(iter->current))->val, int_elem(0)));
     
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);
@@ -128,20 +137,20 @@ void test_iter_reset(void)
 
 void test_current(void)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
     for (size_t i = 0; i < 5; i++)
     {
-        ioopm_linked_list_append(lt, 5*i);
+        ioopm_linked_list_append(lt, int_elem(5*i));
     }
     ioopm_iterator_next(iter);
-    CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 5);
+    CU_ASSERT_TRUE(int_eq(ioopm_iterator_current(iter), int_elem(5)));
 
     ioopm_iterator_next(iter);
-    CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 10);
+    CU_ASSERT_TRUE(int_eq(ioopm_iterator_current(iter), int_elem(10)));
 
     ioopm_iterator_next(iter);
-    CU_ASSERT_EQUAL(ioopm_iterator_current(iter), 15);
+    CU_ASSERT_TRUE(int_eq(ioopm_iterator_current(iter), int_elem(15)));
     
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);

@@ -3,8 +3,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
+#include "common.h"
 
 typedef struct link link_t;
+
+
+
 union elem
 {
     char *str;
@@ -29,6 +33,7 @@ struct list
     link_t *first;
     link_t *last;
     size_t size;
+    ioopm_eq_function eq_function;
 };
 
 /// @brief Creates an element
@@ -74,10 +79,10 @@ void ioopm_linked_list_destroy(ioopm_list_t *lt)
     }
     free(lt);
 }
-ioopm_list_t *ioopm_linked_list_create()
+ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun)
 {
     ioopm_list_t *lt = calloc(1, sizeof(ioopm_list_t));
-    link_t *dummy = element_create(0, NULL);
+    link_t *dummy = element_create(int_elem(0), NULL);
 
     // maybe do lt->first = lt->last = NULL;
     // then we can check if list is empty by checking if first is NULL
@@ -85,6 +90,7 @@ ioopm_list_t *ioopm_linked_list_create()
     lt->first = dummy;
     lt->last = dummy;
     lt->size = 0;
+    lt->eq_function = fun;
 
     return lt;
 }
@@ -151,7 +157,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value)
     }
 }
 
-int ioopm_linked_list_remove(ioopm_list_t *list, int index)
+elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index)
 {
     int size = ioopm_linked_list_size(list);
     check_index_exit(index, size-1); //Does nothing if index is in the correct range
@@ -161,7 +167,7 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
 
     if (list->size == 1) // We need a special case for when we only have one element in the list.
     {
-        link_t *dummy = element_create(0, NULL);
+        link_t *dummy = element_create(int_elem(0), NULL);
         
         list->first = dummy;
         list->last = dummy;
@@ -176,12 +182,12 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index)
     if (list->size < 1) prev_value->next = value_to_remove->next;
 
     list->size -= 1;
-    int val = value_to_remove->val;
+    elem_t val = value_to_remove->val;
     free(value_to_remove);
     return val;
 }
 
-int ioopm_linked_list_get(ioopm_list_t *list, int index)
+elem_t ioopm_linked_list_get(ioopm_list_t *list, int index)
 {
     const size_t size = ioopm_linked_list_size(list);
     check_index_exit(index, size-1); //Does nothing if index is in the correct range
@@ -206,12 +212,13 @@ int ioopm_linked_list_get(ioopm_list_t *list, int index)
     return cursor->val;
 }
 
-bool ioopm_linked_list_contains(ioopm_list_t *list, int element)
+bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element)
 {
+
     link_t *cursor = list->first;
     while (cursor != NULL)
     {
-        if (cursor->val == element) return true;
+        if (list->eq_function(cursor->val, element)) return true;
         cursor = cursor->next;
     }
     
@@ -234,7 +241,7 @@ void ioopm_linked_list_clear(ioopm_list_t *list)
         free(cursor);
         cursor = next;
     }
-    link_t *dummy = element_create(0, NULL);
+    link_t *dummy = element_create(int_elem(0), NULL);
         
     list->first = dummy;
     list->last = dummy;
@@ -244,11 +251,11 @@ void ioopm_linked_list_clear(ioopm_list_t *list)
 bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
 {
     link_t *cursor = list->first;
-    int NOT_USED_KEY = 0; // TODO: Maybe it will be more clear what key does later..?
+    elem_t NOT_USED_KEY = int_elem(0); // TODO: Maybe it will be more clear what key does later..?
 
     while (cursor != NULL)
     {
-        if (!prop(NOT_USED_KEY, &cursor->val, extra)) return false;
+        if (!prop(NOT_USED_KEY, cursor->val, extra)) return false;
         cursor = cursor->next;
     }
 
@@ -257,11 +264,11 @@ bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate prop, void *e
 bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
 {
     link_t *cursor = list->first;
-    int NOT_USED_KEY = 0; // TODO: Maybe it will be more clear what key does later..?
+    elem_t NOT_USED_KEY = int_elem(0); // TODO: Maybe it will be more clear what key does later..?
 
     while (cursor != NULL)
     {
-        if (prop(NOT_USED_KEY, &cursor->val, extra)) return true;
+        if (prop(NOT_USED_KEY, cursor->val, extra)) return true;
         cursor = cursor->next;
     }
 
@@ -271,7 +278,7 @@ bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate prop, void *e
 void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function fun, void *extra)
 {
     link_t *cursor = list->first;
-    int NOT_USED_KEY = 0; // TODO: Maybe it will be more clear what key does later..?
+    elem_t NOT_USED_KEY = int_elem(0); // TODO: Maybe it will be more clear what key does later..?
 
     while (cursor != NULL)
     {
@@ -301,7 +308,7 @@ bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter)
 
 }
 
-int ioopm_iterator_next(ioopm_list_iterator_t *iter)
+elem_t ioopm_iterator_next(ioopm_list_iterator_t *iter)
 {
     // elem_t *elem = *(iter->current);
     // elem = elem->next;
@@ -320,7 +327,7 @@ void ioopm_iterator_destroy(ioopm_list_iterator_t *iter)
     free(iter);
 }
 
-int ioopm_iterator_current(ioopm_list_iterator_t *iter)
+elem_t ioopm_iterator_current(ioopm_list_iterator_t *iter)
 {
     link_t *elem = *(iter->current);
     return elem->val;
@@ -331,10 +338,10 @@ void ioopm_iterator_reset(ioopm_list_iterator_t *iter)
     iter->current = &(iter->list->first->next);
 }
 
-int ioopm_iterator_remove(ioopm_list_iterator_t *iter)
+elem_t ioopm_iterator_remove(ioopm_list_iterator_t *iter)
 {
     link_t *elem_to_remove = *(iter->current);
-    int value_of_elem_remove = elem_to_remove->val;
+    elem_t value_of_elem_remove = elem_to_remove->val;
     ioopm_iterator_reset(iter);
     
     while((*(iter->current))->next != elem_to_remove) ioopm_iterator_next(iter);
@@ -346,7 +353,7 @@ int ioopm_iterator_remove(ioopm_list_iterator_t *iter)
     return value_of_elem_remove;
 }
 
-void ioopm_iterator_insert(ioopm_list_iterator_t *iter, int element)
+void ioopm_iterator_insert(ioopm_list_iterator_t *iter, elem_t element)
 {
     link_t *next_elem = *(iter->current);
     link_t *new_elem = element_create(element, next_elem);

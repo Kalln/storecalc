@@ -4,12 +4,13 @@
 typedef union elem elem_t;
 typedef bool(*ioopm_int_predicate)(elem_t key, elem_t value, void *extra);
 typedef void(*ioopm_apply_int_function)(elem_t key, elem_t *value, void *extra);
+typedef bool(*ioopm_eq_function)(elem_t a, elem_t b);
 typedef struct list ioopm_list_t;
 
 
 /// @brief Creates a new empty list
 /// @return an empty linked list
-ioopm_list_t *ioopm_linked_list_create(void);
+ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function eq_function);
 
 /// @brief Tear down the linked list and return all its memory (but not the memory of the elements)
 /// @param list the list to be destroyed
@@ -18,12 +19,12 @@ void ioopm_linked_list_destroy(ioopm_list_t *list);
 /// @brief Insert at the end of a linked list in O(1) time
 /// @param list the linked list that will be appended
 /// @param value the value to be appended
-void ioopm_linked_list_append(ioopm_list_t *list, int value);
+void ioopm_linked_list_append(ioopm_list_t *list, elem_t value);
 
 /// @brief Insert at the front of a linked list in O(1) time
 /// @param list the linked list that will be prepended to
 /// @param value the value to be prepended
-void ioopm_linked_list_prepend(ioopm_list_t *list, int value);
+void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value);
 
 /// @brief Insert an element into a linked list in O(n) time.
 /// The valid values of index are [0,n] for a list of n elements,
@@ -32,7 +33,7 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, int value);
 /// @param list the linked list that will be extended
 /// @param index the position in the list
 /// @param value the value to be inserted 
-void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value);
+void ioopm_linked_list_insert(ioopm_list_t *list, int index, elem_t value);
 
 /// @brief Remove an element from a linked list in O(n) time.
 /// The valid values of index are [0,n-1] for a list of n elements,
@@ -40,7 +41,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, int index, int value);
 /// @param list the linked list
 /// @param index the position in the list
 /// @return the value removed
-int ioopm_linked_list_remove(ioopm_list_t *list, int index);
+elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index);
 
 /// @brief Retrieve an element from a linked list in O(n) time.
 /// The valid values of index are [0,n-1] for a list of n elements,
@@ -48,13 +49,13 @@ int ioopm_linked_list_remove(ioopm_list_t *list, int index);
 /// @param list the linked list that will be extended
 /// @param index the position in the list
 /// @return the value at the given position
-int ioopm_linked_list_get(ioopm_list_t *list, int index);
+elem_t ioopm_linked_list_get(ioopm_list_t *list, int index);
 
 /// @brief Test if an element is in the list
 /// @param list the linked list
 /// @param element the element sought
 /// @return true if element is in the list, else false
-bool ioopm_linked_list_contains(ioopm_list_t *list, int element);
+bool ioopm_linked_list_contains(ioopm_list_t *list, elem_t element);
 
 /// @brief Lookup the number of elements in the linked list in O(1) time
 /// @param list the linked list

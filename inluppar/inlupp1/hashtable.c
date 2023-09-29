@@ -4,6 +4,7 @@
 #include <string.h>
 #include "linked_list.h"
 #include <stdbool.h>
+#include "common.h"
 
 
 // Karl Widborg Kortelainen & William Paradell
@@ -18,8 +19,8 @@ typedef struct entry entry_t;
 
 struct entry
 {
-    int key;
-    char *value;
+    elem_t key;
+    elem_t value;
     entry_t *next;
 };
 
@@ -27,7 +28,10 @@ struct hash_table
 {
     entry_t *buckets[no_buckets];
     int size;
+    ioopm_hash_function ht_function;
+    ioopm_eq_function eq_function;
 };
+
 
 /// @brief Destroys a value for hashtable.
 void value_destroy(char *val)
@@ -40,7 +44,7 @@ void value_destroy(char *val)
 /// @param val value for the entry.
 /// @param first_entry first entry in the bucket.
 /// @return ptr to new entry.
-static entry_t *entry_create(int key, char *val, entry_t *first_entry)
+static entry_t *entry_create(elem_t key, elem_t val, entry_t *first_entry)
 {
     entry_t *new_entry = calloc(1, sizeof(entry_t));
     new_entry->key = key;
@@ -51,27 +55,30 @@ static entry_t *entry_create(int key, char *val, entry_t *first_entry)
 
 static void entry_destroy(entry_t *entry)
 {
-    if (entry->value != NULL)
+    if (entry->value.str != NULL)
     {
-        value_destroy(entry->value);
+        value_destroy(entry->value.str);
+    } else if (entry->value.void_ptr != NULL)
+    {
+        free(entry->value.void_ptr);
     }
     free(entry);
 }
 
-ioopm_hash_table_t *ioopm_hash_table_create(void)
+ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function)
 {
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
     for (int i = 0; i < no_buckets; i++)
     {
-        entry_t *ent = entry_create(0, NULL, NULL);
+        entry_t *ent = entry_create(0, NULL, NULL); // ska vi tillåta NULL som en del av vår elem_t union? Hur annars skapa dummy entry?
         result->buckets[i] = ent;
     }
     result->size = 0;
+    result->ht_function = hash_function;
 
     return result;
 }
 
-// more effective and itterative version of bucket destroy.
 static void bucket_destroy(entry_t *bucket_to_destroy)
 {
     while (bucket_to_destroy != NULL)
@@ -96,12 +103,12 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 /// @param bucket {entry_t *} - bucket that key mapped to
 /// @param key {int} - key to be checked for in the bucket
 /// @return {entry_t *} - pointer to value with the key: key if it exist otherwise NULL
-static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
+static entry_t *find_previous_entry_for_key(entry_t *bucket, elem_t key, ioopm_eq_function eq)
 {
 
     while (bucket->next != NULL)
     {
-        if (bucket->next->key == key || bucket->next->key > key)
+        if (eq(bucket->next->key, key) || bucket->next->key > key)
         {
             break;
         }
@@ -110,25 +117,28 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, int key)
 
     return bucket;
 }
-/// @brief calculates the bucket in hashtable
-/// @param key {int}. this is used to calculate the bucket.
-/// @return {int} bucket in hashtable.
-static size_t bucket_calc(int key)
+/// @brief Calculates the bucket for a key
+/// @param hash hash function to calculate bucket. IT MUST RETURN POSITIVE VALUE.
+/// @param key key to hash.
+/// @return will return a bucket between 0 and no_buckets.
+static size_t bucket_calc(ioopm_hash_function hash, elem_t key)
 {
     /// since we don't have buckets under 0
-    return key >= 0 ? (key % no_buckets) : ((key % no_buckets) + no_buckets); // korrekt
+    return hash(key) % no_buckets;
+
 }
 
-void ioopm_hash_table_insert(ioopm_hash_table_t *ht, int key, char *value)
+void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t *value)
 {
     /// Calculate the bucket for this entry
-    const size_t bucket = bucket_calc(key);
+    const size_t bucket = bucket_calc(ht->ht_function, key);
 
     /// Search for an existing entry for a key
-    entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key);
+    entry_t *entry = find_previous_entry_for_key(ht->buckets[bucket], key, ht->eq_function);
     entry_t *next = entry->next;
 
     /// Check if the next entry should be updated or not
+    
     if (next != NULL && next->key == key)
     {
         char *old_val = next->value;
@@ -228,7 +238,7 @@ void ioopm_hash_table_clear(ioopm_hash_table_t *ht)
 
 ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
 {
-    ioopm_list_t *lt = ioopm_linked_list_create();
+    ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
 
     
     for (int i = 0; i < no_buckets; i++)
@@ -237,7 +247,7 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
 
         while (cursor != NULL)
         {
-            ioopm_linked_list_append(lt, cursor->key); // Puts the value last in the linked list
+            ioopm_linked_list_append(lt, int_elem(cursor->key)); // Puts the value last in the linked list
             cursor = cursor->next;
         }
     }
