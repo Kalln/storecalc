@@ -177,29 +177,32 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value)
     }
 }
 
-elem_t *ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
+elem_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
 {
     const size_t bucket = bucket_calc(ht->ht_function, key);
-    entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key, ht->ht_function);
+    entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key, ht->eq_function);
 
+    /// If there is no entry for this key, return failure
     if (prev_entry->next == NULL)
     {
 
-        return NULL;
+        return void_elem(NULL);
     }
+    // If there is an entry for this key, remove it and return its value
     entry_t *to_remove = prev_entry->next;
+    
     if (to_remove->value.str != NULL)
     {
         elem_t *val1 = to_remove->value.str;
-        elem_t *val;
-        strcpy(val->str, val1);
+        elem_t val;
+        strcpy(val.str, val1.str); 
         prev_entry->next = to_remove->next;
         free(to_remove);
         ht->size -= 1;
         return val;
     } else
     {
-        elem_t *val = to_remove->value.val;
+        elem_t val = int_elem(to_remove->value.val);
         free(to_remove);
         ht->size -= 1;
         return val;
@@ -288,9 +291,9 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
     return lt;
 }
 
-char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
+elem_t **ioopm_hash_table_values(ioopm_hash_table_t *ht)
 {
-    char **values = calloc(ioopm_hash_table_size(ht), sizeof(char *));
+    elem_t **values = calloc(ioopm_hash_table_size(ht), sizeof(char *));
     int count = 0;
 
     for (int i = 0; i < no_buckets; i++)
@@ -299,8 +302,8 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
 
         while (cursor != NULL)
         {
-            char *str_ptr = cursor->value;
-            values[count++] = str_ptr;
+            elem_t *elem_ptr = &cursor->value;
+            values[count++] = elem_ptr;
             cursor = cursor->next;
         }
     }
@@ -308,7 +311,7 @@ char **ioopm_hash_table_values(ioopm_hash_table_t *ht)
     return values;
 }
 
-void ioopm_destroy_hash_table_values(char **values)
+void ioopm_destroy_hash_table_values(elem_t **values)
 {
     const size_t length = strlen(*values) + 1;
 
@@ -319,25 +322,25 @@ void ioopm_destroy_hash_table_values(char **values)
     free(values);
 }
 
-bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
+bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key)
 {
-    const size_t bucket_key = bucket_calc(key);
+    const size_t bucket_key = bucket_calc(ht->ht_function, key);
     entry_t *cursor = ht->buckets[bucket_key]->next;
 
     // Vi sorterar nycklarana i storleksordning i våra buckets,
     // så vi behöver nu som max bara kolla en bucket upp till storleken av nyckeln vi kollar
     while (cursor != NULL)
     {
-        int current_key = cursor->key;
+        elem_t current_key = cursor->key;
 
-        if (key == current_key)
+        if (ht->eq_function(current_key, key))
         {
             return true;
         }
-        else if (key < current_key)
-        {
-            return false;
-        }
+        // else if (key < current_key)
+        // {
+        //     return false;
+        // }
 
         cursor = cursor->next;
     }
@@ -345,37 +348,21 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, int key)
     return false;
 }
 
-bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, char *value)
+bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t value)
 {
-    char **ht_val = ioopm_hash_table_values(ht);
+    elem_t **ht_val = ioopm_hash_table_values(ht);
     const size_t size = ioopm_hash_table_size(ht);
-
-    if (value == NULL)
-    {
-        for (size_t i = 0; i < size; i++)
-        {
-
-            // We are looking for NULL (=0).
-            // Therefore we only have to compare
-            if (ht_val[i][0] == 0)
-            {
-                free(ht_val);
-                return true;
-            }
-        }
-        free(ht_val);
-        return false;
-    }
 
     for (size_t i = 0; i < size; i++)
     {
-        if (strcmp(ht_val[i], value) == 0)
+        if (ht->eq_function(*ht_val[i], value))
         {
-            free(ht_val);
+            ioopm_destroy_hash_table_values(ht_val);
             return true;
         }
     }
-    free(ht_val);
+
+    ioopm_destroy_hash_table_values(ht_val);
     return false;
 }
 
