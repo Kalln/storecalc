@@ -25,7 +25,7 @@ int clean_suite(void)
 // Example hash:
 int example_hash_function(elem_t elem)
 {
-    return 5 * elem.data.val;
+    return elem.data.val;
 }
 
 int example_hash_function_str(elem_t elem)
@@ -72,7 +72,7 @@ void test_insert_once(void)
 
 void test_ht_value_NULL()
 {
-    ioopm_hash_table_t *ht = ioopm_hash_table_create(example_hash_function, str_eq);
+    ioopm_hash_table_t *ht = ioopm_hash_table_create(example_hash_function, int_eq);
     ioopm_hash_table_insert(ht, int_elem(0), void_elem(NULL));
     CU_ASSERT_EQUAL(ioopm_hash_table_lookup(ht, int_elem(0)).success, true);
     //CU_ASSERT_TRUE(int_eq(ioopm_hash_table_lookup(ht, 0).value, int_elem(NULL)));
@@ -82,10 +82,12 @@ void test_ht_value_NULL()
 void test_negative_key()
 {
     ioopm_hash_table_t *h = ioopm_hash_table_create(example_hash_function, str_eq);
-    char *p = strdup("test");
-    ioopm_hash_table_insert(h, int_elem(-1), ptr_elem(p));
-    CU_ASSERT_EQUAL(ioopm_hash_table_lookup(h, int_elem(-1)).success, true);
-    CU_ASSERT_TRUE(str_eq(ioopm_hash_table_lookup(h, int_elem(-1)).value, ptr_elem(p)));
+
+    ioopm_hash_table_insert(h, ptr_elem("hello"), ptr_elem("test"));
+
+    CU_ASSERT_TRUE(ioopm_hash_table_lookup(h, ptr_elem("hello")).success);
+    CU_ASSERT_TRUE(str_eq(ioopm_hash_table_lookup(h, ptr_elem("hello")).value, ptr_elem("test")));
+
     ioopm_hash_table_destroy(h);
 }
 
@@ -106,9 +108,13 @@ void test_remove_multiple_entries()
 {
     ioopm_hash_table_t *h = ioopm_hash_table_create(example_hash_function, str_eq);
 
-    elem_t k1 = int_elem(0);
+/*     elem_t k1 = int_elem(0);
     elem_t k2 = int_elem(17);
-    elem_t k3 = int_elem(34);
+    elem_t k3 = int_elem(34); */
+    elem_t k1 = ptr_elem("");
+    elem_t k2 = ptr_elem("hej");
+    elem_t k3  = ptr_elem("hejhejhej");
+
     elem_t v1 = ptr_elem("hej");
     elem_t v2 = ptr_elem("apa");
     elem_t v3 = ptr_elem("hus");
@@ -118,7 +124,7 @@ void test_remove_multiple_entries()
     ioopm_hash_table_insert(h, k2, v2);
     ioopm_hash_table_insert(h, k3, v3);
 
-    CU_ASSERT_TRUE(str_eq(ioopm_hash_table_remove(h, int_elem(51)), v4));
+    CU_ASSERT_TRUE(str_eq(ioopm_hash_table_remove(h, ptr_elem("notexisting")), v4));
     CU_ASSERT_TRUE(str_eq(ioopm_hash_table_remove(h, k1),  v1));
     CU_ASSERT_TRUE(str_eq(ioopm_hash_table_remove(h, k2), v2));
     CU_ASSERT_TRUE(str_eq(ioopm_hash_table_remove(h, k3), v3));

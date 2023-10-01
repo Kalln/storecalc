@@ -39,7 +39,7 @@ void elem_destroy(elem_t val)
 {
     if (val.type == ELEM_STR)
     {
-        free(val.data.str);
+        //free(val.data.str);
     }
     else if (val.type == ELEM_V_PTR)
     {
