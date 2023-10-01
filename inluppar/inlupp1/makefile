@@ -16,16 +16,16 @@ myprog.final: file1.o file2.o file3.o
 	
 
 # TESTS
-test1: hashtable_tests.o hashtable.o linked_list.o
+test1: hashtable_tests.o hashtable.o linked_list.o common.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
 test: test1
 	./test1
 
-lt_test: linked_list_tests.o linked_list.o
+lt_test: linked_list_tests.o linked_list.o common.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
-iter_test: iterator_tests.o linked_list.o
+iter_test: iterator_tests.o linked_list.o common.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
 
 memtest: test1

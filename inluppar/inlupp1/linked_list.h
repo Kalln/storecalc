@@ -1,7 +1,8 @@
 #pragma once
 #include <stdbool.h>
+#include "common.h"
 
-typedef union elem elem_t;
+//typedef union elem elem_t;
 typedef bool(*ioopm_int_predicate)(elem_t key, elem_t value, void *extra);
 typedef void(*ioopm_apply_int_function)(elem_t key, elem_t *value, void *extra);
 typedef bool(*ioopm_eq_function)(elem_t a, elem_t b);

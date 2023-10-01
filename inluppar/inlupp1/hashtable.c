@@ -34,11 +34,17 @@ struct hash_table
     ioopm_eq_function eq_function;
 };
 
-
 /// @brief Destroys a value for hashtable.
-void value_destroy(char *val)
+void elem_destroy(elem_t val)
 {
-    free(val);
+    if (val.type == ELEM_STR)
+    {
+        free(val.data.str);
+    }
+    else if (val.type == ELEM_V_PTR)
+    {
+        free(val.data.void_ptr);
+    }
 }
 
 /// @brief Creates an entry for hashtable.
@@ -57,17 +63,12 @@ static entry_t *entry_create(elem_t key, elem_t val, entry_t *first_entry)
 
 static void entry_destroy(entry_t *entry)
 {
-    if (entry->value.str != NULL)
-    {
-        value_destroy(entry->value.str);
-    } else if (entry->value.void_ptr != NULL)
-    {
-        free(entry->value.void_ptr);
-    }
+    elem_destroy(entry->key);
+    elem_destroy(entry->value);
     free(entry);
 }
 
-ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function)
+ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function, ioopm_eq_function eq_fun)
 {
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
     for (int i = 0; i < no_buckets; i++)
@@ -77,6 +78,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function)
     }
     result->size = 0;
     result->ht_function = hash_function;
+    result->eq_function = eq_fun;
 
     return result;
 }
@@ -156,16 +158,16 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value)
     {
         elem_t old_val = next->value;
 
-        if (next->key.str != NULL && value.str != NULL) // If we handle a string
+        if (next->key.type == ELEM_STR && value.type == ELEM_STR) // If we handle a string
         {
-        elem_t *new_val = calloc(strlen(value.str) + 1, sizeof(elem_t));
-        strcpy(new_val->str, value.str);
-        next->value.str = new_val->str;
-        free(old_val.str);
+        elem_t *new_val = calloc(strlen(value.data.str) + 1, sizeof(elem_t));
+        strcpy(new_val->data.str, value.data.str);
+        next->value.data.str = new_val->data.str;
+        free(old_val.data.str);
         }
-        else if (next->key.val != NULL) //If we handle an integer value
+        else if (next->key.type == ELEM_INT) //If we handle an integer value
         {
-            old_val.val = value.val;
+            old_val.data.val = value.data.val;
         }
     }
     else
@@ -185,24 +187,24 @@ elem_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
     /// If there is no entry for this key, return failure
     if (prev_entry->next == NULL)
     {
-
         return void_elem(NULL);
     }
     // If there is an entry for this key, remove it and return its value
     entry_t *to_remove = prev_entry->next;
+    enum elem_type type = to_remove->key.type;
     
-    if (to_remove->value.str != NULL)
+    if (type == ELEM_STR)
     {
-        elem_t *val1 = to_remove->value.str;
-        elem_t val;
-        strcpy(val.str, val1.str); 
+        elem_t val1 = ptr_elem(to_remove->value.data.str);
+        elem_t val = ptr_elem("");
+        strcpy(val.data.str, val1.data.str); 
         prev_entry->next = to_remove->next;
-        free(to_remove);
+        entry_destroy(to_remove);
         ht->size -= 1;
         return val;
     } else
     {
-        elem_t val = int_elem(to_remove->value.val);
+        elem_t val = int_elem(to_remove->value.data.val);
         free(to_remove);
         ht->size -= 1;
         return val;
@@ -214,15 +216,19 @@ option_t ioopm_hash_table_lookup(ioopm_hash_table_t *ht, elem_t key)
     const size_t bucket = bucket_calc(ht->ht_function, key);
 
     /// Find the previous entry for key
-    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket], key, ht->ht_function);
+    entry_t *tmp = find_previous_entry_for_key(ht->buckets[bucket], key, ht->eq_function);
     entry_t *next = tmp->next;
 
     if (next && ht->eq_function(next->key, key))
     {
-        
+        if (next->value.type == ELEM_STR)
+        {
+            return Success(next->value);
+        }
+        else return Success(next->value);
         /// If entry was found, return its value...
         // TODO: Kolla om denna fungerar, kan behöva lägga till för fler
-        return Success(next->value.str);
+        return Success(next->value);
     }
     else
     {
@@ -291,9 +297,9 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht)
     return lt;
 }
 
-elem_t **ioopm_hash_table_values(ioopm_hash_table_t *ht)
+elem_t *ioopm_hash_table_values(ioopm_hash_table_t *ht)
 {
-    elem_t **values = calloc(ioopm_hash_table_size(ht), sizeof(char *));
+    elem_t *values = calloc(ioopm_hash_table_size(ht), sizeof(elem_t));
     int count = 0;
 
     for (int i = 0; i < no_buckets; i++)
@@ -302,7 +308,7 @@ elem_t **ioopm_hash_table_values(ioopm_hash_table_t *ht)
 
         while (cursor != NULL)
         {
-            elem_t *elem_ptr = &cursor->value;
+            elem_t elem_ptr = cursor->value;
             values[count++] = elem_ptr;
             cursor = cursor->next;
         }
@@ -311,13 +317,13 @@ elem_t **ioopm_hash_table_values(ioopm_hash_table_t *ht)
     return values;
 }
 
-void ioopm_destroy_hash_table_values(elem_t **values)
+void ioopm_destroy_hash_table_values(elem_t *values)
 {
-    const size_t length = strlen(*values) + 1;
-
+    //const size_t length = strlen(values) + 1;
+    size_t length = 0;
     for (size_t i = 0; i < length; i++)
     {
-        free(values[i]);
+        free(&values[i]);
     }
     free(values);
 }
@@ -350,12 +356,12 @@ bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key)
 
 bool ioopm_hash_table_has_value(ioopm_hash_table_t *ht, elem_t value)
 {
-    elem_t **ht_val = ioopm_hash_table_values(ht);
+    elem_t *ht_val = ioopm_hash_table_values(ht);
     const size_t size = ioopm_hash_table_size(ht);
 
     for (size_t i = 0; i < size; i++)
     {
-        if (ht->eq_function(*ht_val[i], value))
+        if (ht->eq_function(ht_val[i], value))
         {
             ioopm_destroy_hash_table_values(ht_val);
             return true;

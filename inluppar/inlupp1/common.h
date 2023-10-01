@@ -1,15 +1,38 @@
 #pragma once
+#include <stdbool.h>
 
-#define int_elem(x) (elem_t) { .val=(x) }
-#define ptr_elem(x) (elem_t) { .str=(x) }
-#define void_elem(x) (elem_t) { .void_ptr=(x) }
+#define int_elem(x) (elem_t) { .data.val=(x),       .type=ELEM_INT }
+#define ptr_elem(x) (elem_t) { .data.str=(x),       .type=ELEM_STR }
+#define void_elem(x) (elem_t) { .data.void_ptr=(x), .type=ELEM_V_PTR }
 
-typedef union elem
+typedef struct elem elem_t;
+
+/// @brief INT -> 0, STR -> 1, V_PTR -> 2
+enum elem_type 
 {
-    char *str;
-    int val;
-    void *void_ptr;
-} elem_t;
+    ELEM_INT,
+    ELEM_STR,
+    ELEM_V_PTR
+};
+
+
+struct elem {
+    enum elem_type type;
+    union {
+        char *str;
+        int val;
+        void *void_ptr;
+    } data;
+};
+
+// typedef union elem
+// {
+//     char *str;
+//     int val;
+//     void *void_ptr;
+    
+// } elem_t;
+
 
 typedef int (*ioopm_hash_function)(elem_t key);
 

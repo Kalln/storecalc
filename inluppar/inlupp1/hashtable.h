@@ -33,7 +33,7 @@ struct option
 
 /// @brief Create a new hash table
 /// @return A new empty hash table
-ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function);
+ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function, ioopm_eq_function eq_function);
 
 /// @brief Delete a hash table and free its memory
 /// @param ht a hash table to be deleted
@@ -79,11 +79,11 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht);
 /// @brief return the values for all entries in a hash map (in no particular order, but same as ioopm_hash_table_keys)
 /// @param h hash table operated upon
 /// @return an array of values for hash table h
-elem_t **ioopm_hash_table_values(ioopm_hash_table_t *ht);
+elem_t *ioopm_hash_table_values(ioopm_hash_table_t *ht);
 
 /// @brief free all values in the array created by ioopm_hash_table_values
 /// @param values array to be freed
-void ioopm_destroy_hash_table_values(elem_t **values);
+void ioopm_destroy_hash_table_values(elem_t *values);
 
 /// @brief check if a hash table has an entry with a given key
 /// @param h hash table operated upon

@@ -7,15 +7,6 @@
 
 typedef struct link link_t;
 
-
-
-union elem
-{
-    char *str;
-    int val;
-    void *void_ptr;
-};
-
 struct ioopm_list_iterator
 {
     ioopm_list_t *list;
