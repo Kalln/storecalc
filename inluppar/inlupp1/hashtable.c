@@ -34,18 +34,18 @@ struct hash_table
     ioopm_eq_function eq_function;
 };
 
-/// @brief Destroys a value for hashtable.
-void elem_destroy(elem_t val)
-{
-    if (val.type == ELEM_STR && val.data.str != NULL)
-    {
-        free(val.data.str);
-    }
-    else if (val.type == ELEM_V_PTR && val.data.void_ptr != NULL)
-    {
-        free(val.data.void_ptr);
-    }
-}
+// /// @brief Destroys a value for hashtable.
+// void elem_destroy(elem_t val)
+// {
+//     if (val.type == ELEM_STR && val.data.str != NULL)
+//     {
+//         free(val.data.str);
+//     }
+//     else if (val.type == ELEM_V_PTR && val.data.void_ptr != NULL)
+//     {
+//         free(val.data.void_ptr);
+//     }
+// }
 
 /// @brief Creates an entry for hashtable.
 /// @param key key for new entry, (expects that there is no previous entry of this key).
@@ -54,47 +54,15 @@ void elem_destroy(elem_t val)
 /// @return ptr to new entry.
 static entry_t *entry_create(elem_t key, elem_t val, entry_t *first_entry)
 {
-    elem_t actual_key;
-    elem_t actual_val;
-
-    if (key.type == ELEM_STR && key.data.str != NULL) 
-    {
-        actual_key.data.str = calloc(1, sizeof(char *));
-        strcpy(actual_key.data.str, key.data.str);
-    } 
-    else if (key.type == ELEM_V_PTR && key.data.void_ptr != NULL)
-    {
-        actual_key.data.void_ptr = calloc(1, sizeof(void *));
-    } else
-    {
-        actual_key = key;
-    }
-
-    
-    if (val.type == ELEM_STR && val.data.str != NULL) 
-    {
-        actual_val.data.str = calloc(1, sizeof(char *));
-        strcpy(actual_val.data.str, val.data.str);
-    } 
-    else if (key.type == ELEM_V_PTR && val.data.void_ptr != NULL)
-    {
-        actual_val.data.void_ptr = calloc(1, sizeof(void *));
-    } else
-    {
-        actual_val = val;
-    }
-
     entry_t *new_entry = calloc(1, sizeof(entry_t));
-    new_entry->key = actual_key;
-    new_entry->value = actual_val;
+    new_entry->key = key;
+    new_entry->value = val;
     new_entry->next = first_entry;
     return new_entry;
 }
 
 static void entry_destroy(entry_t *entry)
 {
-    elem_destroy(entry->key);
-    elem_destroy(entry->value);
     free(entry);
 }
 
@@ -188,19 +156,7 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value)
     
     if (next != NULL && ht->eq_function(next->key, key))
     {
-        elem_t old_val = next->value;
-
-        if (next->key.type == ELEM_STR && value.type == ELEM_STR) // If we handle a string
-        {
-        elem_t *new_val = calloc(strlen(value.data.str) + 1, sizeof(elem_t));
-        strcpy(new_val->data.str, value.data.str);
-        next->value.data.str = new_val->data.str;
-        free(old_val.data.str);
-        }
-        else if (next->key.type == ELEM_INT) //If we handle an integer value
-        {
-            old_val.data.val = value.data.val;
-        }
+        next->value = value;
     }
     else
     {
@@ -217,29 +173,30 @@ elem_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
     entry_t *prev_entry = find_previous_entry_for_key(ht->buckets[bucket], key, ht->eq_function);
 
     /// If there is no entry for this key, return failure
-    if (prev_entry->next == NULL)
+    if (prev_entry == NULL || prev_entry->next == NULL)
     {
         return void_elem(NULL);
     }
     // If there is an entry for this key, remove it and return its value
     entry_t *to_remove = prev_entry->next;
     enum elem_type type = to_remove->key.type;
+
+    // De-refrence pointer and set new entry
+    prev_entry->next = to_remove->next;
+    
+    ht->size -= 1;
     
     if (type == ELEM_STR)
     {
-        elem_t val1 = ptr_elem(to_remove->value.data.str);
-        //elem_t val;
+        elem_t val = ptr_elem(to_remove->value.data.str);
+        free(to_remove);
+        return val;
 
-        //strcpy(val.data.str, val1.data.str);
-        prev_entry->next = to_remove->next;
-        entry_destroy(to_remove);
-        ht->size -= 1;
-        return val1;
     } else
     {
-        elem_t val = int_elem(to_remove->value.data.val);
+        elem_t val;
+        val = int_elem(to_remove->value.data.val);
         free(to_remove);
-        ht->size -= 1;
         return val;
     }
 }
