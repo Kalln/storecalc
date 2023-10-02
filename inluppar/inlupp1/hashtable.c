@@ -95,10 +95,11 @@ static void bucket_destroy(entry_t *bucket_to_destroy)
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 {
-    for (size_t i = 0; i < no_buckets; i++)
+    /* for (size_t i = 0; i < no_buckets; i++)
     {
         bucket_destroy(ht->buckets[i]);
-    }
+    } */
+    // TODO FREE ALL VALUES
     free(ht);
     return;
 }
@@ -196,12 +197,13 @@ elem_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key)
     if (type == ELEM_STR)
     {
         elem_t val1 = ptr_elem(to_remove->value.data.str);
-        elem_t val = ptr_elem("");
-        strcpy(val.data.str, val1.data.str); 
+        //elem_t val;
+
+        //strcpy(val.data.str, val1.data.str);
         prev_entry->next = to_remove->next;
         entry_destroy(to_remove);
         ht->size -= 1;
-        return val;
+        return val1;
     } else
     {
         elem_t val = int_elem(to_remove->value.data.val);
