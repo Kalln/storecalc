@@ -349,8 +349,7 @@ bool any_key_is_divisible_by_two(elem_t key, elem_t unused, void *x)
 /// @return new string = str1 + str2 that is allocated on the heap.
 char *concat_string(char *str1, char *str2)
 {
-    int str_len = strlen(str1) + strlen(str2) + 1;
-    char *new_str = calloc(str_len, sizeof(char *));
+    char *new_str = calloc(strlen(str1) + strlen(str2) + 1, sizeof(char));
     strcpy(new_str, str1);
     strcat(new_str, str2);
     return new_str;
@@ -372,8 +371,6 @@ void apply_string_to_value(elem_t key, elem_t *value, void *string_add)
     }
 
     value->data.str = new_val;
-
-    free(new_val);
 }
 
 void test_hash_table_all(void)
