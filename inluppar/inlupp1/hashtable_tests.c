@@ -369,8 +369,11 @@ void apply_string_to_value(elem_t key, elem_t *value, void *string_add)
         printf("Error: could not allocate memory for new value in apply_string_to_value.\n");
         return;
     }
-
+    
     value->data.str = new_val;
+    //free(&old_ptr);
+
+    
 }
 
 void test_hash_table_all(void)
@@ -416,6 +419,12 @@ void test_hash_table_any(void)
     ioopm_hash_table_destroy(ht);
 }
 
+void free_all_elements(elem_t key, elem_t *value, void *xtra) {
+    if (value->type == ELEM_V_PTR || value->type == ELEM_STR) {
+        free(value->data.void_ptr);
+    }
+}
+
 void test_hash_table_apply_all(void) 
 {
     ioopm_hash_table_t *ht = ioopm_hash_table_create(example_hash_function, int_eq);
@@ -443,7 +452,7 @@ void test_hash_table_apply_all(void)
         elem_t entry_val = ioopm_hash_table_lookup(ht, int_elem(keys[i])).value;
         CU_ASSERT_TRUE(str_eq(entry_val, ptr_elem("helloworld")));
     }
-
+    ioopm_hash_table_apply_to_all(ht, free_all_elements, NULL);
     ioopm_hash_table_destroy(ht);
 }
 
