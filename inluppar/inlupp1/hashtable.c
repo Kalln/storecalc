@@ -37,11 +37,11 @@ struct hash_table
 /// @brief Destroys a value for hashtable.
 void elem_destroy(elem_t val)
 {
-    if (val.type == ELEM_STR)
+    if (val.type == ELEM_STR && val.data.str != NULL)
     {
-        //free(val.data.str);
+        free(val.data.str);
     }
-    else if (val.type == ELEM_V_PTR)
+    else if (val.type == ELEM_V_PTR && val.data.void_ptr != NULL)
     {
         free(val.data.void_ptr);
     }
@@ -54,9 +54,39 @@ void elem_destroy(elem_t val)
 /// @return ptr to new entry.
 static entry_t *entry_create(elem_t key, elem_t val, entry_t *first_entry)
 {
+    elem_t actual_key;
+    elem_t actual_val;
+
+    if (key.type == ELEM_STR && key.data.str != NULL) 
+    {
+        actual_key.data.str = calloc(1, sizeof(char *));
+        strcpy(actual_key.data.str, key.data.str);
+    } 
+    else if (key.type == ELEM_V_PTR && key.data.void_ptr != NULL)
+    {
+        actual_key.data.void_ptr = calloc(1, sizeof(void *));
+    } else
+    {
+        actual_key = key;
+    }
+
+    
+    if (val.type == ELEM_STR && val.data.str != NULL) 
+    {
+        actual_val.data.str = calloc(1, sizeof(char *));
+        strcpy(actual_val.data.str, val.data.str);
+    } 
+    else if (key.type == ELEM_V_PTR && val.data.void_ptr != NULL)
+    {
+        actual_val.data.void_ptr = calloc(1, sizeof(void *));
+    } else
+    {
+        actual_val = val;
+    }
+
     entry_t *new_entry = calloc(1, sizeof(entry_t));
-    new_entry->key = key;
-    new_entry->value = val;
+    new_entry->key = actual_key;
+    new_entry->value = actual_val;
     new_entry->next = first_entry;
     return new_entry;
 }
@@ -71,7 +101,7 @@ static void entry_destroy(entry_t *entry)
 ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function hash_function, ioopm_eq_function eq_fun)
 {
     ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
-    for (int i = 0; i < no_buckets; i++)
+    for (size_t i = 0; i < no_buckets; i++)
     {
         entry_t *ent = entry_create(int_elem(0), ptr_elem(NULL), NULL);
         result->buckets[i] = ent;
@@ -95,10 +125,11 @@ static void bucket_destroy(entry_t *bucket_to_destroy)
 
 void ioopm_hash_table_destroy(ioopm_hash_table_t *ht)
 {
-    /* for (size_t i = 0; i < no_buckets; i++)
+    // FIXME 
+    for (size_t i = 0; i < no_buckets; i++)
     {
         bucket_destroy(ht->buckets[i]);
-    } */
+    }
     // TODO FREE ALL VALUES
     free(ht);
     return;
