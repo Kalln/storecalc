@@ -7,12 +7,6 @@
 #include "common.h"
 
 typedef struct link link_t;
-union elem
-{
-    char *str;
-    int val;
-    void *void_ptr;
-};
 
 struct link 
 {
@@ -90,7 +84,17 @@ void test_iter_next(void)
 void test_iter_remove(void)
 {
     ioopm_list_t *lt = ioopm_linked_list_create(int_eq);
+    for (size_t i = 0; i < 4; i++)
+    {
+        ioopm_linked_list_append(lt, int_elem(i));
+    }
+    
     ioopm_list_iterator_t *iter = ioopm_list_iterator(lt);
+
+    CU_ASSERT_EQUAL(ioopm_iterator_next(iter).data.val, 1);
+    CU_ASSERT_EQUAL(ioopm_iterator_remove(iter).data.val, 1);
+    CU_ASSERT_EQUAL(ioopm_iterator_current(iter).data.val, 2);
+    CU_ASSERT_EQUAL(ioopm_iterator_next(iter).data.val, 3);
 
     ioopm_iterator_destroy(iter);
     ioopm_linked_list_destroy(lt);
