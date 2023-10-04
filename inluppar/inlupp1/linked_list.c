@@ -70,6 +70,7 @@ void ioopm_linked_list_destroy(ioopm_list_t *lt)
     }
     free(lt);
 }
+
 ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function fun)
 {
     ioopm_list_t *lt = calloc(1, sizeof(ioopm_list_t));

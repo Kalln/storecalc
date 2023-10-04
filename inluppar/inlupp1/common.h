@@ -25,14 +25,6 @@ struct elem {
     } data;
 };
 
-// typedef union elem
-// {
-//     char *str;
-//     int val;
-//     void *void_ptr;
-    
-// } elem_t;
-
 
 typedef int (*ioopm_hash_function)(elem_t key);
 
@@ -48,3 +40,11 @@ bool int_eq(elem_t a, elem_t b);
 /// @param b str2 to be compared.
 /// @return true if equal.
 bool str_eq(elem_t a, elem_t b);
+
+// typedef union elem
+// {
+//     char *str;
+//     int val;
+//     void *void_ptr;
+    
+// } elem_t;

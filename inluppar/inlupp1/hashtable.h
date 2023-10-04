@@ -79,11 +79,13 @@ ioopm_list_t *ioopm_hash_table_keys(ioopm_hash_table_t *ht);
 /// @brief return the values for all entries in a hash map (in no particular order, but same as ioopm_hash_table_keys)
 /// @param h hash table operated upon
 /// @return an array of values for hash table h
-elem_t *ioopm_hash_table_values(ioopm_hash_table_t *ht);
+/// @details Will return an array of pointers to ALREADY ALLOCATED memory in the hash table
+ioopm_list_t *ioopm_hash_table_values(ioopm_hash_table_t *ht);
 
 /// @brief free all values in the array created by ioopm_hash_table_values
 /// @param values array to be freed
-void ioopm_destroy_hash_table_values(elem_t *values);
+/// @details Note this will free all STR_values that are in the array, that implies all values in the hash table
+void ioopm_destroy_hash_table_values(ioopm_list_t *values);
 
 /// @brief check if a hash table has an entry with a given key
 /// @param h hash table operated upon
@@ -104,7 +106,7 @@ bool ioopm_hash_table_all(ioopm_hash_table_t *ht, ioopm_predicate pred, void *ar
 /// @brief check if a predicate is satisfied by any entry in a hash table
 /// @param h hash table operated upon
 /// @param pred the predicate
-/// @param arg extra argument to pred
+/// @param arg extra argument to predmake
 bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate pred, void *arg);
 
 /// @brief apply a function to all entries in a hash table
