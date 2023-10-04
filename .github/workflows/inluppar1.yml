@@ -1,5 +1,10 @@
 name: workflow_test
 on: push
+
+defaults:
+  run:
+    working-directory: ./inluppar/inlupp1/
+
 jobs:
   testing:
     runs-on: ubuntu-latest
@@ -9,9 +14,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@main
       - name: Run tests
-        run: |
-          gcc -Wall -g inluppar/inlupp1/hashtable.c inluppar/inlupp1/hashtable_tests.c -o test -lcunit
-          ./test
+        run: hash_test
       
       - name: Install test report dependencies
         run: sudo apt-get install xsltproc
@@ -19,4 +22,4 @@ jobs:
       - name: Transform and display Test Report
         id: transform
         run: |
-          xsltproc inluppar/inlupp1/test_report_converter.xsl test_results-Results.xml >> "$GITHUB_STEP_SUMMARY"
+          xsltproc test_report_converter.xsl test_results-Results.xml >> "$GITHUB_STEP_SUMMARY"
