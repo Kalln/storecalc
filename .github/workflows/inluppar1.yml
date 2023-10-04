@@ -4,6 +4,7 @@ on: push
 defaults:
   run:
     working-directory: ./inluppar/inlupp1/
+    shell: bash
 
 jobs:
   testing:
