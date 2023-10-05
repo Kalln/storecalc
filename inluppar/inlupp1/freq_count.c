@@ -8,6 +8,12 @@
 #include "iterator.h"
 #define Delimiters "+-#@()[]{}.,:;!? \t\n\r"
 
+void free_all_elements(elem_t key, elem_t *value, void *xtra) {
+    if (key.type == ELEM_V_PTR || key.type == ELEM_STR) {
+        free(key.data.str);
+    }
+}
+
 static int cmpstringp(const void *p1, const void *p2)
 {
     return strcmp(*(char *const *)p1, *(char *const *)p2);
@@ -21,11 +27,17 @@ void sort_keys(char *keys[], size_t no_keys)
 void process_word(char *word, ioopm_hash_table_t *ht)
 {
     int freq =
-        ioopm_hash_table_has_key(ht, (elem_t) {.data.str = word})?
-        (ioopm_hash_table_lookup(ht, (elem_t) {.data.str = word})).i:
-        0;
-    ioopm_hash_table_insert(ht, (elem_t) {.data.str = strdup(word)}, (elem_t) {.data.val = freq +
-1});
+        ioopm_hash_table_has_key(ht, ptr_elem(word)) ?
+        (ioopm_hash_table_lookup(ht, ptr_elem(word))).value.data.val :
+        0 ;
+
+    if (freq != 0)
+    {
+        ioopm_hash_table_insert(ht, ptr_elem(word), int_elem(freq + 1));
+    } else
+    {
+    ioopm_hash_table_insert(ht, ptr_elem(strdup(word)), int_elem(freq + 1));
+    }
 }
 
 void process_file(char *filename, ioopm_hash_table_t *ht)
@@ -54,19 +66,19 @@ void process_file(char *filename, ioopm_hash_table_t *ht)
 
 int string_sum_hash(elem_t e)
 {
-    char *str = e.p;
+    char *str = e.data.str;
     int result = 0;
     do
     {
         result += *str;
     }
     while (*++str != '\0');
-    return result;
+    return abs(result);
 }
 
 bool string_eq(elem_t e1, elem_t e2)
 {
-    return (strcmp(e1.p, e2.p) == 0);
+    return (strcmp(e1.data.str, e2.data.str) == 0);
 }
 
 
@@ -86,21 +98,29 @@ int main(int argc, char *argv[])
         ioopm_list_t *key_list = ioopm_hash_table_keys(ht);
         ioopm_list_iterator_t *key_iter = ioopm_list_iterator(key_list);
 
-        char **keys = {ioopm_iterator_current(key_iter)};
         int size = ioopm_hash_table_size(ht);
+        char *keys[size];
+        //char **keys = calloc(size, sizeof(char *));
+        //char **keys = ioopm_hash_table_keys(ht);
+        keys[0] = ioopm_iterator_current(key_iter).data.str;
 
-        for (size_t i = 1; i < size-2; i++)
+        for (size_t i = 1; i < size-1; i++)
         {
-            keys[i] = ioopm_iterator_next(key_iter);
+            keys[i] = ioopm_iterator_next(key_iter).data.str;
         }
     
         sort_keys(keys, size);
-        for (int i = 0; i < size; ++i)
+        for (int i = 1; i < size; ++i)
         {
             // FIXME: Update to match your own interface, error handling, etc.
-            int freq = (ioopm_hash_table_lookup(ht, (elem_t) {.data.str = keys[i]})).value.data.val;
+            //int freq = (ioopm_hash_table_lookup(ht, (elem_t) {.data.str = keys[i]})).value.data.val;
+            int freq = ioopm_hash_table_lookup(ht, ptr_elem(keys[i])).value.data.val;
             printf("%s: %d\n", keys[i], freq);
         }
+        ioopm_iterator_destroy(key_iter);
+        //ioopm_apply_function
+        ioopm_linked_list_destroy(key_list);
+        
     }
     else
     {
@@ -108,6 +128,8 @@ int main(int argc, char *argv[])
     }
     // FIXME: Leaks memory! Use valgrind to find out where that memory is
     // being allocated, and then insert code here to free it.
+    
+    ioopm_hash_table_apply_to_all(ht, free_all_elements, NULL);
     ioopm_hash_table_destroy(ht);
     return 0;
 }

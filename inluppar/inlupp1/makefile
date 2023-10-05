@@ -7,7 +7,7 @@ CUNIT_LINK     	= -lcunit
 CCOV 			= -fprofile-arcs -ftest-coverage
 
 %.o:  %.c
-	$(C_COMPILER) $(C_OPTIONS) $(CCOV) $^ -c
+	$(C_COMPILER) $(C_OPTIONS) $^ -c
 
 myprog: hashtable_tests.o hashtable.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@
@@ -69,9 +69,12 @@ htcov: hash_cov
 
 # Freq count
 freq_test: common.o linked_list.o hashtable.o freq_count.o
-	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
+	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@
 
-
+prof: 
+	gcc -pg common.c hashtable.c linked_list.c  $(C_LINK_OPTIONS) -pg $^ -o $@
+	./prof freq_count/16k_words.txt
+	gprof prof gmon.out > profile.txt
 
 coverage:
 	make ht_cov

@@ -5,8 +5,8 @@
 
 bool int_eq(elem_t a, elem_t b)
 {
-    return a.data.val == NULL && b.data.val == NULL ? true
-         : a.data.val == NULL || b.data.val == NULL ? false
+    return (a.data.void_ptr) == NULL && (b.data.void_ptr) == NULL ? true
+         : (a.data.void_ptr) == NULL || (b.data.void_ptr) == NULL ? false
          : a.data.val == b.data.val;
 }
 
