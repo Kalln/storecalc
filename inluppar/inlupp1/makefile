@@ -67,6 +67,12 @@ htcov: hash_cov
 	./hash_cov
 	gcov hashtable.c
 
+# Freq count
+freq_test: common.o linked_list.o hashtable.o freq_count.o
+	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@ $(CUNIT_LINK)
+
+
+
 coverage:
 	make ht_cov
 	./ht_cov
