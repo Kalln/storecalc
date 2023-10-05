@@ -98,19 +98,19 @@ int main(int argc, char *argv[])
         ioopm_list_t *key_list = ioopm_hash_table_keys(ht);
         ioopm_list_iterator_t *key_iter = ioopm_list_iterator(key_list);
 
-        int size = ioopm_hash_table_size(ht);
+        int size = ioopm_hash_table_size(ht) - 1;
         char *keys[size];
         //char **keys = calloc(size, sizeof(char *));
         //char **keys = ioopm_hash_table_keys(ht);
         keys[0] = ioopm_iterator_current(key_iter).data.str;
 
-        for (size_t i = 1; i < size-1; i++)
+        for (size_t i = 1; i < size; i++)
         {
             keys[i] = ioopm_iterator_next(key_iter).data.str;
         }
     
         sort_keys(keys, size);
-        for (int i = 1; i < size; ++i)
+        for (int i = 0; i < size; ++i)
         {
             // FIXME: Update to match your own interface, error handling, etc.
             //int freq = (ioopm_hash_table_lookup(ht, (elem_t) {.data.str = keys[i]})).value.data.val;
