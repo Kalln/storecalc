@@ -71,10 +71,11 @@ htcov: hash_cov
 freq_test: common.o linked_list.o hashtable.o freq_count.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@
 
-prof: 
-	gcc -pg common.c hashtable.c linked_list.c  $(C_LINK_OPTIONS) -pg $^ -o $@
-	./prof freq_count/16k_words.txt
-	gprof prof gmon.out > profile.txt
+prof: common.c linked_list.c hashtable.c freq_count.c
+	gcc -o prof_req $^ -pg
+	./prof_req freq_count/256k-words.txt
+	gprof prof_req gmon.out > profile.txt
+
 
 coverage:
 	make ht_cov
@@ -89,5 +90,6 @@ clean:
 
 # remove coverage files
 	rm -f ht_cov *.gcda *.gcno *.gcov *.html *.png *.css *.infogcov ht_cov-hashtable iter_test linked_cov  hash_cov coverage_ht.info iterator_cov
+	rm -f freq_test prof_req gmon.out profile.txt
 
 .PHONY: test clean lt_test ht_cov hash_test
