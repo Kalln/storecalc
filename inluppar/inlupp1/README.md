@@ -1,26 +1,60 @@
+# IOOPM Hashtable
+IOOPM hashtable consists of three C files. 
+* hashtable.c
+* linked_list.c
+* common.c
+  
+Each of these files have been provided with a header file with full documentation of how each public function works.
+
+This hashtable module does also provide test files as well as larger files that can test out the module. On how to run each test, please check the "how to run" section of this readme.
+
+## How to run
+* "make" - will run the program "freq_count.c" and use the hashtable to keep track of how many times a word has appeared in the book: "Den svenska Arbetareskyddslagstiftningen och Yrkesinspektionen" by Georg Stjernstedt (1902).
+* make test - Will run all unit tests for all files.
+* make cov - Presents coverage for all files.
+
+## Deisgn choices
+The hashtable does not take responsibility for any values that require allocation. It is up to the user to free all values or keys that requires allocation. With that said the hashtable will not take ownership of the values or keys. The hashtable does only have ownership of itself, its bucket (linked list) and its entries.
+
 # Initial profiling result
 
-For each input, what are the top 3 functions?
-    256k
+* For each input, what are the top 3 functions?
+
+    **256k**
+
         str_eq , find_previous_entry_for_key , ioopm_hash_table_has_key
-    16k 
+
+    **16k** 
+
         str_eq bucket_calc string_sum_hash
-    10k 
+
+    **10k** 
+
         str_eq bucket_calc string_sum_hash
-    1k
+
+    **1k**
+
         str_eq bucket_calc string_sum_hash
-    small
+
+    **small**
+
         str_eq, bucket_calc, string_sum_hash
 
-For each input, what are the top 3 functions in your code (that you have written), or is it library functions?
+* For each input, what are the top 3 functions in your code (that you have written), or is it library functions?
+    
     256k
+
     16k
+
     10k
+
     1k
+
     small
 
-Are the top 3 functions in your code consistent across the inputs? Why? Why not?
-    It's fairly consistent. str_eq as well as bucket_calc and string_sum_hash are the functions that are taking
+* Are the top 3 functions in your code consistent across the inputs? Why? Why not?
+
+    It's fairly consistent. **str_eq** as well as **bucket_calc** and **string_sum_hash** are the functions that are taking
     the most time in our program except for the biggest file. In the biggest file we have instead functions
     that look for the previous entry of an entry and also the function that checks if an key has already
     been inserted or not. The reason for this is probably beacuse the buckets gets too "full". Since we 
@@ -32,11 +66,32 @@ Are the top 3 functions in your code consistent across the inputs? Why? Why not?
     entries into each bucket). This means that we don't have as long way to go into the end of the list as if we
     had 15 000 entries in each bucket.
      
-Is there some kind of trend? (Possibly several.)
-Do the results correspond with your expectations?
-Based on these results, do you see a way to make your program go faster?
+* Is there some kind of trend? (Possibly several.)
+  
+  The trends seem very clear from our viewpoint. Comparing the values (str_eq) is the function that is used the most.
+  This has to do with that we always have to compare entries and their values to either know if they already exist
+  or if the don't exist. When we get a large amount of entries, it seems very clear that we have to traverse a 
+  very long way into the linked list to check all the entries. This is very clear on 256k input were
+  find_previous_entry_for_key as well as ioopm_hash_table_has_key is topping the amount of calls each function get.
 
-256K 
+* Do the results correspond with your expectations?
+
+  We are not sure what we expected but we expected definetly that looking up a key and looking for the previous key 
+  would take the most time. We expected this because of in cases of large entries it will take a long time traversing
+  and checking the whole linked list to be sure that the key either exists or does note exist. We expected this to be
+  the case especially with the larger text file.
+
+* Based on these results, do you see a way to make your program go faster?
+
+
+  Increasing the amount of buckets would probably result in a faster program. The more buckets we have, the more we can
+  "split" up our entries in each bucket and the fewer entries we have in each bucket would result in a faster run time.
+  This is because calculating the bucket takes O(1) time, while traversing a linked list could take O(n) time in worst
+  case scenario. In the most optimal hashtable we would only have one entry per bucket. This would result that we can
+  lookup a key in O(1) time. 
+
+### 256K 
+
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ms/call  ms/call  name    
@@ -71,7 +126,7 @@ Each sample counts as 0.01 seconds.
   0.00      0.21     0.00        1     0.00     0.00  sort_keys
  
 
- SMALL
+ ### SMALL
 
    %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
@@ -105,7 +160,7 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00        1     0.00     0.00  sort_keys
 
 
-1K 
+### 1K 
 
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
@@ -142,7 +197,7 @@ Each sample counts as 0.01 seconds.
 
 
 
-  10k 
+ ### 10k 
 
     %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
@@ -175,7 +230,7 @@ Each sample counts as 0.01 seconds.
   0.00      0.00     0.00        1     0.00     0.00  process_file
   0.00      0.00     0.00        1     0.00     0.00  sort_keys
 
-  16k
+### 16k
 
 
   Each sample counts as 0.01 seconds.

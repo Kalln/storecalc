@@ -1,4 +1,4 @@
-main: myprog
+main: freq_test
 
 C_COMPILER     	= gcc
 C_OPTIONS      	= -Wall -pedantic -g -lgcov
@@ -67,9 +67,14 @@ htcov: hash_cov
 	./hash_cov
 	gcov hashtable.c
 
+cov: hash_cov ltcov
+	cat hashtable.c.gcov
+	cat linked_list.c.gcov
+
 # Freq count
 freq_test: common.o linked_list.o hashtable.o freq_count.o
 	$(C_COMPILER) $(C_LINK_OPTIONS) $^ -o $@
+	./freq_test freq_count/256k-words.txt
 
 prof: common.c linked_list.c hashtable.c freq_count.c
 	gcc -o prof_req $^ -pg
