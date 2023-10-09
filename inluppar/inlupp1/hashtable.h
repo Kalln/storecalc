@@ -24,7 +24,6 @@ typedef struct option option_t;
 typedef bool(*ioopm_predicate)(elem_t key, elem_t value, void *extra);
 typedef void(*ioopm_apply_function)(elem_t key, elem_t *value, void *extra);
 
-// TODO: check where option struct should be? In hashtable.c?
 struct option
 {
   bool success;

@@ -160,7 +160,7 @@ elem_t ioopm_linked_list_remove(ioopm_list_t *list, int index)
 
     for (size_t i = 0; i < index; i++) //Step through the list until desired index reached
     {
-        // TODO Add covergae for this part. This never runs in our current tests.
+        
         value_to_remove = value_to_remove->next;
         prev_value = prev_value->next;
     }
@@ -233,7 +233,7 @@ void ioopm_linked_list_clear(ioopm_list_t *list)
 bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
 {
     link_t *cursor = list->first;
-    elem_t NOT_USED_KEY = int_elem(0); // TODO: Maybe it will be more clear what key does later..?
+    elem_t NOT_USED_KEY = int_elem(0);
 
     while (cursor != NULL)
     {
@@ -246,7 +246,7 @@ bool ioopm_linked_list_all(ioopm_list_t *list, ioopm_int_predicate prop, void *e
 bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate prop, void *extra)
 {
     link_t *cursor = list->first;
-    elem_t NOT_USED_KEY = int_elem(0); // TODO: Maybe it will be more clear what key does later..?
+    elem_t NOT_USED_KEY = int_elem(0); 
 
     while (cursor != NULL)
     {
@@ -260,7 +260,7 @@ bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate prop, void *e
 void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function fun, void *extra)
 {
     link_t *cursor = list->first;
-    elem_t NOT_USED_KEY = int_elem(0); // TODO: Maybe it will be more clear what key does later..?
+    elem_t NOT_USED_KEY = int_elem(0); ?
 
     while (cursor != NULL)
     {

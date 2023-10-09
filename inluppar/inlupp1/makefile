@@ -4,7 +4,7 @@ C_COMPILER     	= gcc
 C_OPTIONS      	= -Wall -pedantic -g -lgcov
 C_LINK_OPTIONS 	= -lm 
 CUNIT_LINK     	= -lcunit
-CCOV 			= -fprofile-arcs -ftest-coverage
+CCOV 			= -fprofile-arcs -ftest-coverage -lgcov
 
 %.o:  %.c
 	$(C_COMPILER) $(C_OPTIONS) $^ -c
@@ -46,30 +46,35 @@ lt_memtest: lt_test
 
 # Code coverage
 
-hash_cov: hashtable_tests.o hashtable.o common.o linked_list.o
+hash_cov: hashtable_tests.c hashtable.c common.c linked_list.c
 	$(C_COMPILER) $(C_LINK_OPTIONS) $(CCOV) $^ -o $@ $(CUNIT_LINK)
 
-iterator_cov: iterator_tests.o linked_list.o common.o
+iterator_cov: iterator_tests.c linked_list.c common.c
 	$(C_COMPILER) $(C_LINK_OPTIONS) $(CCOV) $^ -o $@ $(CUNIT_LINK)
 
-linked_cov: linked_list_tests.o linked_list.o common.o
+linked_cov: linked_list_tests.c linked_list.c common.c
 	$(C_COMPILER) $(C_LINK_OPTIONS) $(CCOV) $^ -o $@ $(CUNIT_LINK)
 	
 ht_cov: hashtable.c linked_list.c common.c hashtable_tests.c linked_list.h hashtable.h common.h
 	$(C_COMPILER) $(C_LINK_OPTIONS) $(word 1, $^) $(word 2, $^) $(word 3, $^) $(word 4, $^) -lgcov --coverage -o $@ $(CUNIT_LINK)
 
-ltcov: linked_cov iterator_cov
+ltcov: linked_cov
 	./linked_cov
 	./iterator_cov
-	gcov linked_list.c 
+	gcov linked_cov-linked_list 
+
+
+itcov: iterator_cov
+	./iterator_cov
+	gcov iterator_cov-linked_list
+
 
 htcov: hash_cov
 	./hash_cov
-	gcov hashtable.c
+	gcov hash_cov-hashtable
 
-cov: hash_cov ltcov
-	cat hashtable.c.gcov
-	cat linked_list.c.gcov
+cov: hash_cov ltcov itcov
+
 
 # Freq count
 freq_test: common.o linked_list.o hashtable.o freq_count.o

@@ -13,8 +13,7 @@
 typedef struct entry entry_t;
 #define Success(v)      (option_t){.success = true, .value = v};
 #define Failure()       (option_t){.success = false};
-#define Successful(o)   (o.success == true)    // TODO: use this definition
-#define Unsuccessful(o) (o.success == false) // TODO: use this definition
+
 
 #define no_buckets 17
 #define ioopm_int_str_ht_insert(ht, i, s) \
