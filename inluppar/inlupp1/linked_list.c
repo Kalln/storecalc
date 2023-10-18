@@ -260,7 +260,7 @@ bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_int_predicate prop, void *e
 void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_int_function fun, void *extra)
 {
     link_t *cursor = list->first;
-    elem_t NOT_USED_KEY = int_elem(0); ?
+    elem_t NOT_USED_KEY = int_elem(0);
 
     while (cursor != NULL)
     {
@@ -323,13 +323,9 @@ void ioopm_iterator_reset(ioopm_list_iterator_t *iter)
 elem_t ioopm_iterator_remove(ioopm_list_iterator_t *iter)
 {
     link_t *elem_to_remove = *(iter->current);
-    elem_t value_of_elem_remove = elem_to_remove->val;
-    ioopm_iterator_reset(iter);
-    
-    while((*(iter->current))->next != elem_to_remove) ioopm_iterator_next(iter);
-    ((*(iter->current))->next) = (elem_to_remove->next);
-    ioopm_iterator_next(iter);
-    
+    elem_t value_of_elem_remove = elem_to_remove->val;  
+
+    (*(iter->current)) = elem_to_remove->next;
     element_destroy(elem_to_remove);
 
     return value_of_elem_remove;
@@ -340,8 +336,5 @@ void ioopm_iterator_insert(ioopm_list_iterator_t *iter, elem_t element)
     link_t *next_elem = *(iter->current);
     link_t *new_elem = element_create(element, next_elem);
 
-    ioopm_iterator_reset(iter);
-    while((*(iter->current))->next != next_elem) ioopm_iterator_next(iter);
-    (*iter->current)->next = new_elem;
-    ioopm_iterator_next(iter);    
+    (*(iter->current)) = new_elem;
 }
