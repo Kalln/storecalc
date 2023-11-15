@@ -1,22 +1,21 @@
-package inluppar.inlupp3.org.ioopm.calculator.parser;
+package org.ioopm.calculator.parser;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.*;
-import inluppar.inlupp3.org.ioopm.calculator.ast.atom.Variable;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Addition;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Assignment;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Division;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Multiplication;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Subtraction;
-import inluppar.inlupp3.org.ioopm.calculator.ast.command.Quit;
-import inluppar.inlupp3.org.ioopm.calculator.ast.command.Vars;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Cos;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Exp;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Log;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Sin;
+import org.ioopm.calculator.ast.*;
+import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.Variable;
+import org.ioopm.calculator.ast.binary.Addition;
+import org.ioopm.calculator.ast.binary.Division;
+import org.ioopm.calculator.ast.binary.Multiplication;
+import org.ioopm.calculator.ast.binary.Negation;
+import org.ioopm.calculator.ast.binary.Subtraction;
+import org.ioopm.calculator.ast.unary.Cos;
+import org.ioopm.calculator.ast.unary.Exp;
+import org.ioopm.calculator.ast.unary.Log;
+import org.ioopm.calculator.ast.unary.Sin;
 
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-i
+
 
 import java.io.StreamTokenizer;
 import java.io.StringReader;
@@ -55,8 +54,9 @@ public class CalculatorParser {
      * @param vars the Environment in which the variables exist
      * @return a SymbolicExpression to be evaluated
      * @throws IOException by nextToken() if it reads invalid input
+     * @throws SyntaxErrorException
      */
-    public SymbolicExpression parse(String inputString, Environment vars) throws IOException {
+    public SymbolicExpression parse(String inputString, Environment vars) throws IOException, SyntaxErrorException {
         this.st = new StreamTokenizer(new StringReader(inputString)); // reads from inputString via stringreader.
         this.vars = vars;
         this.st.ordinaryChar('-');
@@ -72,7 +72,7 @@ public class CalculatorParser {
      * @throws IOException by nextToken() if it reads invalid input
      * @throws SyntaxErrorException if the token parsed cannot be turned into a valid expression
      */
-    private SymbolicExpression statement() throws IOException {
+    private SymbolicExpression statement() throws IOException, SyntaxErrorException {
         SymbolicExpression result;
         this.st.nextToken(); //kollar på nästa token som ligger på strömmen
         if (this.st.ttype == this.st.TT_EOF) {
@@ -124,7 +124,7 @@ public class CalculatorParser {
      * @throws SyntaxErrorException if the token parsed cannot be turned into a valid expression,
      *         the variable on rhs of '=' is a number or invalid variable
      */
-    private SymbolicExpression assignment() throws IOException {
+    private SymbolicExpression assignment() throws IOException, SyntaxErrorException {
         SymbolicExpression result = expression();
         this.st.nextToken();
         while (this.st.ttype == ASSIGNMENT) {
@@ -227,7 +227,7 @@ public class CalculatorParser {
      * @throws SyntaxErrorException if the token parsed cannot be turned into a valid expression,
      *         missing right parantheses
      */
-    private SymbolicExpression primary() throws IOException {
+    private SymbolicExpression primary() throws IOException, SyntaxErrorException {
         SymbolicExpression result;
         if (this.st.ttype == '(') {
             this.st.nextToken();
@@ -288,7 +288,7 @@ public class CalculatorParser {
      * @throws SyntaxErrorException if the token parsed cannot be turned into a valid expression,
      *         expected a number which is not present
      */
-    private SymbolicExpression number() throws IOException {
+    private SymbolicExpression number() throws IOException, SyntaxErrorException {
         this.st.nextToken();
         if (this.st.ttype == this.st.TT_NUMBER) {
             return new Constant(this.st.nval);

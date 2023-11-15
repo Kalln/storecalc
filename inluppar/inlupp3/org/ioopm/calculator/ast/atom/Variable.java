@@ -1,4 +1,4 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.atom;
+package org.ioopm.calculator.ast.atom;
 
 public class Variable extends Atom {
 
@@ -19,6 +19,10 @@ public class Variable extends Atom {
 
     public boolean isVariable() {
         return true;
+    }
+
+    public int hashCode() {
+        return this.identifier.hashCode();
     }
     
 }

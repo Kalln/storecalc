@@ -1,4 +1,4 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.atom;
+package org.ioopm.calculator.ast.atom;
 
 public class Constant extends Atom{
     private double value;

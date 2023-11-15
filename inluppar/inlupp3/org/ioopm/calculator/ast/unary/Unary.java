@@ -1,6 +1,6 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.unary;
+package org.ioopm.calculator.ast.unary;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.SymbolicExpression;
 
 public abstract class Unary extends SymbolicExpression {
     public SymbolicExpression exp;

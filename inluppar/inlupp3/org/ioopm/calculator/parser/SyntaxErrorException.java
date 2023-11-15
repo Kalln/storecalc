@@ -1,4 +1,4 @@
-package inluppar.inlupp3.org.ioopm.calculator.parser;
+package org.ioopm.calculator.parser;
 
 public class SyntaxErrorException extends Exception {
 

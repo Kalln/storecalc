@@ -1,6 +1,9 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.binary;
+package org.ioopm.calculator.ast.binary;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.SymbolicExpression;
+import java.util.HashMap;
+
+import org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.atom.Variable;
 
 public class Assignment extends Binary {
     public Assignment(SymbolicExpression lhs, SymbolicExpression rhs ) throws RuntimeException{
@@ -12,7 +15,7 @@ public class Assignment extends Binary {
     }
 
 
-    public SymbolicExpression eval() {
-        return this.getRhs().eval();
+    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars) {
+        return this.getRhs().eval(vars);
     }
 }

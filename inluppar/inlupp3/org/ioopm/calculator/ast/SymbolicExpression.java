@@ -1,4 +1,7 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast;
+package org.ioopm.calculator.ast;
+
+import java.util.HashMap;
+import org.ioopm.calculator.ast.atom.Variable;
 
 public abstract class SymbolicExpression {
     private String name; 
@@ -55,7 +58,7 @@ public abstract class SymbolicExpression {
         return false;
     }
 
-    public abstract SymbolicExpression eval();
+    public abstract SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars);
         
 
 

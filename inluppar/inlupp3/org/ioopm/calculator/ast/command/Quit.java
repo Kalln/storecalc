@@ -1,6 +1,9 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.command;
+package org.ioopm.calculator.ast.command;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.SymbolicExpression;
+import java.util.HashMap;
+
+import org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.atom.Variable;
 
 public class Quit extends Command {
 
@@ -8,7 +11,8 @@ public class Quit extends Command {
         super("Quit", null);
     }
 
-    public SymbolicExpression eval() throws RuntimeException {
+    @Override
+    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars ) throws RuntimeException {
         throw new RuntimeException("commands may not be evaluated");
     }
     

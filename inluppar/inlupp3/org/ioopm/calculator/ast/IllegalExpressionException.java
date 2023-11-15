@@ -1,4 +1,4 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast;
+package org.ioopm.calculator.ast;
 
 public class IllegalExpressionException extends Exception {
 

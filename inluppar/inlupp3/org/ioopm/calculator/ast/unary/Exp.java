@@ -1,7 +1,10 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.unary;
+package org.ioopm.calculator.ast.unary;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.SymbolicExpression;
-import inluppar.inlupp3.org.ioopm.calculator.ast.atom.Constant;
+import java.util.HashMap;
+
+import org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.Variable;
 
 public class Exp extends Unary {
     
@@ -14,8 +17,8 @@ public class Exp extends Unary {
         return "exp";
     }
 
-    public SymbolicExpression eval() {
-        SymbolicExpression arg = this.exp.eval();
+    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars) {
+        SymbolicExpression arg = this.exp.eval(vars);
         if (arg.isConstant()) {
             return new Constant(Math.exp(arg.getValue()));
         }

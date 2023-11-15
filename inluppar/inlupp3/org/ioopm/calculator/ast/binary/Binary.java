@@ -1,6 +1,6 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.binary;
+package org.ioopm.calculator.ast.binary;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.SymbolicExpression;
 
 public abstract class Binary extends SymbolicExpression{
     private SymbolicExpression lhs;

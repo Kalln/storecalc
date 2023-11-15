@@ -1,15 +1,17 @@
-package inluppar.inlupp3.org.ioopm.calculator;
+package org.ioopm.calculator;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.*;
-import inluppar.inlupp3.org.ioopm.calculator.ast.atom.Constant;
-import inluppar.inlupp3.org.ioopm.calculator.ast.atom.Variable;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Addition;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Multiplication;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Division;
-import inluppar.inlupp3.org.ioopm.calculator.ast.binary.Subtraction;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Cos;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Log;
-import inluppar.inlupp3.org.ioopm.calculator.ast.unary.Sin;
+import java.util.HashMap;
+
+import org.ioopm.calculator.ast.*;
+import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.Variable;
+import org.ioopm.calculator.ast.binary.Addition;
+import org.ioopm.calculator.ast.binary.Multiplication;
+import org.ioopm.calculator.ast.binary.Division;
+import org.ioopm.calculator.ast.binary.Subtraction;
+import org.ioopm.calculator.ast.unary.Cos;
+import org.ioopm.calculator.ast.unary.Log;
+import org.ioopm.calculator.ast.unary.Sin;
 
 
 
@@ -39,7 +41,9 @@ public class Test {
 
     }
      private void testEvaluating(SymbolicExpression expected, SymbolicExpression e) {
-        SymbolicExpression r = e.eval();
+        HashMap<Variable, SymbolicExpression> vars = new HashMap<Variable, SymbolicExpression>();
+        
+        SymbolicExpression r = e.eval(vars);
         if (r.equals(expected)) {
             System.out.println("Passed: " + r);
         } else {

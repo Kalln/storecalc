@@ -1,6 +1,6 @@
-package inluppar.inlupp3.org.ioopm.calculator.ast.command;
+package org.ioopm.calculator.ast.command;
 
-import inluppar.inlupp3.org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.SymbolicExpression;
 
 public abstract class Command extends SymbolicExpression {
     public Command(String name, SymbolicExpression exp) {
