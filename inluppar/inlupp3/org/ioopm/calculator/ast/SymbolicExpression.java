@@ -27,5 +27,37 @@ public abstract class SymbolicExpression {
         sb.append(")");
         return sb.toString(); 
     }
+
+    public boolean isConstant() {
+        return false;
+    }
+
+    public boolean isVariable() {
+        return false;
+    }
+
+    public String getName() {
+        throw new RuntimeException("getName() not implemented for expressions with no operator");
+    }
+
+    public int getPriority() {
+        return 100;
+    }
+    
+    public double getValue() {
+        throw new RuntimeException("getValue() not implemented for non constants");
+    }
+
+    public boolean equals(SymbolicExpression other) {
+        if (this.getValue() == other.getValue()) {
+            return true;
+        }
+        return false;
+    }
+
+    public abstract SymbolicExpression eval();
+        
+
+
 }
 
