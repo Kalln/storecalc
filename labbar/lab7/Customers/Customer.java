@@ -1,6 +1,6 @@
 package Customers;
 
-public class Customer {
+public abstract class Customer {
     public int bornTime;
     public int groceries;
     private int serveSpeed;
@@ -9,12 +9,6 @@ public class Customer {
         this.bornTime = bornTime;
         this.groceries = groceries;
         this.serveSpeed = serveSpeed;
-    }
-
-    public Customer(int bornTime, int groceries) {
-        this.bornTime = bornTime;
-        this.groceries = groceries; 
-        this.serveSpeed = 2;
     }
 
     public void serve() {
