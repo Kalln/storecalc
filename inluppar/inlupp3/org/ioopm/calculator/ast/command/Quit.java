@@ -3,8 +3,8 @@ package org.ioopm.calculator.ast.command;
 
 public class Quit extends Command {
 
-    public Quit() {
-        super("Quit", null);
-    }
+    private static final Quit theInstance = new Quit();
+    private Quit() {}
+    public static Quit instance() { return theInstance; }
     
 }

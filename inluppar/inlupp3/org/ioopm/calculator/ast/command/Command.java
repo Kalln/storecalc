@@ -5,8 +5,8 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.Environment;
 
 public abstract class Command extends SymbolicExpression {
-    public Command(String name, SymbolicExpression exp) {
-        super(name, exp);
+    public boolean isCommand() {
+        return true;
     }
 
     public SymbolicExpression eval(Environment vars) throws RuntimeException {
