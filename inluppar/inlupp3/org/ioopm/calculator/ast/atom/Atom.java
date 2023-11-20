@@ -1,7 +1,5 @@
 package org.ioopm.calculator.ast.atom;
 
-import java.util.HashMap;
-
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
