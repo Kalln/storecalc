@@ -1,10 +1,8 @@
 package org.ioopm.calculator.ast.unary;
 
-import java.util.HashMap;
-
+import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
-import org.ioopm.calculator.ast.atom.Variable;
 
 public class Cos extends Unary {
     public Cos(SymbolicExpression exp) {
@@ -13,10 +11,10 @@ public class Cos extends Unary {
 
     @Override
     public String getName() {
-        return "cos";
+        return "Cos";
     }
 
-    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars) {
+    public SymbolicExpression eval(Environment vars) {
         SymbolicExpression arg = this.exp.eval(vars);
         if (arg.isConstant()) {
             return new Constant(Math.cos(arg.getValue()));

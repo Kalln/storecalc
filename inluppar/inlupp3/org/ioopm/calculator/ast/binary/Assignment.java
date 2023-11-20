@@ -1,9 +1,7 @@
 package org.ioopm.calculator.ast.binary;
 
-import java.util.HashMap;
-
+import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.atom.Variable;
 
 public class Assignment extends Binary {
     public Assignment(SymbolicExpression lhs, SymbolicExpression rhs ) throws RuntimeException{
@@ -15,7 +13,7 @@ public class Assignment extends Binary {
     }
 
 
-    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars) {
+    public SymbolicExpression eval(Environment vars) {
         return this.getRhs().eval(vars);
     }
 }

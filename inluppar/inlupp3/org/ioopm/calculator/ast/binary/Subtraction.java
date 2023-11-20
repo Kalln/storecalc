@@ -1,10 +1,8 @@
 package org.ioopm.calculator.ast.binary;
 
-import java.util.HashMap;
-
+import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
-import org.ioopm.calculator.ast.atom.Variable;
 
 public class Subtraction extends Binary {
 
@@ -22,7 +20,7 @@ public class Subtraction extends Binary {
         return 10;
     }
 
-    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars) {
+    public SymbolicExpression eval(Environment vars) {
         SymbolicExpression lhs = this.getLhs().eval(vars);
         SymbolicExpression rhs = this.getRhs().eval(vars);
 

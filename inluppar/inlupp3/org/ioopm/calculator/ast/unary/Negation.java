@@ -4,24 +4,31 @@ import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 
-public class Sin extends Unary {
-    public Sin(SymbolicExpression exp) {
-        super("Sin", exp);
+public class Negation extends Unary {
+
+    public Negation(SymbolicExpression exp) {
+        super("Negation", exp);
     }
 
-    @Override
+    @Override 
     public String getName() {
-        return "Sin";
+        return "Neg";
     }
 
     @Override
+    public String toString() {
+        return "-" + exp.getValue();
+    }
+
     public SymbolicExpression eval(Environment vars) {
         SymbolicExpression arg = this.exp.eval(vars);
+
         if (arg.isConstant()) {
-            return new Constant(Math.sin(arg.getValue()));
+            var tmp = exp.getValue();
+            tmp = 2 * tmp;
+            return new Constant(exp.getValue() - tmp);
         }
-        else {
-            return new Sin(arg);
-        }
+        return new Negation(arg);
     }
+
 }

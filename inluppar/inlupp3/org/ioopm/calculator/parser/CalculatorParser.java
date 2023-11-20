@@ -6,11 +6,11 @@ import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Multiplication;
-import org.ioopm.calculator.ast.binary.Negation;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.ioopm.calculator.ast.unary.Log;
+import org.ioopm.calculator.ast.unary.Negation;
 import org.ioopm.calculator.ast.unary.Sin;
 
 import java.io.StreamTokenizer;

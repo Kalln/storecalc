@@ -1,10 +1,8 @@
 package org.ioopm.calculator.ast.unary;
 
-import java.util.HashMap;
-
+import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
-import org.ioopm.calculator.ast.atom.Variable;
 
 public class Log extends Unary {
     
@@ -14,9 +12,9 @@ public class Log extends Unary {
     
     @Override
     public String getName() {
-        return "log";
+        return "Log";
     }
-    public SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars) {
+    public SymbolicExpression eval(Environment vars) {
         SymbolicExpression arg = this.exp.eval(vars);
         if (arg.isConstant()) {
             return new Constant(Math.log(arg.getValue()));

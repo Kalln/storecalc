@@ -44,7 +44,7 @@ public abstract class SymbolicExpression {
     }
 
     public int getPriority() {
-        return 100;
+        return 100; 
     }
     
     public double getValue() {
@@ -58,9 +58,8 @@ public abstract class SymbolicExpression {
         return false;
     }
 
-    public abstract SymbolicExpression eval(HashMap<Variable, SymbolicExpression> vars);
+    public abstract SymbolicExpression eval(Environment vars);
         
 
 
 }
-

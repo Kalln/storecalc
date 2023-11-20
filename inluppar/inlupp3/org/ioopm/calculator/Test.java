@@ -1,7 +1,5 @@
 package org.ioopm.calculator;
 
-import java.util.HashMap;
-
 import org.ioopm.calculator.ast.*;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.Variable;
@@ -11,6 +9,7 @@ import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Log;
+import org.ioopm.calculator.ast.unary.Negation;
 import org.ioopm.calculator.ast.unary.Sin;
 
 
@@ -30,6 +29,8 @@ public class Test {
         t.test_simple_eval_sub();
         t.test_simple_eval_mult();
         t.test_simple_eval_div();
+        t.test_simple_neg();
+        t.test_inter_prob();
     }
 
     private void testPrinting(String expected, SymbolicExpression e) {
@@ -41,11 +42,11 @@ public class Test {
 
     }
      private void testEvaluating(SymbolicExpression expected, SymbolicExpression e) {
-        HashMap<Variable, SymbolicExpression> vars = new HashMap<Variable, SymbolicExpression>();
+        Environment vars = new Environment();
         
         SymbolicExpression r = e.eval(vars);
         if (r.equals(expected)) {
-            System.out.println("Passed: " + r);
+            System.out.println("PASS: " + r);
         } else {
             System.out.println("Error: expected '" + expected + "' but got '" + r + "'");
         }
@@ -122,7 +123,7 @@ public class Test {
         Multiplication m = new Multiplication(a, c2);
         Log l = new Log(m);
 
-        testPrinting("log((5.0 + x) * 2.0)", l);
+        testPrinting("Log((5.0 + x) * 2.0)", l);
     }
 
     private void test_simple_sin_cos() {
@@ -135,8 +136,8 @@ public class Test {
         Cos c = new Cos(v);
         Sin s = new Sin(m);
 
-        testPrinting("cos(x)", c);
-        testPrinting("sin((5.0 + x) * 2.0)", s);
+        testPrinting("Cos(x)", c);
+        testPrinting("Sin((5.0 + x) * 2.0)", s);
     }
 
     private void test_simple_equal(){
@@ -170,6 +171,25 @@ public class Test {
         SymbolicExpression a = new Division(new Constant(5), new Constant(5));
         SymbolicExpression b = new Constant(1);
         testEvaluating(b, a);
+    }
+
+    private void test_simple_neg(){
+        SymbolicExpression a = new Negation(new Constant(4));
+        SymbolicExpression b = new Addition(new Constant(4), a);
+        SymbolicExpression c = new Constant(0);
+        testPrinting("-4.0", a);
+        testEvaluating(c, b);
+    }
+
+    private void test_inter_prob(){
+        SymbolicExpression c1 = new Constant(5);
+        SymbolicExpression c2 = new Constant(2);
+        SymbolicExpression v = new Variable("x");
+        SymbolicExpression a = new Addition(c1, v);
+        SymbolicExpression m1 = new Multiplication(a, c2);
+        SymbolicExpression d = new Division(m1, a);
+
+        testPrinting("(5.0 + x) * 2.0 / (5.0 + x)", d);
     }
 
 
