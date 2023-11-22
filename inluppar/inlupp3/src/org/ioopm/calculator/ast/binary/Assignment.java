@@ -21,7 +21,7 @@ public class Assignment extends Binary {
     public SymbolicExpression eval(Environment vars) {
         SymbolicExpression key = this.getRhs();
         if (key instanceof Variable v) {
-            vars.put(v, this.getLhs());
+            vars.put(v, this.getLhs().eval(vars));
         } else {
             throw new RuntimeException("The rhs was not a variable.");
         }
