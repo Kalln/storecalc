@@ -15,6 +15,7 @@ import org.ioopm.calculator.ast.unary.Sin;
 
 
 public class Test {
+    private Environment vars = new Environment();
     public static void main(String[] args) {
         Test t = new Test();
         t.test_simple_mult();
@@ -31,6 +32,16 @@ public class Test {
         t.test_simple_eval_div();
         t.test_simple_neg();
         t.test_inter_prob();
+
+        /**
+         * VARIABLE TESTS
+         */
+
+         SymbolicExpression a = new Variable("x");
+         SymbolicExpression b = new Variable("avc");
+         System.out.println("a = " + a.hashCode() + "\nb = " + b.hashCode());
+
+
     }
 
     private void testPrinting(String expected, SymbolicExpression e) {
@@ -42,9 +53,9 @@ public class Test {
 
     }
      private void testEvaluating(SymbolicExpression expected, SymbolicExpression e) {
-        Environment vars = new Environment();
         
-        SymbolicExpression r = e.eval(vars);
+        
+        SymbolicExpression r = e.eval(this.vars);
         if (r.equals(expected)) {
             System.out.println("PASS: " + r);
         } else {
