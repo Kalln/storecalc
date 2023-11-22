@@ -7,7 +7,7 @@ import org.ioopm.calculator.ast.atom.Constant;
 public class Log extends Unary {
     
     public Log(SymbolicExpression exp) {
-        super("Log", exp);
+        super(exp);
     }
     
     @Override

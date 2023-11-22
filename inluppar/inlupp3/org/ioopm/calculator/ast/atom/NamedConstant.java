@@ -5,7 +5,6 @@ public class NamedConstant extends Atom {
     private double value;
     
     public NamedConstant(String identifier, double value) {
-        super("NamedConstant");
         this.identifier = identifier;
         this.value = value;
     }
@@ -18,5 +17,11 @@ public class NamedConstant extends Atom {
     @Override
     public double getValue() {
         return this.value;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.identifier;
     }
 }

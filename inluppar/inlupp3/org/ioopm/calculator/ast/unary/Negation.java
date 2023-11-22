@@ -7,7 +7,7 @@ import org.ioopm.calculator.ast.atom.Constant;
 public class Negation extends Unary {
 
     public Negation(SymbolicExpression exp) {
-        super("Negation", exp);
+        super(exp);
     }
 
     @Override 

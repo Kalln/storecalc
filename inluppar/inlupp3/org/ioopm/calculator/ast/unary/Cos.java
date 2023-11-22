@@ -6,7 +6,7 @@ import org.ioopm.calculator.ast.atom.Constant;
 
 public class Cos extends Unary {
     public Cos(SymbolicExpression exp) {
-        super("Cos", exp);
+        super(exp);
     }
 
     @Override

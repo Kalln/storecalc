@@ -8,7 +8,7 @@ import org.ioopm.calculator.ast.atom.Constant;
 public class Exp extends Unary {
     
     public Exp(SymbolicExpression exp) {
-        super("Exp", exp);
+        super(exp);
     }
 
     @Override

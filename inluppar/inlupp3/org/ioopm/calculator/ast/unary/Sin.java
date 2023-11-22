@@ -6,7 +6,7 @@ import org.ioopm.calculator.ast.atom.Constant;
 
 public class Sin extends Unary {
     public Sin(SymbolicExpression exp) {
-        super("Sin", exp);
+        super(exp);
     }
 
     @Override

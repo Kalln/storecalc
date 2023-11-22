@@ -4,7 +4,6 @@ public class Constant extends Atom{
     private double value;
 
     public Constant(double value) {
-        super("Constant");
         this.value = value;
     }
 
@@ -24,8 +23,8 @@ public class Constant extends Atom{
     }
     
     public boolean equals(Object other) {
-        if (other instanceof Constant) {
-            return this.equals((Constant) other);
+        if (other instanceof Constant c) {
+            return this.getValue() == c.getValue();
         } else {
             return false;
         }

@@ -19,6 +19,7 @@ public class Addition extends Binary {
         return 10;
     }
 
+    @Override
     public SymbolicExpression eval(Environment vars) {
         SymbolicExpression lhs = this.getLhs().eval(vars);
         SymbolicExpression rhs = this.getRhs().eval(vars);

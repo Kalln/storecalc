@@ -5,8 +5,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 public abstract class Unary extends SymbolicExpression {
     public SymbolicExpression exp;
     
-    public Unary(String name, SymbolicExpression exp) {
-        super(name, exp);
+    public Unary(SymbolicExpression exp) {
         this.exp = exp;
     }
 
@@ -17,10 +16,5 @@ public abstract class Unary extends SymbolicExpression {
     @Override 
     public String toString() {
         return this.getName() + "(" + this.exp.toString() + ")";
-    }
-
-    @Override
-    public int getPriority() {
-        return 70;
     }
 }

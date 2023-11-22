@@ -8,7 +8,6 @@ public class Variable extends Atom {
     private String identifier;
 
     public Variable(String identifier) {
-        super("Variable");
         this.identifier = identifier;
     }
 
@@ -28,16 +27,18 @@ public class Variable extends Atom {
         return this.identifier.hashCode();
     }
 
-    public boolean equals(Variable other) {
-        return this.identifier.equals(other.getVariable());
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Variable v) {
+            return this.identifier.equals(v.identifier);
+        } else {
+            return false;
+        }
     }
 
     public SymbolicExpression eval(Environment vars) {
-        if (vars.get(this) == null) {
-            return this;
-        } else {
-            return vars.get(this);
-        }
+        SymbolicExpression result = vars.get(this);
+        return result != null ? result : this;
     }
     
 }

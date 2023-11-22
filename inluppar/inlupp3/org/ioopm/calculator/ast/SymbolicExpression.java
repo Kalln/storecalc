@@ -1,23 +1,23 @@
 package org.ioopm.calculator.ast;
 
-import java.util.HashMap;
-import org.ioopm.calculator.ast.atom.Variable;
+import javax.management.RuntimeErrorException;
 
 public abstract class SymbolicExpression {
     private String name; 
     private String[] subExpressions;
     
+ public abstract SymbolicExpression eval(Environment vars);
     /// The second argument allows us to pass in 0 or more arguments
-    public SymbolicExpression(String name, Object... subExpressions) {
+/*     public SymbolicExpression(String name, Object... subExpressions) {
         this.name = name;
         this.subExpressions = new String[subExpressions.length];
         for (int i = 0; i < subExpressions.length; ++i) {
             this.subExpressions[i] = subExpressions[i].toString();
         }
-    }
+    } */
 
     /// Returns e.g., "Constant(42)" if name is "Constant" and subExpressions is ["42"]
-    public String toString(String msg) {
+   /*  public String toString(String msg) {
         StringBuilder sb = new StringBuilder();
         sb.append(this.name);
         sb.append("(");
@@ -29,7 +29,7 @@ public abstract class SymbolicExpression {
         }
         sb.append(")");
         return sb.toString(); 
-    }
+    } */
 
     public boolean isConstant() {
         return false;
@@ -50,16 +50,4 @@ public abstract class SymbolicExpression {
     public double getValue() {
         throw new RuntimeException("getValue() not implemented for non constants");
     }
-
-    public boolean equals(SymbolicExpression other) {
-        if (this.getValue() == other.getValue()) {
-            return true;
-        }
-        return false;
-    }
-
-    public abstract SymbolicExpression eval(Environment vars);
-        
-
-
 }

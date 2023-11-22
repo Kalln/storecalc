@@ -2,18 +2,29 @@ package org.ioopm.calculator.ast.binary;
 
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.atom.Variable;
 
 public class Assignment extends Binary {
-    public Assignment(SymbolicExpression lhs, SymbolicExpression rhs ) throws RuntimeException{
-        super("Assignment", lhs, rhs);
+    public Assignment(SymbolicExpression res, SymbolicExpression key ) throws RuntimeException{
+        super("Assignment", res, key);
 
-        if (!lhs.isVariable()) {
+        if (!key.isVariable()) {
             throw new RuntimeException("Left hand side of assignment must be a variable");
         }
     }
 
+    public String getName() {
+        return "=";
+    }
+
 
     public SymbolicExpression eval(Environment vars) {
-        return this.getRhs().eval(vars);
+        SymbolicExpression key = this.getRhs();
+        if (key instanceof Variable v) {
+            vars.put(v, this.getLhs());
+        } else {
+            throw new RuntimeException("The rhs was not a variable.");
+        }
+        return key;
     }
 }

@@ -7,7 +7,6 @@ public abstract class Binary extends SymbolicExpression{
     private SymbolicExpression rhs;
 
     public Binary(String name, SymbolicExpression lhs, SymbolicExpression rhs) {
-        super(name, lhs, rhs);
         this.lhs = lhs; 
         this.rhs = rhs;
     }
@@ -29,5 +28,10 @@ public abstract class Binary extends SymbolicExpression{
         }
         // if not, just print it out
         return lhs.toString() + " " + getName() + " " + rhs.toString();
+    }
+
+
+    public boolean eval(Binary other) {
+        return this.lhs.equals(other.lhs) && this.rhs.equals(other.rhs);
     }
 }
