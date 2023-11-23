@@ -31,6 +31,9 @@ public abstract class SymbolicExpression {
         return sb.toString(); 
     } */
 
+    public boolean isCommand() {
+        return false;
+    }
     public boolean isConstant() {
         return false;
     }
