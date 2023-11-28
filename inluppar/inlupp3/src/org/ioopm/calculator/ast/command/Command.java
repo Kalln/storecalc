@@ -14,4 +14,6 @@ public abstract class Command extends SymbolicExpression {
     public SymbolicExpression eval(Environment vars) throws RuntimeException {
         throw new RuntimeException("commands may not be evaluated");
     }
+
+    public abstract void run(Environment env, int expressionsEntered, int sucessfullyEvaluated, int fullyEvaluated);
 }
