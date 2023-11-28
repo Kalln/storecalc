@@ -27,7 +27,7 @@ public class Subtraction extends Binary {
         if (lhs.isConstant() && rhs.isConstant()) {
             return new Constant(lhs.getValue() - rhs.getValue());
         } else {
-            return new Addition(lhs, rhs);
+            return new Subtraction(lhs, rhs);
         }
     }
 }
