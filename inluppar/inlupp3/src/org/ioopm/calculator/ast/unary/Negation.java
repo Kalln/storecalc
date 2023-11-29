@@ -24,6 +24,9 @@ public class Negation extends Unary {
         SymbolicExpression arg = this.exp.eval(vars);
 
         if (arg.isConstant()) {
+
+            // double the current value, then get the current val and subtract the double of the current value.
+            // to make it negative.
             var tmp = exp.getValue();
             tmp = 2 * tmp;
             return new Constant(exp.getValue() - tmp);

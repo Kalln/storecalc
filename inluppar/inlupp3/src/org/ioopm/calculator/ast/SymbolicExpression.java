@@ -1,36 +1,22 @@
 package org.ioopm.calculator.ast;
 
-import javax.management.RuntimeErrorException;
+
 
 public abstract class SymbolicExpression {
-    private String name; 
-    private String[] subExpressions;
-    
- public abstract SymbolicExpression eval(Environment vars);
-    /// The second argument allows us to pass in 0 or more arguments
-/*     public SymbolicExpression(String name, Object... subExpressions) {
-        this.name = name;
-        this.subExpressions = new String[subExpressions.length];
-        for (int i = 0; i < subExpressions.length; ++i) {
-            this.subExpressions[i] = subExpressions[i].toString();
-        }
-    } */
 
-    /// Returns e.g., "Constant(42)" if name is "Constant" and subExpressions is ["42"]
-   /*  public String toString(String msg) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.name);
-        sb.append("(");
-        for (int i = 1; i < this.subExpressions.length; ++i) {
-            sb.append(this.subExpressions[i]);
-            if (i + 1 < subExpressions.length) {
-                sb.append(", ");
-            }
-        }
-        sb.append(")");
-        return sb.toString(); 
-    } */
 
+    /**
+     * Abstract method that forces class-children to have eval method that will evaluate the given expression.
+     * @param vars - Environment containing the variables in the running program
+     * @return A new SymbolicExpression.
+     */
+    public abstract SymbolicExpression eval(Environment vars);
+
+
+    /**
+     * By defualt all isX methods are false, these has to been overwritten by childrens of this class.
+     * 
+     */
     public boolean isCommand() {
         return false;
     }
@@ -41,13 +27,17 @@ public abstract class SymbolicExpression {
     public boolean isVariable() {
         return false;
     }
+    
+    /**
+     * Priority that determines how paranthesis are printed.
+     * @return a number priority, If a operation has higher priority the paranthesis will be printed on that expression.
+     */
+    public int getPriority() {
+            return 100; 
+        }
 
     public String getName() {
         throw new RuntimeException("getName() not implemented for expressions with no operator");
-    }
-
-    public int getPriority() {
-        return 100; 
     }
     
     public double getValue() {
