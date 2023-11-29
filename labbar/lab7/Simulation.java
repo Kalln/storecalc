@@ -2,6 +2,7 @@ import java.util.Random;
 
 import Customers.Customer;
 import Customers.ElderlyCustomer;
+import Customers.RegularCustomer;
 import Customers.SelfScanningCustomer;
 
 public class Simulation {
@@ -33,7 +34,7 @@ public class Simulation {
         this.time = 0;
         
         // create the first customer.
-        store.newCustomer(new Customer(0, maxGroceries));
+        store.newCustomer(new RegularCustomer(0, maxGroceries));
     }
 
     public void step() {
@@ -59,7 +60,7 @@ public class Simulation {
                 // 50 % to get a regular customer.
             }
             
-            store.newCustomer(new Customer(time, rand.nextInt(maxGroceries)));
+            store.newCustomer(new RegularCustomer(time, rand.nextInt(maxGroceries)));
           
         }
 
