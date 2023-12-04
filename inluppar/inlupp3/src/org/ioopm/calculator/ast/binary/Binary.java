@@ -31,7 +31,10 @@ public abstract class Binary extends SymbolicExpression{
     }
 
 
-    public boolean eval(Binary other) {
-        return this.lhs.equals(other.lhs) && this.rhs.equals(other.rhs);
+    public boolean equals(Object other) {
+        if (other instanceof Binary b) {
+            return this.lhs.equals(b.lhs) && this.rhs.equals(b.rhs);
+        }
+        return false;
     }
 }

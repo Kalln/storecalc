@@ -1,15 +1,16 @@
 package org.ioopm.calculator.ast.binary;
 
 import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Variable;
 
 public class Assignment extends Binary {
-    public Assignment(SymbolicExpression res, SymbolicExpression key ) throws RuntimeException{
+    public Assignment(SymbolicExpression res, SymbolicExpression key ) throws IllegalAssignmentException{
         super("Assignment", res, key);
 
         if (!key.isVariable()) {
-            throw new RuntimeException("Left hand side of assignment must be a variable");
+            throw new IllegalAssignmentException("not allowed to redefine a named constant.");
         }
     }
 
