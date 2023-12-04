@@ -6,7 +6,6 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 
 public class Exp extends Unary {
-    
     public Exp(SymbolicExpression exp) {
         super(exp);
     }

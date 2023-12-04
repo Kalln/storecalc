@@ -13,6 +13,7 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
 import org.ioopm.calculator.ast.unary.Sin;
+import org.ioopm.calculator.ast.unary.Exp;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +29,7 @@ public class StandardTests {
 
     @BeforeEach
     void init() {
-        
+
     }
 
     @Test
@@ -43,7 +44,7 @@ public class StandardTests {
         assertTrue(c.isConstant());
         assertFalse(c.isCommand());
         assertFalse(c.isVariable());
-        
+
     }
 
     @Test
@@ -66,7 +67,7 @@ public class StandardTests {
 
 
     }
-    
+
     @Test
     void additionTest() {
         Environment vars = new Environment();
@@ -105,7 +106,7 @@ public class StandardTests {
 
         // TODO
     }
-    
+
     @Test
     void divisionTest() {
         Environment vars = new Environment();
@@ -139,15 +140,24 @@ public class StandardTests {
         Cos c = new Cos(v);
         Sin s = new Sin(m);
 
-        assertTrue(c.toString().equals("Cos(x)")); // TODO rewrite toString()
-        assertTrue(s.toString().equals("Sin((5.0 + x) * 2.0)")); // TODO rewrite toString()
+        assertTrue(c.toString().equals("Cos(x)"));
+        assertTrue(s.toString().equals("Sin((5.0 + x) * 2.0)"));
         assertTrue(new Cos(c1).eval(null).getValue() == Math.cos(5));
     }
+
     @Test
     void expTest() {
-        assertTrue(new Constant(42).getValue() == 42);
+        var c1 = new Constant(5);
+        var v = new Variable("x");
 
-        // TODO
+        var c = new Exp(v);
+        var c2 = new Exp(new Addition(new Constant(5), new Constant(2)));
+
+        assertTrue(c.toString().equals("Exp(x)"));
+
+        assertEquals(new Exp(c1).eval(null).getValue(), Math.exp(5));
+        assertEquals(c2.eval(null).getValue(), Math.exp(7));
+
     }
 
     @Test
@@ -159,7 +169,7 @@ public class StandardTests {
         Multiplication m = new Multiplication(a, c2);
         Log l = new Log(m);
 
-        assertTrue(l.toString().equals("Log((5.0 + x) * 2.0)")); // TODO rewrite toString()
+        assertTrue(l.toString().equals("Log((5.0 + x) * 2.0)"));
         // TODO test eval
     }
 
@@ -182,10 +192,8 @@ public class StandardTests {
         SymbolicExpression m1 = new Multiplication(a, c2);
         SymbolicExpression d = new Division(m1, a);
 
-        assertTrue(d.toString().equals("(5.0 + x) * 2.0 / (5.0 + x)")); // TODO rewrite toString()
+        assertTrue(d.toString().equals("(5.0 + x) * 2.0 / (5.0 + x)"));
     }
-
-
 
     @Test
     void succeedingTest() {
