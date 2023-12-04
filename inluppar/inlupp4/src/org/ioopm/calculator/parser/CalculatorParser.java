@@ -113,7 +113,7 @@ public class CalculatorParser {
      * @throws SyntaxErrorException if the token parsed cannot be turned into a valid expression,
      *         the variable on rhs of '=' is a number or invalid variable
      */
-    private SymbolicExpression assignment() throws IOException, SyntaxErrorException {
+    private SymbolicExpression assignment() throws IOException {
         SymbolicExpression result = expression();
         this.st.nextToken();
         while (this.st.ttype == ASSIGNMENT) {
