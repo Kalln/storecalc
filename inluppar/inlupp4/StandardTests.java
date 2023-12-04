@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class StandardTests {
-
     @BeforeAll
     static void initAll() {
 
@@ -157,7 +156,31 @@ public class StandardTests {
 
         assertEquals(new Exp(c1).eval(null).getValue(), Math.exp(5));
         assertEquals(c2.eval(null).getValue(), Math.exp(7));
+        assertFalse(c2.isConstant());
+    }
 
+    @Test
+    void testPriority() {
+        var v = new Variable("var");
+        var con = new Constant(9);
+        var sin = new Sin(new Constant(5));
+        var cos = new Cos(con);
+
+        var add = new Addition(new Constant(2), new Constant(3456));
+        var mul = new Multiplication(new Constant(0), new Constant(67));
+        var sub = new Subtraction(new Constant(345) , new Constant(5));
+        var div = new Division(v, con);
+
+        assertTrue(add.getPriority() <  mul.getPriority());
+        assertTrue(sin.getPriority() >  sub.getPriority());
+
+        assertEquals(mul.getPriority(), div.getPriority());
+        assertEquals(add.getPriority(), sub.getPriority());
+
+        assertEquals(v.getPriority(), con.getPriority());
+        assertEquals(sin.getPriority(), cos.getPriority());
+
+        //TODO: check more priority
     }
 
     @Test
