@@ -52,6 +52,7 @@ Mkfile.old
 dkms.conf
 
 # java
-
+lib/*.jar
 *.class
 inluppar/inlupp3/classes
+inluppar/inlupp4/classes

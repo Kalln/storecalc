@@ -31,12 +31,14 @@ public class CalculatorParser {
     private static String EXP = "Exp";
     private static char ASSIGNMENT = '=';
 
-    // unallowerdVars is used to check if variabel name that we
+    // unallowerdVars is used to check if variable name that we
     // want to assign new meaning to is a valid name eg 3 = Quit
     // or 10 + x = L is not allowed
-    private final ArrayList < String > unallowedVars = new ArrayList < String > (Arrays.asList("Quit",
+    private final ArrayList<String> unallowedVars = new ArrayList<String>(Arrays.asList(
+        "Quit",
         "Vars",
-        "Clear"));
+        "Clear"
+    ));
 
     /**
      * Used to parse the inputted string by the Calculator program
@@ -64,11 +66,11 @@ public class CalculatorParser {
     private SymbolicExpression statement() throws IOException {
         SymbolicExpression result;
         this.st.nextToken(); //kollar på nästa token som ligger på strömmen
-        if (this.st.ttype == this.st.TT_EOF) {
+        if (this.st.ttype == StreamTokenizer.TT_EOF) {
             throw new SyntaxErrorException("Error: Expected an expression");
         }
 
-        if (this.st.ttype == this.st.TT_WORD) { // vilken typ det senaste tecken vi läste in hade.
+        if (this.st.ttype == StreamTokenizer.TT_WORD) { // vilken typ det senaste tecken vi läste in hade.
             if (this.st.sval.equals("Quit") || this.st.sval.equals("Vars") || this.st.sval.equals("Clear")) { // sval = string Variable
                 result = command();
             } else {
@@ -78,8 +80,8 @@ public class CalculatorParser {
             result = assignment(); // om inte == word, gå till assignment ändå (kan vara tt_number)
         }
 
-        if (this.st.nextToken() != this.st.TT_EOF) { // token should be an end of stream token if we are done
-            if (this.st.ttype == this.st.TT_WORD) {
+        if (this.st.nextToken() != StreamTokenizer.TT_EOF) { // token should be an end of stream token if we are done
+            if (this.st.ttype == StreamTokenizer.TT_WORD) {
                 throw new SyntaxErrorException("Error: Unexpected '" + this.st.sval + "'");
             } else {
                 throw new SyntaxErrorException("Error: Unexpected '" + String.valueOf((char) this.st.ttype) + "'");
@@ -106,7 +108,7 @@ public class CalculatorParser {
 
 
     /**
-     * Checks wether the token read is an assignment between 2 expression and 
+     * Checks wether the token read is an assignment between 2 expression and
      * descend into the right hand side of '='
      * @return a SymbolicExpression to be evaluated
      * @throws IOException by nextToken() if it reads invalid input
@@ -118,9 +120,9 @@ public class CalculatorParser {
         this.st.nextToken();
         while (this.st.ttype == ASSIGNMENT) {
             this.st.nextToken();
-            if (this.st.ttype == this.st.TT_NUMBER) {
+            if (this.st.ttype == StreamTokenizer.TT_NUMBER) {
                 throw new SyntaxErrorException("Error: Numbers cannot be used as a variable name");
-            } else if (this.st.ttype != this.st.TT_WORD) {
+            } else if (this.st.ttype != StreamTokenizer.TT_WORD) {
                 throw new SyntaxErrorException("Error: Not a valid assignment of a variable"); //this handles faulty inputs after the equal sign eg. 1 = (x etc
             } else {
                 if (this.st.sval.equals("ans")) {
@@ -155,7 +157,6 @@ public class CalculatorParser {
         }
         return result;
     }
-
 
     /**
      * Checks wether the token read is an addition or subtraction
@@ -227,7 +228,7 @@ public class CalculatorParser {
             }
         } else if (this.st.ttype == NEGATION) {
             result = unary();
-        } else if (this.st.ttype == this.st.TT_WORD) {
+        } else if (this.st.ttype == StreamTokenizer.TT_WORD) {
             if (st.sval.equals(SIN) ||
                 st.sval.equals(COS) ||
                 st.sval.equals(EXP) ||
@@ -279,7 +280,7 @@ public class CalculatorParser {
      */
     private SymbolicExpression number() throws IOException {
         this.st.nextToken();
-        if (this.st.ttype == this.st.TT_NUMBER) {
+        if (this.st.ttype == StreamTokenizer.TT_NUMBER) {
             return new Constant(this.st.nval);
         } else {
             throw new SyntaxErrorException("Error: Expected number");
