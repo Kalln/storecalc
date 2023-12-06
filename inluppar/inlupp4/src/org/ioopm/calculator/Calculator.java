@@ -30,42 +30,47 @@ public class Calculator {
         while(true) {
             System.out.print("> ");
             String input = scanner.nextLine();
-            SymbolicExpression result = calcParser.parse(input, env);
-            expressionEntered++;
 
-            // Since commands can't be evaluated, we have to check that if the result is a command first before evaluating.
-            if (result.isCommand()) {
+            try {
+                SymbolicExpression result = calcParser.parse(input, env);
+                expressionEntered++;
 
-                // all commands have their own run methods, that do their own operation.
-                if (result instanceof Quit r) {
-                    r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
-                    // Breaks the while loop.
-                    break; 
+                // Since commands can't be evaluated, we have to check that if the result is a command first before evaluating.
+                if (result.isCommand()) {
+
+                    // all commands have their own run methods, that do their own operation.
+                    if (result instanceof Quit r) {
+                        r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+                        // Breaks the while loop.
+                        break; 
+                    }
+                    else if (result instanceof Vars r) {
+                        r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+                        continue;
+                    } else if (result instanceof Clear r) {
+                        r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+                        continue;
+                    }
+                } else {
+
+                    // results is not a command, therefore we can evaluate the result.
+                    var evalRes = result.eval(env);
+                    sucessfullyEvaluated++;
+
+                    // ans variable will keep the last successfully evaluated expression.
+                    // this is done by saving 'ans' as a variable in the environment. 
+                    env.put(new Variable("ans"), evalRes);
+                    
+                    // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
+                    if (evalRes instanceof Constant) {
+                        fullyEvaluated++;
+                    }
+
+
+                    System.out.println(evalRes);
                 }
-                else if (result instanceof Vars r) {
-                    r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
-                    continue;
-                } else if (result instanceof Clear r) {
-                    r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
-                    continue;
-                }
-            } else {
-
-                // results is not a command, therefore we can evaluate the result.
-                var evalRes = result.eval(env);
-                sucessfullyEvaluated++;
-
-                // ans variable will keep the last successfully evaluated expression.
-                // this is done by saving 'ans' as a variable in the environment. 
-                env.put(new Variable("ans"), evalRes);
-                
-                // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
-                if (evalRes instanceof Constant) {
-                    fullyEvaluated++;
-                }
-
-
-                System.out.println(evalRes);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
             }
 
         }
