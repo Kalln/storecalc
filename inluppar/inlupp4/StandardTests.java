@@ -1,14 +1,22 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
+import javax.swing.plaf.synth.SynthButtonUI;
+
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.NamedConstant;
 import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.Subtraction;
+import org.ioopm.calculator.ast.command.Clear;
+import org.ioopm.calculator.ast.command.Quit;
+import org.ioopm.calculator.ast.command.Vars;
 import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
@@ -95,10 +103,10 @@ public class StandardTests {
     @Test
     void assignmentTest() {
         try {
+            SymbolicExpression as1 = new Assignment(new Variable("x"), new Constant(6));
             SymbolicExpression as = new Assignment(new Constant(3), new Constant(6));
-            SymbolicExpression as1 = new Assignment(null, new Constant(6));
         } catch (RuntimeException e) {
-            assertTrue(e.getMessage() == "Left hand side of assignment must be a variable");
+            assertEquals(e.getMessage(), "not allowed to redefine a named constant.");
         }
 
         Assignment as2 = new Assignment(new Constant(42), new Variable("x"));
@@ -217,6 +225,159 @@ public class StandardTests {
 
         assertTrue(d.toString().equals("(5.0 + x) * 2.0 / (5.0 + x)"));
     }
+    
+    @Test
+    void isCommandTest() {
+        // atom
+        SymbolicExpression c1 = new Constant(42);
+        SymbolicExpression nc = new NamedConstant("x", 42);
+        SymbolicExpression v = new Variable("y");
+
+        // binary
+        SymbolicExpression a = new Addition(c1, v);
+        SymbolicExpression as = new Assignment(c1, v);
+        SymbolicExpression d = new Division(v, a);
+        SymbolicExpression m = new Multiplication(as, d);
+        SymbolicExpression s = new Subtraction(d, m); 
+
+        // command
+        SymbolicExpression q = Quit.instance();
+        SymbolicExpression c = Clear.instance();
+        SymbolicExpression vars = Vars.instance();
+
+        // unary
+        SymbolicExpression cos = new Cos(c1);
+        SymbolicExpression exp = new Exp(c1);
+        SymbolicExpression log = new Log(c1);
+        SymbolicExpression neg = new Negation(c1);
+        SymbolicExpression sin = new Sin(c1);
+
+        // test that all non-commands return false on fn isCommand()
+        // atom
+        assertFalse(c1.isCommand());
+        assertFalse(nc.isCommand());
+        assertFalse(v.isCommand());
+
+        // binary
+        assertFalse(a.isCommand());
+        assertFalse(as.isCommand());
+        assertFalse(d.isCommand());
+        assertFalse(m.isCommand());
+        assertFalse(s.isCommand());
+
+        // command -> true
+        assertTrue(q.isCommand());
+        assertTrue(c.isCommand());
+        assertTrue(vars.isCommand());
+
+        // unary
+        assertFalse(cos.isCommand());
+        assertFalse(exp.isCommand());
+        assertFalse(log.isCommand());
+        assertFalse(neg.isCommand());
+        assertFalse(sin.isCommand());
+    }
+
+    @Test
+    void testToStringAtom() {
+        SymbolicExpression c1 = new Constant(42);
+        SymbolicExpression nc = new NamedConstant("x", 42);
+        SymbolicExpression v = new Variable("y");
+
+        assertEquals(c1.toString(), "42.0");
+        assertEquals(nc.toString(), "x");
+        assertEquals(v.toString(), "y");
+
+    }
+
+    @Test
+    void testToStringBinary() {
+        SymbolicExpression a = new Addition(new Constant(42), new Variable("x"));
+        SymbolicExpression as = new Assignment(new Constant(42), new Variable("y"));
+        SymbolicExpression d = new Division(new Variable("x"), a);
+        SymbolicExpression m = new Multiplication(a, d);
+        SymbolicExpression s = new Subtraction(d, m); 
+
+        assertEquals(a.toString(), "42.0 + x");
+        assertEquals(as.toString(), "42.0 = y");
+        assertEquals(d.toString(), "x / (42.0 + x)");
+        assertEquals(m.toString(), "(42.0 + x) * x / (42.0 + x)");
+        assertEquals(s.toString(), "x / (42.0 + x) - (42.0 + x) * x / (42.0 + x)");
+        
+    }
+
+    // TODO  more complex unary toString testststs.
+    @Test
+    void testToStringUnary() {
+        SymbolicExpression c1 = new Constant(42);
+        SymbolicExpression cos = new Cos(c1);
+        SymbolicExpression exp = new Exp(c1);
+        SymbolicExpression log = new Log(c1);
+        SymbolicExpression neg = new Negation(c1);
+        SymbolicExpression sin = new Sin(c1);
+
+        assertEquals(cos.toString(), "Cos(42.0)");
+        assertEquals(exp.toString(), "Exp(42.0)");
+        assertEquals(log.toString(), "Log(42.0)");
+        assertEquals(neg.toString(), "-42.0");
+        assertEquals(sin.toString(), "Sin(42.0)");
+
+    }
+
+    @Test
+    void getNametest() {
+        // atom
+        SymbolicExpression c1 = new Constant(42);
+        SymbolicExpression nc = new NamedConstant("x", 42);
+        SymbolicExpression v = new Variable("y");
+
+        // binary
+        SymbolicExpression a = new Addition(c1, v);
+        SymbolicExpression as = new Assignment(c1, v);
+        SymbolicExpression d = new Division(v, a);
+        SymbolicExpression m = new Multiplication(as, d);
+        SymbolicExpression s = new Subtraction(d, m); 
+
+        // command
+        SymbolicExpression q = Quit.instance();
+        SymbolicExpression c = Clear.instance();
+        SymbolicExpression vars = Vars.instance();
+
+        // unary
+        SymbolicExpression cos = new Cos(c1);
+        SymbolicExpression exp = new Exp(c1);
+        SymbolicExpression log = new Log(c1);
+        SymbolicExpression neg = new Negation(c1);
+        SymbolicExpression sin = new Sin(c1);
+
+        var thrown = assertThrows(RuntimeException.class, () -> {
+            c1.getName();
+            nc.getName();
+            v.getName();
+            q.getName();
+            c.getName();
+            vars.getName();
+        });
+
+        assertEquals("getName() not implemented for expressions with no operator", thrown.getMessage());
+
+
+        assertEquals(a.getName(), "+");
+        assertEquals(as.getName(), "=");
+        assertEquals(d.getName(), "/");
+        assertEquals(m.getName(), "*");
+        assertEquals(s.getName(), "-");
+
+
+        assertEquals(cos.getName(), "Cos");
+        assertEquals(exp.getName(), "Exp");
+        assertEquals(log.getName(), "Log");
+        assertEquals(neg.getName(), "Neg");
+        assertEquals(sin.getName(), "Sin");
+
+
+    }
+
 
     @Test
     void succeedingTest() {
