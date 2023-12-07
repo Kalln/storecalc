@@ -10,14 +10,16 @@ public class Negation extends Unary {
         super(exp);
     }
 
-    @Override 
+    @Override
     public String getName() {
         return "Neg";
     }
 
     @Override
     public String toString() {
-        return "-" + exp.getValue();
+        return this.getPriority() > exp.getPriority()
+            ? "-(" + exp.toString() + ")"
+            : "-" + exp.toString();
     }
 
     public SymbolicExpression eval(Environment vars) {

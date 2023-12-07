@@ -1,9 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
-import javax.swing.plaf.synth.SynthButtonUI;
-
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -225,7 +221,7 @@ public class StandardTests {
 
         assertTrue(d.toString().equals("(5.0 + x) * 2.0 / (5.0 + x)"));
     }
-    
+
     @Test
     void isCommandTest() {
         // atom
@@ -238,7 +234,7 @@ public class StandardTests {
         SymbolicExpression as = new Assignment(c1, v);
         SymbolicExpression d = new Division(v, a);
         SymbolicExpression m = new Multiplication(as, d);
-        SymbolicExpression s = new Subtraction(d, m); 
+        SymbolicExpression s = new Subtraction(d, m);
 
         // command
         SymbolicExpression q = Quit.instance();
@@ -296,17 +292,16 @@ public class StandardTests {
         SymbolicExpression as = new Assignment(new Constant(42), new Variable("y"));
         SymbolicExpression d = new Division(new Variable("x"), a);
         SymbolicExpression m = new Multiplication(a, d);
-        SymbolicExpression s = new Subtraction(d, m); 
+        SymbolicExpression s = new Subtraction(d, m);
 
         assertEquals(a.toString(), "42.0 + x");
         assertEquals(as.toString(), "42.0 = y");
         assertEquals(d.toString(), "x / (42.0 + x)");
         assertEquals(m.toString(), "(42.0 + x) * x / (42.0 + x)");
         assertEquals(s.toString(), "x / (42.0 + x) - (42.0 + x) * x / (42.0 + x)");
-        
+
     }
 
-    // TODO  more complex unary toString testststs.
     @Test
     void testToStringUnary() {
         SymbolicExpression c1 = new Constant(42);
@@ -322,6 +317,15 @@ public class StandardTests {
         assertEquals(neg.toString(), "-42.0");
         assertEquals(sin.toString(), "Sin(42.0)");
 
+        var nested = new Cos(new Negation(new Cos(new Log(new Constant(36)))));
+        assertEquals(nested.toString(), "Cos(-Cos(Log(36.0)))");
+
+        var negatedAdd = new Negation(new Addition(new Constant(3), new Variable("z")));
+        assertEquals(negatedAdd.toString(), "-(3.0 + z)");
+
+        assertEquals(new Negation(new Constant(6)).toString(), "-6.0");
+        assertEquals(new Negation(new Variable("i")).toString(), "-i");
+
     }
 
     @Test
@@ -336,7 +340,7 @@ public class StandardTests {
         SymbolicExpression as = new Assignment(c1, v);
         SymbolicExpression d = new Division(v, a);
         SymbolicExpression m = new Multiplication(as, d);
-        SymbolicExpression s = new Subtraction(d, m); 
+        SymbolicExpression s = new Subtraction(d, m);
 
         // command
         SymbolicExpression q = Quit.instance();
