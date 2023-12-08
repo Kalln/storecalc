@@ -16,12 +16,12 @@ public class Constant extends Atom{
     public double getValue() {
         return this.value;
     }
-    
+
     @Override
     public String toString() {
         return String.valueOf(this.value);
     }
-    
+
     public boolean equals(Object other) {
         if (other instanceof Constant c) {
             return this.getValue() == c.getValue();

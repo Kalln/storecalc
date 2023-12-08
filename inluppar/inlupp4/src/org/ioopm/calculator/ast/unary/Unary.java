@@ -4,7 +4,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 
 public abstract class Unary extends SymbolicExpression {
     public SymbolicExpression exp;
-    
+
     public abstract String getName();
 
     public Unary(SymbolicExpression exp) {
@@ -15,7 +15,7 @@ public abstract class Unary extends SymbolicExpression {
         return this.exp;
     }
 
-    @Override 
+    @Override
     public String toString() {
         return this.getName() + "(" + this.exp.toString() + ")";
     }

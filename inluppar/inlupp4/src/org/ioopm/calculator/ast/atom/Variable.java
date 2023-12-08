@@ -40,5 +40,5 @@ public class Variable extends Atom {
         SymbolicExpression result = vars.get(this);
         return result != null ? result : this;
     }
-    
+
 }

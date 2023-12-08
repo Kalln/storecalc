@@ -14,10 +14,10 @@ import org.ioopm.calculator.parser.SyntaxErrorException;
 
 public class Calculator {
 
-    public static void main(String[] args) throws IOException, SyntaxErrorException, IllegalExpressionException {    
+    public static void main(String[] args) throws IOException, SyntaxErrorException, IllegalExpressionException {
 
         // Initialize variables for statistics and create the CalculatorParser that will parse the input.
-        // env contains all the environment variables, to be allowed to use constants but also create 
+        // env contains all the environment variables, to be allowed to use constants but also create
         // variables during runtime.
         CalculatorParser calcParser = new CalculatorParser();
         int expressionEntered = 0;
@@ -42,7 +42,7 @@ public class Calculator {
                     if (result instanceof Quit r) {
                         r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
                         // Breaks the while loop.
-                        break; 
+                        break;
                     }
                     else if (result instanceof Vars r) {
                         r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
@@ -58,9 +58,9 @@ public class Calculator {
                     sucessfullyEvaluated++;
 
                     // ans variable will keep the last successfully evaluated expression.
-                    // this is done by saving 'ans' as a variable in the environment. 
+                    // this is done by saving 'ans' as a variable in the environment.
                     env.put(new Variable("ans"), evalRes);
-                    
+
                     // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
                     if (evalRes instanceof Constant) {
                         fullyEvaluated++;
@@ -77,5 +77,5 @@ public class Calculator {
 
         scanner.close();
     }
-    
+
 }

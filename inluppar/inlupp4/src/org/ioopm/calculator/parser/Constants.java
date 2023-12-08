@@ -10,4 +10,4 @@ public class Constants {
         Constants.namedConstants.put("pi", Math.PI);
         Constants.namedConstants.put("e", Math.E);
     }
-}   
+}

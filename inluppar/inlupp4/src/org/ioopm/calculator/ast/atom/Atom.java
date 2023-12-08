@@ -12,5 +12,5 @@ public abstract class Atom extends SymbolicExpression {
             return this;
         }
     }
-    
+
 }

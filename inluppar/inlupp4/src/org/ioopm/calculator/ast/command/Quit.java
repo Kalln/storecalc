@@ -22,5 +22,5 @@ public class Quit extends Command {
                 """.formatted(expressionsEntered, sucessfullyEvaluated, fullyEvaluated);
         System.out.println(endingOfProgram);
     }
-    
+
 }

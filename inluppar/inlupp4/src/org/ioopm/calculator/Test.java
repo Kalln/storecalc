@@ -53,8 +53,8 @@ public class Test {
 
     }
      private void testEvaluating(SymbolicExpression expected, SymbolicExpression e) {
-        
-        
+
+
         SymbolicExpression r = e.eval(this.vars);
         if (r.equals(expected)) {
             System.out.println("PASS: " + r);
