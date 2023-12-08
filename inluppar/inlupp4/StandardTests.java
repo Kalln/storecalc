@@ -25,6 +25,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class StandardTests {
+    // Results might not match expected values exactly, some error is acceptable and expected.
+    private double acceptableFloatError = 0.00001;
+
     @BeforeAll
     static void initAll() {
 
@@ -167,24 +170,36 @@ public class StandardTests {
     void testPriority() {
         var v = new Variable("var");
         var con = new Constant(9);
+        var pi = new NamedConstant("π", Math.PI);
+
         var sin = new Sin(new Constant(5));
         var cos = new Cos(con);
+        var exp = new Exp(con);
+        var log = new Log(v);
+        var neg = new Negation(pi);
 
         var add = new Addition(new Constant(2), new Constant(3456));
         var mul = new Multiplication(new Constant(0), new Constant(67));
         var sub = new Subtraction(new Constant(345) , new Constant(5));
         var div = new Division(v, con);
 
-        assertTrue(add.getPriority() <  mul.getPriority());
-        assertTrue(sin.getPriority() >  sub.getPriority());
+        // var as = new Assignment(con, v);
+
+        // TODO: check if assignment needs lower priority than addition/subtraction
+        // assertTrue(as.getPriority() < add.getPriority());
+        assertTrue(add.getPriority() < mul.getPriority());
+        assertTrue(sub.getPriority() < sin.getPriority());
 
         assertEquals(mul.getPriority(), div.getPriority());
         assertEquals(add.getPriority(), sub.getPriority());
 
+        assertEquals(pi.getPriority(), con.getPriority());
         assertEquals(v.getPriority(), con.getPriority());
-        assertEquals(sin.getPriority(), cos.getPriority());
 
-        //TODO: check more priority
+        assertEquals(sin.getPriority(), cos.getPriority());
+        assertEquals(exp.getPriority(), cos.getPriority());
+        assertEquals(log.getPriority(), cos.getPriority());
+        assertEquals(neg.getPriority(), cos.getPriority());
     }
 
     @Test
@@ -197,7 +212,12 @@ public class StandardTests {
         Log l = new Log(m);
 
         assertTrue(l.toString().equals("Log((5.0 + x) * 2.0)"));
-        // TODO test eval
+
+        var logE = new Log(new Constant(Math.E));
+        assertEquals(logE.eval(new Environment()).getValue(), 1.0, acceptableFloatError);
+
+        var log100 = new Log(new Constant(100));
+        assertEquals(log100.eval(new Environment()).getValue(), Math.log(100), acceptableFloatError);
     }
 
     @Test
