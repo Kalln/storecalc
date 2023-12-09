@@ -159,6 +159,8 @@ public class StandardTests {
         assertTrue(c.toString().equals("Cos(x)"));
         assertTrue(s.toString().equals("Sin((5.0 + x) * 2.0)"));
         assertTrue(new Cos(c1).eval(null).getValue() == Math.cos(5));
+
+        assertEquals(new Sin(new Division(new Constant(Math.PI), new Constant(2))).eval(null).getValue(), 1);
     }
 
     @Test
