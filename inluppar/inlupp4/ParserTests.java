@@ -100,7 +100,13 @@ public class ParserTests {
 
     @Test
     void commandsParse() {
-        // TODO test commands
+        try {
+            assertEquals(parser.parse("Quit", env).isCommand(), true);
+            assertEquals(parser.parse("Vars", env).isCommand(), true);
+            assertEquals(parser.parse("Clear", env).isCommand(), true);
+        } catch (Exception e) {
+            assertTrue(false);
+        }
     }
 
     @Test
