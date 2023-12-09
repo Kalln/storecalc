@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.NamedConstant;
@@ -109,10 +110,17 @@ public class StandardTests {
         }
         Environment env = new Environment();
         Assignment as2 = new Assignment(new Constant(42), new Variable("x"));
+
         assertEquals(as2.eval(env).getValue(), 42.0);
         assertEquals(new Variable("x").eval(env), new Constant(42));
         
-        // TODO
+        try {
+            var as3 = new Assignment(new Constant(42), new Variable(null));
+            assertEquals(as3.eval(env).getValue(), null);
+            
+        } catch (IllegalAssignmentException e) {
+            assertEquals(e.getMessage(), "null is not a valid variable name.");
+        }
     }
 
     @Test
@@ -184,11 +192,9 @@ public class StandardTests {
         var mul = new Multiplication(new Constant(0), new Constant(67));
         var sub = new Subtraction(new Constant(345) , new Constant(5));
         var div = new Division(v, con);
-        SymbolicExpression as = new Assignment(new Constant(6), new Variable("x"));
+        var as = new Assignment(new Constant(6), new Variable("x"));
 
-        // var as = new Assignment(con, v);
 
-        // TODO: check if assignment needs lower priority than addition/subtraction
         assertTrue(as.getPriority() < add.getPriority());
         assertTrue(add.getPriority() < mul.getPriority());
         assertTrue(sub.getPriority() < sin.getPriority());

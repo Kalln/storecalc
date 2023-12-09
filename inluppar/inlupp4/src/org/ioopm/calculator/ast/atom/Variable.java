@@ -1,6 +1,7 @@
 package org.ioopm.calculator.ast.atom;
 
 import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Variable extends Atom {
@@ -8,6 +9,7 @@ public class Variable extends Atom {
     private String identifier;
 
     public Variable(String identifier) {
+        if (identifier == null) { throw new IllegalAssignmentException("null is not a valid variable name."); }
         this.identifier = identifier;
     }
 

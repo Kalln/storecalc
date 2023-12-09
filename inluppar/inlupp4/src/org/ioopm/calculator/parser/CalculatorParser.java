@@ -37,7 +37,9 @@ public class CalculatorParser {
     private final ArrayList<String> unallowedVars = new ArrayList<String>(Arrays.asList(
         "Quit",
         "Vars",
-        "Clear"
+        "Clear",
+        "pi",
+        "e"
     ));
 
     /**
