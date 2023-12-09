@@ -10,7 +10,7 @@ public class Assignment extends Binary {
         super("Assignment", res, key);
 
         if (!key.isVariable()) {
-            throw new IllegalAssignmentException("not allowed to redefine a named constant.");
+            throw new IllegalAssignmentException("Right hand side must be a variable.");
         }
     }
 

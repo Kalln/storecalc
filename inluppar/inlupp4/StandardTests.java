@@ -105,11 +105,13 @@ public class StandardTests {
             SymbolicExpression as1 = new Assignment(new Variable("x"), new Constant(6));
             SymbolicExpression as = new Assignment(new Constant(3), new Constant(6));
         } catch (RuntimeException e) {
-            assertEquals(e.getMessage(), "not allowed to redefine a named constant.");
+            assertEquals(e.getMessage(), "Right hand side must be a variable.");
         }
-
+        Environment env = new Environment();
         Assignment as2 = new Assignment(new Constant(42), new Variable("x"));
-
+        assertEquals(as2.eval(env).getValue(), 42.0);
+        assertEquals(new Variable("x").eval(env), new Constant(42));
+        
         // TODO
     }
 
