@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.invoke.ConstantCallSite;
+
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -85,11 +87,15 @@ public class ParserTests {
 
     @Test
     void advancedBinaryOperatorParse() {
-
         var mul = new Multiplication(c2, c1);
+
         try {
-            assertEquals(parser.parse("(42 + 58) * 42 - 58", env).toString(), new Multiplication(add, sub).toString());
-            assertEquals(parser.parse("42 + 58 * 42 - 58", env).toString(), new Addition(c1, new Subtraction(mul, c2)).toString());
+            assertEquals(parser.parse("(42 + 58) * 42 - 58", env).toString(),
+                        new Multiplication(add, sub).toString());
+
+            assertEquals(parser.parse("42 + 58 * 42 - 58", env).toString(),
+                         new Addition(c1, new Subtraction(mul, c2)).toString());
+
             // TODO more
 
         } catch (Exception e) {
@@ -111,8 +117,32 @@ public class ParserTests {
 
     @Test
     void unaryParse() {
+        try{
+            // Sin(1/2)
+            assertTrue(parser.parse("Sin(1/2)", env).equals(
+                new Sin(
+                    new Division(
+                        new Constant(1), 
+                        new Constant(2)
+                    )
+                )
+            ));
 
-        // TODO test unary
+            // Cos(1)
+            assertTrue(parser.parse("Cos(1)", env).equals(new Cos(new Constant(1))));
+
+            // Cos(Sin(1))
+            assertTrue(parser.parse("Cos(Sin(1))", env).equals(
+                new Cos(
+                    new Sin(
+                        new Constant(1)
+                    )
+                )
+            ));
+
+        } catch (Exception e) {
+            assertTrue(false);
+        }
 
     }
 
