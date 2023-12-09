@@ -184,11 +184,12 @@ public class StandardTests {
         var mul = new Multiplication(new Constant(0), new Constant(67));
         var sub = new Subtraction(new Constant(345) , new Constant(5));
         var div = new Division(v, con);
+        SymbolicExpression as = new Assignment(new Constant(6), new Variable("x"));
 
         // var as = new Assignment(con, v);
 
         // TODO: check if assignment needs lower priority than addition/subtraction
-        // assertTrue(as.getPriority() < add.getPriority());
+        assertTrue(as.getPriority() < add.getPriority());
         assertTrue(add.getPriority() < mul.getPriority());
         assertTrue(sub.getPriority() < sin.getPriority());
 

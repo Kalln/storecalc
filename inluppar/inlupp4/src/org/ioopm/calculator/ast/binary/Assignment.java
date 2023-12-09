@@ -14,6 +14,11 @@ public class Assignment extends Binary {
         }
     }
 
+    @Override
+    public int getPriority() {
+        return 5;
+    }
+
     public String getName() {
         return "=";
     }
