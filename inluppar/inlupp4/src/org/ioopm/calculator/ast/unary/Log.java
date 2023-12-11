@@ -4,7 +4,6 @@ import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
-import org.ioopm.calculator.parser.SyntaxErrorException;
 
 public class Log extends Unary {
 

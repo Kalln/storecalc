@@ -1,6 +1,7 @@
 package org.ioopm.calculator.ast.binary;
 
 import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 
@@ -22,6 +23,12 @@ public class Division extends Binary{
     public SymbolicExpression eval(Environment vars) {
         SymbolicExpression lhs = this.getLhs().eval(vars);
         SymbolicExpression rhs = this.getRhs().eval(vars);
+
+        // dividing by zero is illegal, so we will not tolerate that.
+
+        if (rhs.isConstant() && rhs.getValue() == 0) {
+            throw new IllegalExpressionException("Dividing by 0 is not possible.");
+        }
 
         if (lhs.isConstant() && rhs.isConstant()) {
             return new Constant(lhs.getValue() / rhs.getValue());
