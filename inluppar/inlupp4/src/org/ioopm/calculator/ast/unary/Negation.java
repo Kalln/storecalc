@@ -1,7 +1,5 @@
 package org.ioopm.calculator.ast.unary;
 
-import javax.swing.plaf.synth.SynthButtonUI;
-
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;

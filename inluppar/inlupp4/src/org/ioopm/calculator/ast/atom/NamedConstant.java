@@ -24,4 +24,10 @@ public class NamedConstant extends Atom {
     public String toString() {
         return this.identifier;
     }
+
+    public boolean equals(Object other) {
+        return other instanceof NamedConstant nc
+            && this.identifier.equals(nc.identifier)
+            && nc.value == this.value;
+    }
 }
