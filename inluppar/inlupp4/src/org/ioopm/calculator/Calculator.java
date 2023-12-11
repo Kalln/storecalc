@@ -1,6 +1,7 @@
 package org.ioopm.calculator;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.ioopm.calculator.ast.Environment;
@@ -29,9 +30,10 @@ public class Calculator {
 
         while(true) {
             System.out.print("> ");
-            String input = scanner.nextLine();
-
+            
+            
             try {
+                String input = scanner.nextLine();
                 SymbolicExpression result = calcParser.parse(input, env);
                 expressionEntered++;
 
@@ -70,8 +72,9 @@ public class Calculator {
                     System.out.println(evalRes);
                 }
             } catch (Exception e){
+                if (e instanceof NoSuchElementException) { break; }
                 System.out.println(e.getMessage());
-            }
+            } 
 
         }
 
