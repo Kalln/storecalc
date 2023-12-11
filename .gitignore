@@ -56,3 +56,4 @@ lib/*.jar
 *.class
 inluppar/inlupp3/classes
 inluppar/inlupp4/classes
+inluppar/inlupp4/tests/output.txt
