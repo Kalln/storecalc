@@ -108,6 +108,7 @@ public class StandardTests {
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(4), new NamedConstant("asdf", 7)));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(5), new Sin(new Variable("null"))));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(6), new Addition(new Variable("x"), new Constant(0))));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
 
         var env = new Environment();
 
@@ -120,14 +121,6 @@ public class StandardTests {
         assertEquals(as3.eval(env).getValue(), 1234, acceptableFloatError);
         assertTrue(env.containsKey(new Variable("qwerty")));
         assertEquals(env.get(new Variable("qwerty")).getValue(), 1234, acceptableFloatError);
-
-        try {
-            var as4 = new Assignment(new Constant(42), new Variable(null));
-            assertEquals(as4.eval(env).getValue(), null);
-            
-        } catch (IllegalAssignmentException e) {
-            assertEquals(e.getMessage(), "null is not a valid variable name.");
-        }
     }
 
     @Test
