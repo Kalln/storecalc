@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
+import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.NamedConstant;
 import org.ioopm.calculator.ast.atom.Variable;
@@ -102,25 +103,24 @@ public class StandardTests {
 
     @Test
     void assignmentTest() {
-        try {
-            SymbolicExpression as1 = new Assignment(new Variable("x"), new Constant(6));
-            SymbolicExpression as = new Assignment(new Constant(3), new Constant(6));
-        } catch (RuntimeException e) {
-            assertEquals(e.getMessage(), "Right hand side must be a variable.");
-        }
-        Environment env = new Environment();
-        Assignment as2 = new Assignment(new Constant(42), new Variable("x"));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Variable("x"), new Constant(6)));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(3), new Constant(6)));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(4), new NamedConstant("asdf", 7)));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(5), new Sin(new Variable("null"))));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(6), new Addition(new Variable("x"), new Constant(0))));
+        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
 
-        assertEquals(as2.eval(env).getValue(), 42.0);
-        assertEquals(new Variable("x").eval(env), new Constant(42));
-        
-        try {
-            var as3 = new Assignment(new Constant(42), new Variable(null));
-            assertEquals(as3.eval(env).getValue(), null);
-            
-        } catch (IllegalAssignmentException e) {
-            assertEquals(e.getMessage(), "null is not a valid variable name.");
-        }
+        var env = new Environment();
+
+        var as2 = new Assignment(new Constant(42), new Variable("x"));
+        assertEquals(as2.eval(env).getValue(), 42, acceptableFloatError);
+        assertTrue(env.containsKey(new Variable("x")));
+        assertEquals(env.get(new Variable("x")).getValue(), 42, acceptableFloatError);
+
+        var as3 = new Assignment(new Addition(new Constant(1000), new Constant(234)), new Variable("qwerty"));
+        assertEquals(as3.eval(env).getValue(), 1234, acceptableFloatError);
+        assertTrue(env.containsKey(new Variable("qwerty")));
+        assertEquals(env.get(new Variable("qwerty")).getValue(), 1234, acceptableFloatError);
     }
 
     @Test
