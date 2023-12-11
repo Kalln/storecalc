@@ -3,7 +3,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.NamedConstant;
 import org.ioopm.calculator.ast.atom.Variable;
