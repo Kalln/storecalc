@@ -1,8 +1,7 @@
 package org.ioopm.calculator.ast.unary;
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.atom.Constant;
 
 public class Cos extends Unary {
     public Cos(SymbolicExpression exp) {
@@ -14,13 +13,8 @@ public class Cos extends Unary {
         return "Cos";
     }
 
-    public SymbolicExpression eval(Environment vars) {
-        SymbolicExpression arg = this.exp.eval(vars);
-        if (arg.isConstant()) {
-            return new Constant(Math.cos(arg.getValue()));
-        }
-        else {
-            return new Cos(arg);
-        }
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }

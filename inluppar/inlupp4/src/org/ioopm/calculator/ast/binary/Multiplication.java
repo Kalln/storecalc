@@ -1,9 +1,8 @@
 package org.ioopm.calculator.ast.binary;
 
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.atom.Constant;
 
 public class Multiplication extends Binary{
     public Multiplication(SymbolicExpression lhs, SymbolicExpression rhs ) {
@@ -19,14 +18,9 @@ public class Multiplication extends Binary{
     public int getPriority() {
         return 25;
     }
-    public SymbolicExpression eval(Environment vars) {
-        SymbolicExpression lhs = this.getLhs().eval(vars);
-        SymbolicExpression rhs = this.getRhs().eval(vars);
 
-        if (lhs.isConstant() && rhs.isConstant()) {
-            return new Constant(lhs.getValue() * rhs.getValue());
-        } else {
-            return new Addition(lhs, rhs);
-        }
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }

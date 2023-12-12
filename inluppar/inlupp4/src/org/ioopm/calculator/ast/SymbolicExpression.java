@@ -1,17 +1,9 @@
 package org.ioopm.calculator.ast;
 
-
+import org.ioopm.calculator.Visitor;
 
 public abstract class SymbolicExpression {
-
-
-    /**
-     * Abstract method that forces class-children to have eval method that will evaluate the given expression.
-     * @param vars - Environment containing the variables in the running program
-     * @return A new SymbolicExpression.
-     */
-    public abstract SymbolicExpression eval(Environment vars);
-
+    public abstract SymbolicExpression accept(Visitor v);
 
     /**
      * By defualt all isX methods are false, these has to been overwritten by childrens of this class.

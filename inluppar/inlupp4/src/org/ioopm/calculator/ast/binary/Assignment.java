@@ -1,9 +1,8 @@
 package org.ioopm.calculator.ast.binary;
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.atom.Variable;
 
 public class Assignment extends Binary {
     public Assignment(SymbolicExpression res, SymbolicExpression key) throws IllegalAssignmentException{
@@ -23,14 +22,8 @@ public class Assignment extends Binary {
         return "=";
     }
 
-    public SymbolicExpression eval(Environment vars) {
-        SymbolicExpression key = this.getRhs();
-        if (key instanceof Variable v) {
-            var lhsResult = this.getLhs().eval(vars);
-            vars.put(v, lhsResult);
-            return lhsResult;
-        } else {
-            throw new RuntimeException("The rhs was not a variable.");
-        }
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }
