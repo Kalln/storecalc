@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.ioopm.calculator.EvaluationVisitor;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -28,6 +29,8 @@ import org.junit.jupiter.api.Test;
 public class StandardTests {
     // Results might not match expected values exactly, some error is acceptable and expected.
     private double acceptableFloatError = 0.00001;
+    private EvaluationVisitor visitor = new EvaluationVisitor();
+    private Environment env = new Environment();
 
     @BeforeAll
     static void initAll() {
@@ -36,7 +39,8 @@ public class StandardTests {
 
     @BeforeEach
     void init() {
-
+        visitor = new EvaluationVisitor();
+        env = new Environment();
     }
 
     @Test
@@ -46,7 +50,7 @@ public class StandardTests {
 
         assertTrue(c.getValue() == 42);
         assertTrue(c.equals(c2));
-        assertTrue(c.eval(null).equals(c2));
+        assertTrue(visitor.evaluate(c, env).equals(c2));
 
         assertTrue(c.isConstant());
         assertFalse(c.isCommand());
@@ -77,10 +81,8 @@ public class StandardTests {
 
     @Test
     void additionTest() {
-        Environment vars = new Environment();
-
         SymbolicExpression add = new Addition(new Constant(42), new Constant(8));
-        assertTrue(add.eval(null).getValue() == 50);
+        assertTrue(visitor.evaluate(add, env).getValue() == 50);
         assertTrue(new Constant(42).getValue() == 42);
 
         Addition add2 = new Addition(add, add);
@@ -92,7 +94,7 @@ public class StandardTests {
 
         assertTrue(add2.equals(add2));
 
-        assertTrue(add2.eval(vars).getValue() == 100);
+        assertTrue(visitor.evaluate(add2, env).getValue() == 100);
 
         assertFalse(add.isVariable());
         assertFalse(add.isConstant());
@@ -109,39 +111,35 @@ public class StandardTests {
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(6), new Addition(new Variable("x"), new Constant(0))));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
 
-        var env = new Environment();
-
         var as2 = new Assignment(new Constant(42), new Variable("x"));
-        assertEquals(as2.eval(env).getValue(), 42, acceptableFloatError);
+        assertEquals(visitor.evaluate(as2, env).getValue(), 42, acceptableFloatError);
         assertTrue(env.containsKey(new Variable("x")));
         assertEquals(env.get(new Variable("x")).getValue(), 42, acceptableFloatError);
 
         var as3 = new Assignment(new Addition(new Constant(1000), new Constant(234)), new Variable("qwerty"));
-        assertEquals(as3.eval(env).getValue(), 1234, acceptableFloatError);
+        assertEquals(visitor.evaluate(as3, env).getValue(), 1234, acceptableFloatError);
         assertTrue(env.containsKey(new Variable("qwerty")));
         assertEquals(env.get(new Variable("qwerty")).getValue(), 1234, acceptableFloatError);
     }
 
     @Test
     void divisionTest() {
-        Environment vars = new Environment();
         Division div = new Division(new Constant(42), new Constant(2));
-        div.eval(vars).getValue();
-        assertTrue(div.eval(vars).getValue() == 21);
+        assertTrue(visitor.evaluate(div, env).getValue() == 21);
     }
 
     @Test
     void multiplicationTest() {
         SymbolicExpression a = new Multiplication(new Constant(5), new Constant(37));
         SymbolicExpression b = new Constant(185);
-        assertTrue(a.eval(null).equals(b));
+        assertTrue(visitor.evaluate(a, env).equals(b));
     }
 
     @Test
     void subtractionTest() {
         SymbolicExpression a = new Subtraction(new Constant(5), new Constant(37));
         SymbolicExpression b = new Constant(-32);
-        assertTrue(a.eval(null).equals(b));
+        assertTrue(visitor.evaluate(a, env).equals(b));
     }
 
     @Test
@@ -157,9 +155,10 @@ public class StandardTests {
 
         assertTrue(c.toString().equals("Cos(x)"));
         assertTrue(s.toString().equals("Sin((5.0 + x) * 2.0)"));
-        assertTrue(new Cos(c1).eval(null).getValue() == Math.cos(5));
+        assertTrue(visitor.evaluate(new Cos(c1), env).getValue() == Math.cos(5));
 
-        assertEquals(new Sin(new Division(new Constant(Math.PI), new Constant(2))).eval(null).getValue(), 1);
+        var s2 = new Sin(new Division(new Constant(Math.PI), new Constant(2)));
+        assertEquals(visitor.evaluate(s2, env).getValue(), 1);
     }
 
     @Test
@@ -172,8 +171,8 @@ public class StandardTests {
 
         assertTrue(c.toString().equals("Exp(x)"));
 
-        assertEquals(new Exp(c1).eval(null).getValue(), Math.exp(5));
-        assertEquals(c2.eval(null).getValue(), Math.exp(7));
+        assertEquals(visitor.evaluate(new Exp(c1), env).getValue(), Math.exp(5));
+        assertEquals(visitor.evaluate(c2, env).getValue(), Math.exp(7));
         assertFalse(c2.isConstant());
     }
 
@@ -224,10 +223,10 @@ public class StandardTests {
         assertTrue(l.toString().equals("Log((5.0 + x) * 2.0)"));
 
         var logE = new Log(new Constant(Math.E));
-        assertEquals(logE.eval(new Environment()).getValue(), 1.0, acceptableFloatError);
+        assertEquals(visitor.evaluate(logE, env).getValue(), 1.0, acceptableFloatError);
 
         var log100 = new Log(new Constant(100));
-        assertEquals(log100.eval(new Environment()).getValue(), Math.log(100), acceptableFloatError);
+        assertEquals(visitor.evaluate(log100, env).getValue(), Math.log(100), acceptableFloatError);
     }
 
     @Test
@@ -236,8 +235,8 @@ public class StandardTests {
         SymbolicExpression b = new Addition(new Constant(4), a);
         SymbolicExpression c = new Constant(0);
 
-        assertTrue(a.eval(null).equals(new Constant(-4)));
-        assertTrue(b.eval(null).equals(c));
+        assertTrue(visitor.evaluate(a, env).equals(new Constant(-4)));
+        assertTrue(visitor.evaluate(b, env).equals(c));
     }
 
     @Test

@@ -1,6 +1,8 @@
 package org.ioopm.calculator.ast.command;
 
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Quit extends Command {
 
@@ -23,4 +25,8 @@ public class Quit extends Command {
         System.out.println(endingOfProgram);
     }
 
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
 }

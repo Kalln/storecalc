@@ -1,8 +1,7 @@
 package org.ioopm.calculator.ast.binary;
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.SymbolicExpression;
-import org.ioopm.calculator.ast.atom.Constant;
 
 public class Subtraction extends Binary {
 
@@ -20,14 +19,8 @@ public class Subtraction extends Binary {
         return 10;
     }
 
-    public SymbolicExpression eval(Environment vars) {
-        SymbolicExpression lhs = this.getLhs().eval(vars);
-        SymbolicExpression rhs = this.getRhs().eval(vars);
-
-        if (lhs.isConstant() && rhs.isConstant()) {
-            return new Constant(lhs.getValue() - rhs.getValue());
-        } else {
-            return new Subtraction(lhs, rhs);
-        }
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }

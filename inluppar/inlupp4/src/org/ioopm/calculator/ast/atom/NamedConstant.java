@@ -1,5 +1,8 @@
 package org.ioopm.calculator.ast.atom;
 
+import org.ioopm.calculator.Visitor;
+import org.ioopm.calculator.ast.SymbolicExpression;
+
 public class NamedConstant extends Atom {
     private String identifier;
     private double value;
@@ -29,5 +32,10 @@ public class NamedConstant extends Atom {
         return other instanceof NamedConstant nc
             && this.identifier.equals(nc.identifier)
             && nc.value == this.value;
+    }
+
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }

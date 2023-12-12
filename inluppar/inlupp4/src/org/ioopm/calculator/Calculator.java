@@ -30,8 +30,8 @@ public class Calculator {
 
         while(true) {
             System.out.print("> ");
-            
-            
+
+
             try {
                 String input = scanner.nextLine();
                 SymbolicExpression result = calcParser.parse(input, env);
@@ -56,7 +56,8 @@ public class Calculator {
                 } else {
 
                     // results is not a command, therefore we can evaluate the result.
-                    var evalRes = result.eval(env);
+                    var evaluator = new EvaluationVisitor();
+                    var evalRes = evaluator.evaluate(result, env);
                     sucessfullyEvaluated++;
 
                     // ans variable will keep the last successfully evaluated expression.
@@ -74,7 +75,7 @@ public class Calculator {
             } catch (Exception e){
                 if (e instanceof NoSuchElementException) { break; }
                 System.out.println(e.getMessage());
-            } 
+            }
 
         }
 

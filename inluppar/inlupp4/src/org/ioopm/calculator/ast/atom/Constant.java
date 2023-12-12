@@ -1,5 +1,8 @@
 package org.ioopm.calculator.ast.atom;
 
+import org.ioopm.calculator.Visitor;
+import org.ioopm.calculator.ast.SymbolicExpression;
+
 public class Constant extends Atom{
     private double value;
 
@@ -28,5 +31,10 @@ public class Constant extends Atom{
         } else {
             return false;
         }
+    }
+
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }

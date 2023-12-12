@@ -1,5 +1,6 @@
 package org.ioopm.calculator.ast.atom;
 
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -43,4 +44,8 @@ public class Variable extends Atom {
         return result != null ? result : this;
     }
 
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
+    }
 }

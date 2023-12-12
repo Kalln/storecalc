@@ -2,6 +2,7 @@ package org.ioopm.calculator.ast.command;
 
 import java.util.Map;
 
+import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Variable;
@@ -15,5 +16,10 @@ public class Vars extends Command {
         for (Map.Entry<Variable, SymbolicExpression> entry : env.entrySet()) {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
+    }
+
+    @Override
+    public SymbolicExpression accept(Visitor v) {
+        return v.visit(this);
     }
 }
