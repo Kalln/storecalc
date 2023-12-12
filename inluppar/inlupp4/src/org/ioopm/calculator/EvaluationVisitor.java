@@ -25,6 +25,11 @@ import org.ioopm.calculator.ast.unary.Sin;
 public class EvaluationVisitor implements Visitor {
     private Environment env = null;
 
+    /*
+     * Evaluate a given SymbolicExpression topLevel. This will "find" the correct 
+     * accept() corresponding to that Expression type and return it's evaluated 
+     * expression.
+     */
     public SymbolicExpression evaluate(SymbolicExpression topLevel, Environment env) {
         this.env = env;
         return topLevel.accept(this);
@@ -67,6 +72,7 @@ public class EvaluationVisitor implements Visitor {
         var lhs = n.getLhs().accept(this);
         var rhs = n.getRhs().accept(this);
 
+        // division by 0 is not possible.
         if (rhs.isConstant() && rhs.getValue() == 0) {
             throw new IllegalExpressionException("Dividing by 0 is not possible.");
         }
@@ -84,23 +90,23 @@ public class EvaluationVisitor implements Visitor {
             env.put(v, lhsResult);
             return lhsResult;
         } else {
-            throw new RuntimeException("The rhs was not a variable.");
+            throw new RuntimeException("Right hand side was not a variable.");
         }
     }
 
     @Override
     public SymbolicExpression visit(Clear n) {
-        throw new RuntimeException("commands may not be evaluated");
+        throw new RuntimeException("Commands may not be evaluated");
     }
 
     @Override
     public SymbolicExpression visit(Quit n) {
-        throw new RuntimeException("commands may not be evaluated");
+        throw new RuntimeException("Commands may not be evaluated");
     }
 
     @Override
     public SymbolicExpression visit(Vars n) {
-        throw new RuntimeException("commands may not be evaluated");
+        throw new RuntimeException("Commands may not be evaluated");
     }
 
     @Override

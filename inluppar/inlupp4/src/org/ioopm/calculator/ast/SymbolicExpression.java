@@ -3,6 +3,12 @@ package org.ioopm.calculator.ast;
 import org.ioopm.calculator.Visitor;
 
 public abstract class SymbolicExpression {
+
+    /**
+     * Tells the Evaluator what type of SymbolicExpression should be evaluated.
+     * @param v {Visitor} - A evaluatable Symbolicexpression.
+     * @return Evaluated SymbolicExpression
+     */
     public abstract SymbolicExpression accept(Visitor v);
 
     /**
