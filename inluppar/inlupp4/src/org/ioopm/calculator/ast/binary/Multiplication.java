@@ -6,7 +6,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Multiplication extends Binary{
     public Multiplication(SymbolicExpression lhs, SymbolicExpression rhs ) {
-        super("Multiplication", lhs, rhs);
+        super(lhs, rhs);
     }
 
     @Override

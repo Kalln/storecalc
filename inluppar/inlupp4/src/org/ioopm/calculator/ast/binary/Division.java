@@ -5,7 +5,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Division extends Binary{
     public Division(SymbolicExpression lhs, SymbolicExpression rhs ) {
-        super("Division", lhs, rhs);
+        super(lhs, rhs);
     }
 
     @Override

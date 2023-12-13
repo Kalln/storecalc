@@ -6,7 +6,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 public class Subtraction extends Binary {
 
     public Subtraction(SymbolicExpression lhs, SymbolicExpression rhs ) {
-        super("Subtraciton", lhs, rhs);
+        super(lhs, rhs);
     }
 
     @Override

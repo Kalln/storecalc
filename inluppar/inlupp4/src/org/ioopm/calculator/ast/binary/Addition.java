@@ -5,7 +5,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Addition extends Binary {
     public Addition(SymbolicExpression lhs, SymbolicExpression rhs ) {
-        super("Addition", lhs, rhs);
+        super(lhs, rhs);
     }
 
     @Override
