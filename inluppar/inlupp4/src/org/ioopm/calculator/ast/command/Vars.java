@@ -14,6 +14,7 @@ public class Vars extends Command {
 
     @Override
     public void run(Environment env, int notused_1, int notused_2, int notused_3) {
+        // TODO fix raw types
         for (Map.Entry<Variable, SymbolicExpression> entry : env.entrySet()) {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
         }

@@ -4,7 +4,7 @@ import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
-public class Variable extends Atom {
+public class Variable<T extends Comparable<T>> extends Atom implements Comparable<Variable<T>> {
 
     private String identifier;
 
@@ -45,4 +45,10 @@ public class Variable extends Atom {
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }
+ 
+    @Override
+    public int compareTo(Variable<T> otherVariable) {
+        return this.identifier.compareTo(otherVariable.identifier);
+    }
+
 }
