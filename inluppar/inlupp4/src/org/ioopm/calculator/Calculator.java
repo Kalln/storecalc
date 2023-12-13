@@ -62,7 +62,7 @@ public class Calculator {
 
                     // ans variable will keep the last successfully evaluated expression.
                     // this is done by saving 'ans' as a variable in the environment.
-                    env.put(new Variable("ans"), evalRes);
+                    env.put(new Variable<String>("ans"), evalRes);
 
                     // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
                     if (evalRes instanceof Constant) {

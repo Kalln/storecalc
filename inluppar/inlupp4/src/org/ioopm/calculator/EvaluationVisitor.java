@@ -87,7 +87,7 @@ public class EvaluationVisitor implements Visitor {
         var key = n.getRhs();
         if (key instanceof Variable v) {
             var lhsResult = n.getLhs().accept(this);
-            env.put(v, lhsResult);
+            env.put(v, lhsResult); // TODO type check...
             return lhsResult;
         } else {
             throw new RuntimeException("Right hand side was not a variable.");
@@ -120,7 +120,7 @@ public class EvaluationVisitor implements Visitor {
     }
 
     @Override
-    public SymbolicExpression visit(Variable n) {
+    public SymbolicExpression visit(Variable<String> n) {
         var result = env.get(n);
         return result != null ? result : n;
     }

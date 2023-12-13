@@ -5,17 +5,15 @@ import org.ioopm.calculator.ast.atom.Variable;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-public class Environment extends HashMap<Variable, SymbolicExpression> {
+public class Environment extends HashMap<Variable<String>, SymbolicExpression> {
 
-
-    // TODO fix raw types
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Variables: ");
-        TreeSet<Variable> vars = new TreeSet<>(this.keySet());
+        TreeSet<Variable<String>> vars = new TreeSet<>(this.keySet());
 
-        for (Variable v : vars) {
+        for (Variable<String> v : vars) {
             sb.append(v.getName());
             sb.append(" = ");
             sb.append(this.get(v));
@@ -25,4 +23,3 @@ public class Environment extends HashMap<Variable, SymbolicExpression> {
         return sb.toString();
     }
 }
-

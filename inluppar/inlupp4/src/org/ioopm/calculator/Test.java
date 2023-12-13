@@ -37,8 +37,8 @@ public class Test {
          * VARIABLE TESTS
          */
 
-         SymbolicExpression a = new Variable("x");
-         SymbolicExpression b = new Variable("avc");
+         SymbolicExpression a = new Variable<String>("x");
+         SymbolicExpression b = new Variable<String>("avc");
          System.out.println("a = " + a.hashCode() + "\nb = " + b.hashCode());
 
 
@@ -77,7 +77,7 @@ public class Test {
     private void test_simple_mult() {
         Constant c1 = new Constant(5);
         Constant c2 = new Constant(2);
-        Variable v = new Variable("x");
+        Variable<String> v = new Variable<String>("x");
         Addition a = new Addition(c1, v);
         Multiplication m = new Multiplication(a, c2);
 
@@ -87,7 +87,7 @@ public class Test {
     private void test_simple_add() {
         Constant c1 = new Constant(5);
         Constant c2 = new Constant(5);
-        Variable v = new Variable("x");
+        Variable<String> v = new Variable<String>("x");
 
         Addition a = new Addition(c1, v);
         Addition a2 = new Addition(c1, c2);
@@ -100,7 +100,7 @@ public class Test {
     private void test_simple_sub() {
         Constant c1 = new Constant(5);
         Constant c2 = new Constant(2);
-        Variable v = new Variable("x");
+        Variable<String> v = new Variable<String>("x");
         Subtraction s = new Subtraction(c1, v);
         Subtraction s2 = new Subtraction(c1, c2);
 
@@ -111,7 +111,7 @@ public class Test {
     private void test_simple_div() {
         Constant c1 = new Constant(5);
         Constant c2 = new Constant(2);
-        Variable v = new Variable("x");
+        Variable<String> v = new Variable<String>("x");
         Addition a = new Addition(c1, v);
         Division d = new Division(a, c2);
 
@@ -128,7 +128,7 @@ public class Test {
     private void test_simple_log() {
         Constant c1 = new Constant(5);
         Constant c2 = new Constant(2);
-        Variable v = new Variable("x");
+        Variable<String> v = new Variable<String>("x");
         Addition a = new Addition(c1, v);
         Multiplication m = new Multiplication(a, c2);
         Log l = new Log(m);
@@ -139,7 +139,7 @@ public class Test {
     private void test_simple_sin_cos() {
         Constant c1 = new Constant(5);
         Constant c2 = new Constant(2);
-        Variable v = new Variable("x");
+        Variable<String> v = new Variable<String>("x");
         Addition a = new Addition(c1, v);
         Multiplication m = new Multiplication(a, c2);
 
@@ -194,7 +194,7 @@ public class Test {
     private void test_inter_prob(){
         SymbolicExpression c1 = new Constant(5);
         SymbolicExpression c2 = new Constant(2);
-        SymbolicExpression v = new Variable("x");
+        SymbolicExpression v = new Variable<String>("x");
         SymbolicExpression a = new Addition(c1, v);
         SymbolicExpression m1 = new Multiplication(a, c2);
         SymbolicExpression d = new Division(m1, a);
