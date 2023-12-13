@@ -1,7 +1,6 @@
 package org.ioopm.calculator.ast.atom;
 
 import org.ioopm.calculator.Visitor;
-import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
