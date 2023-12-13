@@ -18,14 +18,17 @@ public class Variable extends Atom {
         return this.identifier;
     }
 
+    @Override
     public String toString() {
         return this.identifier;
     }
 
+    @Override
     public boolean isVariable() {
         return true;
     }
 
+    @Override
     public int hashCode() {
         return this.identifier.hashCode();
     }
@@ -37,11 +40,6 @@ public class Variable extends Atom {
         } else {
             return false;
         }
-    }
-
-    public SymbolicExpression eval(Environment vars) {
-        SymbolicExpression result = vars.get(this);
-        return result != null ? result : this;
     }
 
     @Override

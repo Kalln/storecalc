@@ -10,6 +10,7 @@ public class Quit extends Command {
     private Quit() {}
     public static Quit instance() { return theInstance; }
 
+    @Override
     public void run(Environment env, int expressionsEntered, int sucessfullyEvaluated, int fullyEvaluated) {
         String endingOfProgram = """
                 -------------------------------------------------------

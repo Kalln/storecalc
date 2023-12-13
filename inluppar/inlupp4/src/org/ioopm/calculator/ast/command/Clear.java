@@ -9,6 +9,7 @@ public class Clear extends Command {
     private Clear() {}
     public static Clear instance() { return theInstance; }
 
+    @Override
     public void run(Environment env, int notused_1, int notused_2, int notused_3) {
         env.clear();
     }

@@ -19,6 +19,7 @@ public abstract class Binary extends SymbolicExpression{
         return rhs;
     }
 
+    @Override
     public String toString() {
         // check if one side has higher priority than the other
         if (this.lhs.getPriority() < this.getPriority()) {
@@ -30,7 +31,7 @@ public abstract class Binary extends SymbolicExpression{
         return lhs.toString() + " " + getName() + " " + rhs.toString();
     }
 
-
+    @Override
     public boolean equals(Object other) {
         if (other instanceof Binary b) {
             return this.lhs.equals(b.lhs) && this.rhs.equals(b.rhs);

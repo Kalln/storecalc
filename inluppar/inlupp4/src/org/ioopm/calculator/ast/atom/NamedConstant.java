@@ -28,6 +28,7 @@ public class NamedConstant extends Atom {
         return this.identifier;
     }
 
+    @Override
     public boolean equals(Object other) {
         return other instanceof NamedConstant nc
             && this.identifier.equals(nc.identifier)

@@ -25,6 +25,7 @@ public class Constant extends Atom{
         return String.valueOf(this.value);
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other instanceof Constant c) {
             return this.getValue() == c.getValue();

@@ -18,6 +18,7 @@ public class Assignment extends Binary {
         return 5;
     }
 
+    @Override
     public String getName() {
         return "=";
     }

@@ -5,6 +5,7 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 public abstract class Unary extends SymbolicExpression {
     public SymbolicExpression exp;
 
+    @Override
     public abstract String getName();
 
     public Unary(SymbolicExpression exp) {

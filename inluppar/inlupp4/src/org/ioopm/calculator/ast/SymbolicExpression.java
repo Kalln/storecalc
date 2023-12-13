@@ -31,8 +31,8 @@ public abstract class SymbolicExpression {
      * @return a number priority, If a operation has higher priority the paranthesis will be printed on that expression.
      */
     public int getPriority() {
-            return 100;
-        }
+        return 100;
+    }
 
     public String getName() {
         throw new RuntimeException("getName() not implemented for expressions with no operator");
