@@ -120,7 +120,7 @@ public class EvaluationVisitor implements Visitor {
     }
 
     @Override
-    public SymbolicExpression visit(Variable<String> n) {
+    public SymbolicExpression visit(Variable n) {
         var result = env.get(n);
         return result != null ? result : n;
     }
