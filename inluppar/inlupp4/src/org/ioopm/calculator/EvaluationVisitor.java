@@ -87,7 +87,7 @@ public class EvaluationVisitor implements Visitor {
         var key = n.getRhs();
         if (key instanceof Variable v) {
             var lhsResult = n.getLhs().accept(this);
-            env.put(v, lhsResult); // TODO type check...
+            env.put(v, lhsResult);
             return lhsResult;
         } else {
             throw new RuntimeException("Right hand side was not a variable.");

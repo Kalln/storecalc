@@ -61,10 +61,10 @@ public class StandardTests {
     @Test
     void variableTest() {
         Variable v = new Variable("x");
-        assertTrue(v.getVariable() == "x");
+        assertTrue(v.getName() == "x");
 
         Variable longvar = new Variable("AveryLongNameIsHereIDontReallyKnowWhatToWriteHereExceptForSomethingIWillNowJustWriteSomethingSomethingSomething");
-        assertTrue(longvar.getVariable() == "AveryLongNameIsHereIDontReallyKnowWhatToWriteHereExceptForSomethingIWillNowJustWriteSomethingSomethingSomething");
+        assertTrue(longvar.getName() == "AveryLongNameIsHereIDontReallyKnowWhatToWriteHereExceptForSomethingIWillNowJustWriteSomethingSomethingSomething");
 
         assertFalse(longvar.equals(v));
 
