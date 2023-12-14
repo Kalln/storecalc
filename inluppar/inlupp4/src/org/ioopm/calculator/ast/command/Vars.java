@@ -12,6 +12,8 @@ public class Vars extends Command {
     private Vars() {}
     public static Vars instance() { return theInstance; }
 
+
+    // TODO fix
     @Override
     public void run(Environment env, int notused_1, int notused_2, int notused_3) {
         for (Map.Entry<Variable, SymbolicExpression> entry : env.entrySet()) {

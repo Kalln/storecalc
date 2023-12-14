@@ -47,7 +47,7 @@ public class Calculator {
                         break;
                     }
                     else if (result instanceof Vars r) {
-                        r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+                        System.out.println(env);
                         continue;
                     } else if (result instanceof Clear r) {
                         r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
