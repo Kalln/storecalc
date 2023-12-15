@@ -154,7 +154,7 @@ public class CalculatorParser {
             result = new NamedConstant(st.sval, Constants.namedConstants.get(st.sval));
         } else {
             result = new Variable(this.st.sval);
-        } 
+        }
         return result;
     }
 
