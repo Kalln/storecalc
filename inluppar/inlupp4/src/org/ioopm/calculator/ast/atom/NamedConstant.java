@@ -18,6 +18,16 @@ public class NamedConstant extends Atom {
     }
 
     @Override
+    public String getName() {
+        return this.identifier;
+    }
+
+    @Override
+    public boolean isNamedConstant() {
+        return true;
+    }
+
+    @Override
     public double getValue() {
         return this.value;
     }

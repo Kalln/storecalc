@@ -32,11 +32,9 @@
 > 1.0
 > Dividing by 0 is not possible.
 > 1019.0
-> öl -> 8.0
-ans -> 1019.0
-x -> 10.0
-y -> 10.0
-> > > y
+> Variables: ans = 1019.0, x = 10.0, y = 10.0, öl = 8.0, 
+> > Variables: 
+> y
 > 5.0
 > 10.0
 > 15.0

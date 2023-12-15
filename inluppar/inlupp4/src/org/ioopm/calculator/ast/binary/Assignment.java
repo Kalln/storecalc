@@ -5,12 +5,9 @@ import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Assignment extends Binary {
-    public Assignment(SymbolicExpression res, SymbolicExpression key) throws IllegalAssignmentException{
+    public Assignment(SymbolicExpression res, SymbolicExpression key) throws IllegalAssignmentException {
         super(res, key);
 
-        if (!key.isVariable()) {
-            throw new IllegalAssignmentException("Right hand side must be a variable.");
-        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -56,21 +57,30 @@ public class Calculator {
                 } else {
 
                     // results is not a command, therefore we can evaluate the result.
-                    var evaluator = new EvaluationVisitor();
-                    var evalRes = evaluator.evaluate(result, env);
-                    sucessfullyEvaluated++;
 
-                    // ans variable will keep the last successfully evaluated expression.
-                    // this is done by saving 'ans' as a variable in the environment.
-                    env.put(new Variable("ans"), evalRes);
-
-                    // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
-                    if (evalRes instanceof Constant) {
-                        fullyEvaluated++;
+                    // check for assigning named constants.
+                    var namedConstantChecker = new NamedConstantChecker(); 
+                    if (namedConstantChecker.check(result)) {
+                        
+                        var evaluator = new EvaluationVisitor();
+                        var evalRes = evaluator.evaluate(result, env);
+                        sucessfullyEvaluated++;
+    
+                        // ans variable will keep the last successfully evaluated expression.
+                        // this is done by saving 'ans' as a variable in the environment.
+                        env.put(new Variable("ans"), evalRes);
+    
+                        // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
+                        if (evalRes instanceof Constant) {
+                            fullyEvaluated++;
+                        }
+    
+    
+                        System.out.println(evalRes);
+                    } else {
+                        System.out.println(namedConstantChecker);
                     }
 
-
-                    System.out.println(evalRes);
                 }
             } catch (Exception e){
                 if (e instanceof NoSuchElementException) { break; }
