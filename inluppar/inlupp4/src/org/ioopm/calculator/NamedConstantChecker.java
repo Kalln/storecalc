@@ -9,12 +9,10 @@ import org.ioopm.calculator.ast.unary.*;
 import org.ioopm.calculator.ast.command.*;
 
 
-public class NamedConstantChecker implements Visitor {
-
+public class NamedConstantChecker implements Visitor {    
 
     public boolean check(SymbolicExpression topLevel) {
         topLevel.accept(this);
-        
         return true;
     }
 
