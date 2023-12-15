@@ -1,5 +1,9 @@
 package org.ioopm.calculator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
@@ -11,25 +15,31 @@ import org.ioopm.calculator.ast.command.*;
 
 public class NamedConstantChecker implements Visitor {    
 
+    ArrayList<NamedConstant> FoundIllegalAssignments = new ArrayList<>();
+
     public boolean check(SymbolicExpression topLevel) {
         topLevel.accept(this);
-        return true;
+
+        if (FoundIllegalAssignments.size() == 0) {
+            return true;
+        }
+        return false;
     }
 
     public SymbolicExpression visit(Addition a) {
         a.getLhs().accept(this);
-        a.getLhs().accept(this);
+        a.getRhs().accept(this);
         return null;
     }
 
     @Override
     public SymbolicExpression visit(Assignment n) throws IllegalAssignmentException {
         n.getLhs().accept(this);
-        n.getLhs().accept(this);
+        n.getRhs().accept(this);
 
         if (n.getRhs().isNamedConstant()) {
             // illegal assignment
-            throw new IllegalAssignmentException(n.getRhs().getName() + "Can't be reassigned.");
+            this.FoundIllegalAssignments.add((NamedConstant) n.getRhs());
         }
         return null;
     }
@@ -58,7 +68,7 @@ public class NamedConstantChecker implements Visitor {
     @Override
     public SymbolicExpression visit(Division n) {
         n.getLhs().accept(this);
-        n.getLhs().accept(this);
+        n.getRhs().accept(this);
         return null;
     }
 
@@ -77,7 +87,7 @@ public class NamedConstantChecker implements Visitor {
     @Override
     public SymbolicExpression visit(Multiplication n) {
         n.getLhs().accept(this);
-        n.getLhs().accept(this);
+        n.getRhs().accept(this);
         return null;
     }
 
@@ -113,6 +123,22 @@ public class NamedConstantChecker implements Visitor {
     @Override
     public SymbolicExpression visit(Vars n) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ERROR: Asssignment to named constant: ");
+        
+        for (var NC : this.FoundIllegalAssignments) {
+            sb.append("\n");
+            sb.append(NC.getName());
+            sb.append(" = ");
+            sb.append(NC.getValue());
+            sb.append(", ");
+        }
+
+        return sb.toString();
     }
     
 }

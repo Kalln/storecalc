@@ -60,7 +60,7 @@ public class Calculator {
 
                     // check for assigning named constants.
                     var namedConstantChecker = new NamedConstantChecker(); 
-                    if (namedConstantChecker.check(result)) { // this will never be false since the parser notice this..
+                    if (namedConstantChecker.check(result)) {
                         
                         var evaluator = new EvaluationVisitor();
                         var evalRes = evaluator.evaluate(result, env);
@@ -77,6 +77,8 @@ public class Calculator {
     
     
                         System.out.println(evalRes);
+                    } else {
+                        System.out.println(namedConstantChecker);
                     }
 
                 }
