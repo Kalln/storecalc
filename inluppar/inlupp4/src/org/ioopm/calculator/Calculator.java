@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.ioopm.calculator.ast.Environment;
-import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;

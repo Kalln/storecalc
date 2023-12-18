@@ -1,12 +1,9 @@
 package org.ioopm.calculator;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeSet;
 
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
-
 import org.ioopm.calculator.ast.atom.*;
 import org.ioopm.calculator.ast.binary.*;
 import org.ioopm.calculator.ast.unary.*;
@@ -18,6 +15,7 @@ public class NamedConstantChecker implements Visitor {
     ArrayList<NamedConstant> FoundIllegalAssignments = new ArrayList<>();
 
     public boolean check(SymbolicExpression topLevel) {
+        this.FoundIllegalAssignments = new ArrayList<>();
         topLevel.accept(this);
 
         if (FoundIllegalAssignments.size() == 0) {

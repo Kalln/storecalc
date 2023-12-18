@@ -1,7 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.ioopm.calculator.ast.Environment;
-import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.NamedConstant;
@@ -80,9 +79,6 @@ public class ParserTests {
             );
 
             assertThrows(SyntaxErrorException.class, () -> parser.parse("42 = (x = y)", env));
-
-            assertThrows(IllegalAssignmentException.class, () -> parser.parse("3 = pi", env));
-            assertThrows(IllegalAssignmentException.class, () -> parser.parse("3 = e", env));
 
             assertThrows(IllegalExpressionException.class, () -> parser.parse("5 = Vars", env));
             assertThrows(IllegalExpressionException.class, () -> parser.parse("7 = Quit", env));
