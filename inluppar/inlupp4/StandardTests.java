@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.ioopm.calculator.EvaluationVisitor;
+import org.ioopm.calculator.NamedConstantChecker;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -19,6 +20,7 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
 import org.ioopm.calculator.ast.unary.Sin;
+import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -106,7 +108,7 @@ public class StandardTests {
     void assignmentTest() {
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Variable("x"), new Constant(6)));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(3), new Constant(6)));
-        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(4), new NamedConstant("asdf", 7)));
+        // TODO assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(4), new NamedConstant("asdf", 7)));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(5), new Sin(new Variable("null"))));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(6), new Addition(new Variable("x"), new Constant(0))));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
@@ -409,6 +411,27 @@ public class StandardTests {
         assertEquals(sin.getName(), "Sin");
 
 
+    }
+
+    @Test
+    void test_namedconstantCheck() {
+        var constchecker = new NamedConstantChecker();
+        var parser = new CalculatorParser();
+        var env = new Environment();
+
+        var unallowedExpr1 = "(5 = pi) + (3 = e)";
+        var unallowedExpr2 = "(5 = pi) + (3 = d)";
+
+        var allowedExpr1 = "pi + 5 = x";
+
+        try {
+            assertFalse(constchecker.check(parser.parse(unallowedExpr1, env)));
+            assertFalse(constchecker.check(parser.parse(unallowedExpr2, env)));
+            assertTrue(constchecker.check(parser.parse(allowedExpr1, env)));
+
+        } catch (Exception error) {
+            assertEquals(error.getMessage(), "");
+        }
     }
 
 
