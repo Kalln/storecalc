@@ -9,12 +9,12 @@ public class Assignment extends Binary {
         super(res, key);
         // TODO, don't like this. I think we have to rewrite our parsing tests if we remove this classes
         // responsibility to "check" if it's a correct assignment since NamedConstantCheck should do it now.
-        if (key.isVariable() || key.isNamedConstant()) {
+/*         if (key.isVariable() || key.isNamedConstant()) {
             return;
-        }
+        } */
         
         
-        throw new IllegalAssignmentException("Right side must be an variable.");
+        // throw new IllegalAssignmentException("Right side must be an variable.");
     }
 
     @Override

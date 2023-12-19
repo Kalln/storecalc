@@ -106,11 +106,6 @@ public class StandardTests {
 
     @Test
     void assignmentTest() {
-        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Variable("x"), new Constant(6)));
-        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(3), new Constant(6)));
-        // TODO assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(4), new NamedConstant("asdf", 7)));
-        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(5), new Sin(new Variable("null"))));
-        assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(6), new Addition(new Variable("x"), new Constant(0))));
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
 
         var as2 = new Assignment(new Constant(42), new Variable("x"));
