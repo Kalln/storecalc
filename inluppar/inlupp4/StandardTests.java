@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.ioopm.calculator.EvaluationVisitor;
 import org.ioopm.calculator.NamedConstantChecker;
+import org.ioopm.calculator.ReassignmentChecker;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -105,7 +106,7 @@ public class StandardTests {
     }
 
     @Test
-    void assignmentTest() {
+    void assignmentTest() { 
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
 
         var as2 = new Assignment(new Constant(42), new Variable("x"));
@@ -424,6 +425,30 @@ public class StandardTests {
             assertFalse(constchecker.check(parser.parse(unallowedExpr2, env)));
             assertTrue(constchecker.check(parser.parse(allowedExpr1, env)));
 
+        } catch (Exception error) {
+            assertEquals(error.getMessage(), "");
+        }
+    }
+
+    @Test
+    void test_reassignmentChecker() {
+        var assigncheck = new ReassignmentChecker();
+        var parser = new CalculatorParser();
+        var env = new Environment();
+
+        var unallowedExpr1 = "(6 = x) + (4 = x)";
+        var unallowedExpr2 = "(5+4 = y) - (41 = x) + (23 = y) + (11 = y)";
+
+        var allowedExpr1 = "(5 = y) + (2 = x)";
+        var allowedExpr2 = "5 = y";
+        var allowedExpr3 = "(y = y)";
+
+        try {
+            assertFalse(assigncheck.check(parser.parse(unallowedExpr1, env)));
+            assertFalse(assigncheck.check(parser.parse(unallowedExpr2, env)));
+            assertTrue(assigncheck.check(parser.parse(allowedExpr1, env)));
+            assertTrue(assigncheck.check(parser.parse(allowedExpr2, env)));
+            assertTrue(assigncheck.check(parser.parse(allowedExpr3, env)));
         } catch (Exception error) {
             assertEquals(error.getMessage(), "");
         }
