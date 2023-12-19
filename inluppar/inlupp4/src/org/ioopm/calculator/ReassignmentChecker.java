@@ -2,7 +2,6 @@ package org.ioopm.calculator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -25,8 +24,20 @@ import org.ioopm.calculator.ast.unary.Sin;
 
 public class ReassignmentChecker implements Visitor {
 
-    HashMap<String, Integer> assignedVariables;
-    ArrayList<String> IllegalAssignments;
+    private HashMap<String, Integer> assignedVariables;
+    
+
+    private ArrayList<String> getIllegalAssignments(HashMap<String, Integer> assignedVars) {
+        ArrayList<String> IllegalAssignments = new ArrayList<>();
+
+        for (var entry : assignedVars.keySet()) {
+            if (assignedVars.get(entry) > 1) {
+                IllegalAssignments.add(entry);
+            }
+        }
+
+        return IllegalAssignments;
+    }
 
     public boolean check(SymbolicExpression topLevel) {
         this.assignedVariables = new HashMap<>();
@@ -155,8 +166,7 @@ public class ReassignmentChecker implements Visitor {
         StringBuilder sb = new StringBuilder();
         sb.append("ERROR: Variable assigned twice: ");
         
-        for (var assignedVariable : this.IllegalAssignments) {
-            sb.append("\n");
+        for (var assignedVariable : getIllegalAssignments(this.assignedVariables)) {
             sb.append(assignedVariable);
             sb.append(", ");
         }

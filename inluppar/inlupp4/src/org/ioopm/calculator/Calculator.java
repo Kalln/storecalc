@@ -57,9 +57,14 @@ public class Calculator {
 
                     // results is not a command, therefore we can evaluate the result.
 
-                    // check for assigning named constants.
+                    
                     var namedConstantChecker = new NamedConstantChecker(); 
-                    if (namedConstantChecker.check(result)) {
+                    var reassignmentCheck = new ReassignmentChecker();
+
+                    var namedConstantCheckerResult = namedConstantChecker.check(result);
+                    var reassignmentCheckerResult = reassignmentCheck.check(result);
+
+                    if (reassignmentCheckerResult && namedConstantCheckerResult) {
                         
                         var evaluator = new EvaluationVisitor();
                         var evalRes = evaluator.evaluate(result, env);
@@ -76,8 +81,10 @@ public class Calculator {
     
     
                         System.out.println(evalRes);
-                    } else {
+                    } else if (!namedConstantCheckerResult) {
                         System.out.println(namedConstantChecker);
+                    } else {
+                        System.out.println(reassignmentCheck);
                     }
 
                 }
