@@ -15,6 +15,11 @@ public class Scope extends Unary {
     }
 
     @Override
+    public String toString() {
+        return "{" + exp + "}";
+    }
+
+    @Override
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }

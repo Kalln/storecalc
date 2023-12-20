@@ -248,6 +248,29 @@ public class ParserTests {
                     new Scope(new Assignment(new Constant(1), new Variable("x")))
                 )
             );
+            assertEquals(
+                parser.parse("{{1 = x} = x}", env),
+                new Scope(new Assignment(new Scope(new Assignment(new Constant(1), new Variable("x"))), new Variable("x")))
+            );
+            assertEquals(
+                parser.parse("(1 = x) + {(2 + x = x) + {3 + x = x}}", env),
+                new Addition(
+                    new Assignment(new Constant(1), new Variable("x")),
+                    new Scope(
+                        new Addition(
+                            new Assignment(
+                                new Addition(new Constant(2), new Variable("x")),
+                                new Variable("x")
+                            ),
+                            new Scope(
+                                new Assignment(
+                                    new Addition(new Constant(3), new Variable("x")),
+                                    new Variable("x")
+                                )
+                            )
+                        )
+                    ))
+            );
         } catch (Exception e) {
             System.out.println(e);
             assertTrue(false);

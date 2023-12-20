@@ -171,6 +171,7 @@ public class EvaluationVisitor implements Visitor {
 
     @Override
     public SymbolicExpression visit(Scope n) {
+        // TODO: implement this for real
         var arg = n.getExp().accept(this);
         return arg.isConstant()
             ? new Constant(Math.sin(arg.getValue()))
