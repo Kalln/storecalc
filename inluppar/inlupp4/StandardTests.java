@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.ioopm.calculator.EvaluationVisitor;
 import org.ioopm.calculator.NamedConstantChecker;
 import org.ioopm.calculator.ReassignmentChecker;
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -34,7 +34,7 @@ public class StandardTests {
     // Results might not match expected values exactly, some error is acceptable and expected.
     private double acceptableFloatError = 0.00001;
     private EvaluationVisitor visitor = new EvaluationVisitor();
-    private Environment env = new Environment();
+    private StackEnvironment env = new StackEnvironment();
 
     @BeforeAll
     static void initAll() {
@@ -44,7 +44,7 @@ public class StandardTests {
     @BeforeEach
     void init() {
         visitor = new EvaluationVisitor();
-        env = new Environment();
+        env = new StackEnvironment();
     }
 
     @Test
@@ -414,7 +414,7 @@ public class StandardTests {
     void test_namedconstantCheck() {
         var constchecker = new NamedConstantChecker();
         var parser = new CalculatorParser();
-        var env = new Environment();
+        var env = new StackEnvironment();
 
         var unallowedExpr1 = "(5 = pi) + (3 = e)";
         var unallowedExpr2 = "(5 = pi) + (3 = d)";
@@ -435,7 +435,7 @@ public class StandardTests {
     void test_reassignmentChecker() {
         var assigncheck = new ReassignmentChecker();
         var parser = new CalculatorParser();
-        var env = new Environment();
+        var env = new StackEnvironment();
 
         var unallowedExpr1 = "(6 = x) + (4 = x)";
         var unallowedExpr2 = "(5+4 = y) - (41 = x) + (23 = y) + (11 = y)";

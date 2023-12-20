@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -24,7 +24,7 @@ public class Calculator {
         int expressionEntered = 0;
         int sucessfullyEvaluated = 0;
         int fullyEvaluated = 0;
-        Environment env = new Environment();
+        StackEnvironment env = new StackEnvironment();
 
         Scanner scanner = new Scanner(System.in);
 
