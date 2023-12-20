@@ -457,7 +457,6 @@ public class StandardTests {
 
     @Test
     void testEvaluateScope() {
-
         try {
             assertEquals(
                 // {1 = x} + {1 = x}
@@ -506,7 +505,6 @@ public class StandardTests {
                 acceptableFloatError
             );
         } catch (Exception e) {
-            System.out.println(e);
             assertTrue(false);
         }
     }

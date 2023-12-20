@@ -172,11 +172,11 @@ public class EvaluationVisitor implements Visitor {
 
     @Override
     public SymbolicExpression visit(Scope n) {
-        // TODO: implement this for real
-
+        env.pushEnvironment();
         var arg = n.getExp().accept(this);
+        env.popEnvironment();
         return arg.isConstant()
-            ? new Constant(Math.sin(arg.getValue()))
+            ? arg
             : n;
     }
 
