@@ -20,6 +20,7 @@ import org.ioopm.calculator.ast.command.Vars;
 import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
+import org.ioopm.calculator.ast.unary.Scope;
 import org.ioopm.calculator.ast.unary.Sin;
 import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.ast.unary.Exp;
@@ -106,7 +107,7 @@ public class StandardTests {
     }
 
     @Test
-    void assignmentTest() { 
+    void assignmentTest() {
         assertThrows(IllegalAssignmentException.class, () -> new Assignment(new Constant(7), new Variable(null)));
 
         var as2 = new Assignment(new Constant(42), new Variable("x"));
@@ -451,6 +452,62 @@ public class StandardTests {
             assertTrue(assigncheck.check(parser.parse(allowedExpr3, env)));
         } catch (Exception error) {
             assertEquals(error.getMessage(), "");
+        }
+    }
+
+    @Test
+    void testEvaluateScope() {
+
+        try {
+            assertEquals(
+                // {1 = x} + {1 = x}
+                2.0,
+                visitor.evaluate(
+                    new Addition(
+                        new Scope(new Assignment(new Constant(1), new Variable("x"))),
+                        new Scope(new Assignment(new Constant(1), new Variable("x")))
+                    ),
+                    env
+                ).getValue(),
+                acceptableFloatError
+            );
+            assertEquals(
+                1.0,
+                // {{1 = x} = x}
+                visitor.evaluate(
+                    new Scope(new Assignment(new Scope(new Assignment(new Constant(1), new Variable("x"))), new Variable("x"))),
+                    env
+                ).getValue(),
+                acceptableFloatError
+            );
+            assertEquals(
+                // (1 = x) + {(2 + x = x) + {3 + x = x}}
+                10.0,
+                visitor.evaluate(
+                    new Addition(
+                        new Assignment(new Constant(1), new Variable("x")),
+                        new Scope(
+                            new Addition(
+                                new Assignment(
+                                    new Addition(new Constant(2), new Variable("x")),
+                                    new Variable("x")
+                                ),
+                                new Scope(
+                                    new Assignment(
+                                        new Addition(new Constant(3), new Variable("x")),
+                                        new Variable("x")
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    env
+                ).getValue(),
+                acceptableFloatError
+            );
+        } catch (Exception e) {
+            System.out.println(e);
+            assertTrue(false);
         }
     }
 

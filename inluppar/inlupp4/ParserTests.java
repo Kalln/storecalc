@@ -269,7 +269,8 @@ public class ParserTests {
                                 )
                             )
                         )
-                    ))
+                    )
+                )
             );
         } catch (Exception e) {
             System.out.println(e);
