@@ -3,6 +3,8 @@ package org.ioopm.calculator.ast;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.ioopm.calculator.ast.atom.Variable;
+
 public class StackEnvironment extends Environment {
     private Deque<Environment> stack = new ArrayDeque<>();
 
@@ -24,5 +26,17 @@ public class StackEnvironment extends Environment {
         return containing.isPresent()
             ? containing.orElseThrow().get(v)
             : super.get(v);
+    }
+
+    @Override
+    public SymbolicExpression put(Variable key, SymbolicExpression value) {
+        // TODO: add a test case for this
+        var previous = this.get(key);
+        if (stack.isEmpty()) {
+            super.put(key, value);
+        } else {
+            stack.peek().put(key, value);
+        }
+        return previous;
     }
 }
