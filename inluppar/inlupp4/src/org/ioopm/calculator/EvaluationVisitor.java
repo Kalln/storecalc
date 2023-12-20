@@ -20,14 +20,15 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
+import org.ioopm.calculator.ast.unary.Scope;
 import org.ioopm.calculator.ast.unary.Sin;
 
 public class EvaluationVisitor implements Visitor {
     private Environment env = null;
 
     /*
-     * Evaluate a given SymbolicExpression topLevel. This will "find" the correct 
-     * accept() corresponding to that Expression type and return it's evaluated 
+     * Evaluate a given SymbolicExpression topLevel. This will "find" the correct
+     * accept() corresponding to that Expression type and return it's evaluated
      * expression.
      */
     public SymbolicExpression evaluate(SymbolicExpression topLevel, Environment env) {
@@ -165,6 +166,14 @@ public class EvaluationVisitor implements Visitor {
         var arg = n.getExp().accept(this);
         return arg.isConstant()
             ? new Constant(-arg.getValue())
+            : n;
+    }
+
+    @Override
+    public SymbolicExpression visit(Scope n) {
+        var arg = n.getExp().accept(this);
+        return arg.isConstant()
+            ? new Constant(Math.sin(arg.getValue()))
             : n;
     }
 

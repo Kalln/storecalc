@@ -17,6 +17,7 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
+import org.ioopm.calculator.ast.unary.Scope;
 import org.ioopm.calculator.ast.unary.Sin;
 import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.parser.SyntaxErrorException;
@@ -232,6 +233,23 @@ public class ParserTests {
             ));
 
         } catch (Exception e) {
+            assertTrue(false);
+        }
+
+    }
+
+    @Test
+    void scopeParse() {
+        try {
+            assertEquals(
+                parser.parse("{1 = x} + {1 = x}", env),
+                new Addition(
+                    new Scope(new Assignment(new Constant(1), new Variable("x"))),
+                    new Scope(new Assignment(new Constant(1), new Variable("x")))
+                )
+            );
+        } catch (Exception e) {
+            System.out.println(e);
             assertTrue(false);
         }
 

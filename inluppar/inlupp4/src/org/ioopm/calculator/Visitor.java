@@ -16,6 +16,7 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
+import org.ioopm.calculator.ast.unary.Scope;
 import org.ioopm.calculator.ast.unary.Sin;
 
 public interface Visitor {
@@ -31,6 +32,7 @@ public interface Visitor {
     public SymbolicExpression visit(Multiplication n);
     public SymbolicExpression visit(Negation n);
     public SymbolicExpression visit(Quit n);
+    public SymbolicExpression visit(Scope n);
     public SymbolicExpression visit(Sin n);
     public SymbolicExpression visit(Subtraction n);
     public SymbolicExpression visit(Variable n);
