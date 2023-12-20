@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -24,7 +24,7 @@ public class Calculator {
         int expressionEntered = 0;
         int sucessfullyEvaluated = 0;
         int fullyEvaluated = 0;
-        Environment env = new Environment();
+        StackEnvironment env = new StackEnvironment();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -57,29 +57,28 @@ public class Calculator {
 
                     // results is not a command, therefore we can evaluate the result.
 
-                    
-                    var namedConstantChecker = new NamedConstantChecker(); 
+
+                    var namedConstantChecker = new NamedConstantChecker();
                     var reassignmentCheck = new ReassignmentChecker();
 
                     var namedConstantCheckerResult = namedConstantChecker.check(result);
                     var reassignmentCheckerResult = reassignmentCheck.check(result);
-
                     if (reassignmentCheckerResult && namedConstantCheckerResult) {
-                        
+
                         var evaluator = new EvaluationVisitor();
                         var evalRes = evaluator.evaluate(result, env);
                         sucessfullyEvaluated++;
-    
+
                         // ans variable will keep the last successfully evaluated expression.
                         // this is done by saving 'ans' as a variable in the environment.
                         env.put(new Variable("ans"), evalRes);
-    
+
                         // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
                         if (evalRes instanceof Constant) {
                             fullyEvaluated++;
                         }
-    
-    
+
+
                         System.out.println(evalRes);
                     } else if (!namedConstantCheckerResult) {
                         System.out.println(namedConstantChecker);

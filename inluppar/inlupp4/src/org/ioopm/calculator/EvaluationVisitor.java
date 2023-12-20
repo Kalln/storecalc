@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalExpressionException;
+import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.NamedConstant;
@@ -20,18 +21,20 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
+import org.ioopm.calculator.ast.unary.Scope;
 import org.ioopm.calculator.ast.unary.Sin;
 
 public class EvaluationVisitor implements Visitor {
-    private Environment env = null;
+    private StackEnvironment env = null;
 
     /*
-     * Evaluate a given SymbolicExpression topLevel. This will "find" the correct 
-     * accept() corresponding to that Expression type and return it's evaluated 
+     * Evaluate a given SymbolicExpression topLevel. This will "find" the correct
+     * accept() corresponding to that Expression type and return it's evaluated
      * expression.
      */
-    public SymbolicExpression evaluate(SymbolicExpression topLevel, Environment env) {
+    public SymbolicExpression evaluate(SymbolicExpression topLevel, StackEnvironment env) {
         this.env = env;
+        env.clearStack(); // Clear all environments except the global one
         return topLevel.accept(this);
     }
 
@@ -165,6 +168,16 @@ public class EvaluationVisitor implements Visitor {
         var arg = n.getExp().accept(this);
         return arg.isConstant()
             ? new Constant(-arg.getValue())
+            : n;
+    }
+
+    @Override
+    public SymbolicExpression visit(Scope n) {
+        env.pushEnvironment();
+        var arg = n.getExp().accept(this);
+        env.popEnvironment();
+        return arg.isConstant()
+            ? arg
             : n;
     }
 

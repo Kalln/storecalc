@@ -10,7 +10,7 @@ import org.ioopm.calculator.ast.unary.*;
 import org.ioopm.calculator.ast.command.*;
 
 
-public class NamedConstantChecker implements Visitor {    
+public class NamedConstantChecker implements Visitor {
 
     ArrayList<NamedConstant> FoundIllegalAssignments = new ArrayList<>();
 
@@ -101,6 +101,12 @@ public class NamedConstantChecker implements Visitor {
     }
 
     @Override
+    public SymbolicExpression visit(Scope n) {
+        n.getExp().accept(this);
+        return null;
+    }
+
+    @Override
     public SymbolicExpression visit(Sin n) {
         n.getExp().accept(this);
         return null;
@@ -108,8 +114,8 @@ public class NamedConstantChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(Subtraction n) {
-            n.getLhs().accept(this);
-            n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
         return null;
     }
 
@@ -127,7 +133,7 @@ public class NamedConstantChecker implements Visitor {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ERROR: Asssignment to named constant: ");
-        
+
         for (var NC : this.FoundIllegalAssignments) {
             sb.append("\n");
             sb.append(NC.getName());
@@ -138,5 +144,5 @@ public class NamedConstantChecker implements Visitor {
 
         return sb.toString();
     }
-    
+
 }

@@ -6,7 +6,7 @@ test: all
 	diff tests/output.txt tests/expected_output.txt
 
 
-run:
+run: all
 	java -cp classes org.ioopm.calculator.Calculator
 
 runtest:

@@ -15,7 +15,7 @@ import org.ioopm.calculator.ast.unary.Sin;
 
 
 public class Test {
-    private Environment vars = new Environment();
+    private StackEnvironment vars = new StackEnvironment();
     public static void main(String[] args) {
         Test t = new Test();
         t.test_simple_mult();

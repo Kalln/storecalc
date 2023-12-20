@@ -20,12 +20,13 @@ import org.ioopm.calculator.ast.unary.Cos;
 import org.ioopm.calculator.ast.unary.Exp;
 import org.ioopm.calculator.ast.unary.Log;
 import org.ioopm.calculator.ast.unary.Negation;
+import org.ioopm.calculator.ast.unary.Scope;
 import org.ioopm.calculator.ast.unary.Sin;
 
 public class ReassignmentChecker implements Visitor {
 
     private HashMap<String, Integer> assignedVariables;
-    
+
 
     private ArrayList<String> getIllegalAssignments(HashMap<String, Integer> assignedVars) {
         ArrayList<String> IllegalAssignments = new ArrayList<>();
@@ -68,7 +69,7 @@ public class ReassignmentChecker implements Visitor {
         n.getLhs().accept(this);
         n.getRhs().accept(this);
 
-        // add 
+        // add
         if (assignedVariables.get(n.getRhs().getName()) == null) {
             assignedVariables.put(n.getRhs().getName(), 1);
         } else {
@@ -139,6 +140,13 @@ public class ReassignmentChecker implements Visitor {
     }
 
     @Override
+    public SymbolicExpression visit(Scope n) {
+        // TODO: should scopes have different rules for this?
+        n.getExp().accept(this);
+        return null;
+    }
+
+    @Override
     public SymbolicExpression visit(Sin n) {
         n.getExp().accept(this);
         return null;
@@ -165,7 +173,7 @@ public class ReassignmentChecker implements Visitor {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ERROR: Variable assigned twice: ");
-        
+
         for (var assignedVariable : getIllegalAssignments(this.assignedVariables)) {
             sb.append(assignedVariable);
             sb.append(", ");
@@ -173,6 +181,5 @@ public class ReassignmentChecker implements Visitor {
 
         return sb.toString();
     }
-    
-}
 
+}
