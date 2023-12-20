@@ -20,6 +20,10 @@ public class StackEnvironment extends Environment {
         stack.pop();
     }
 
+    public void clearStack() {
+        stack.clear();
+    }
+
     @Override
     public SymbolicExpression get(Object v) {
         var containing = stack.stream().filter(x -> x.containsKey(v)).findFirst();

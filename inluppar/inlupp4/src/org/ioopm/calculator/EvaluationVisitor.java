@@ -34,6 +34,7 @@ public class EvaluationVisitor implements Visitor {
      */
     public SymbolicExpression evaluate(SymbolicExpression topLevel, StackEnvironment env) {
         this.env = env;
+        env.clearStack(); // Clear all environments except the global one
         return topLevel.accept(this);
     }
 
