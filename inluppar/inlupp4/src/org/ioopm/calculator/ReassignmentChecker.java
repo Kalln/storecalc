@@ -141,8 +141,8 @@ public class ReassignmentChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(Scope n) {
-        // TODO: should scopes have different rules for this?
         n.getExp().accept(this);
+        assignedVariables.clear();
         return null;
     }
 
