@@ -504,6 +504,28 @@ public class StandardTests {
                 ).getValue(),
                 acceptableFloatError
             );
+            assertEquals(
+                // {{1 = x} = x} = y
+                
+                1.0,
+                visitor.evaluate(
+                    new Assignment(
+                        new Scope(
+                            new Assignment(
+                                new Scope(
+                                    new Assignment(
+                                        new Constant(1), new Variable("x")
+                                    )
+                                ),
+                                new Variable("x")
+                            )
+                        ),
+                        new Variable("y")
+                    ),
+                    env
+                    ).getValue(),acceptableFloatError
+            );
+
         } catch (Exception e) {
             assertTrue(false);
         }
