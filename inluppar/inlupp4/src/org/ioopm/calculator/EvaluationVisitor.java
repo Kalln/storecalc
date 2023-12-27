@@ -3,7 +3,6 @@ package org.ioopm.calculator;
 import java.util.Locale;
 
 import org.ioopm.calculator.ast.Conditional;
-import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.SymbolicExpression;

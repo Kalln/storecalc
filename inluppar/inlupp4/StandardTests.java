@@ -1,7 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
-
 import org.ioopm.calculator.EvaluationVisitor;
 import org.ioopm.calculator.NamedConstantChecker;
 import org.ioopm.calculator.ReassignmentChecker;
