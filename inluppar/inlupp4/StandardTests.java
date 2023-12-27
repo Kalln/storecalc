@@ -1,17 +1,23 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+
 import org.ioopm.calculator.EvaluationVisitor;
 import org.ioopm.calculator.NamedConstantChecker;
 import org.ioopm.calculator.ReassignmentChecker;
 import org.ioopm.calculator.ast.StackEnvironment;
+import org.ioopm.calculator.ast.Conditional;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.False;
 import org.ioopm.calculator.ast.atom.NamedConstant;
+import org.ioopm.calculator.ast.atom.True;
 import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
+import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
@@ -509,6 +515,120 @@ public class StandardTests {
         }
     }
 
+    @Test
+    void testTrue() {
+        assertTrue(new True().isBoolean());
+        assertTrue(new True().isTrue());
+
+        assertEquals(new True(), new True());
+
+        assertEquals(new True().toString(), "True");
+
+        assertEquals(visitor.evaluate(new True(), env), new True());
+    }
+
+    @Test
+    void testFalse() {
+        assertTrue(new False().isBoolean());
+        assertFalse(new False().isTrue());
+
+        assertEquals(new False(), new False());
+        assertNotEquals(new True(), new False());
+
+        assertEquals(new False().toString(), "False");
+
+        assertEquals(visitor.evaluate(new False(), env), new False());
+
+    }
+
+    @Test
+    void testLessThan() {
+        // 5 < 6
+        var l1 = new LessThan(new Constant(5), new Constant(6));
+        var evalResult1 = visitor.evaluate(l1, env);
+
+        assertEquals(evalResult1, new True());
+        assertEquals(l1.toString(), "5.0 < 6.0");
+
+        // 1234 < 341
+        var l2 = new LessThan(new Constant(1234), new Constant(341));
+        var evalResult2 = visitor.evaluate(l2, env);
+
+        assertEquals(evalResult2, new False());
+        assertEquals(l2.toString(), "1234.0 < 341.0");
+
+        // x < 1
+        var l3 = new LessThan(new Variable("x"), new Constant(1));
+        var evalResult3 = visitor.evaluate(l3, env);
+
+        assertEquals(evalResult3, new LessThan(new Variable("x"), new Constant(1)));
+        assertEquals(l3.toString(), "x < 1.0");
+
+        // 9 < asdf
+        var l4 = new LessThan(new Constant(9), new Variable("asdf"));
+        var evalResult4 = visitor.evaluate(l4, env);
+
+        assertEquals(evalResult4, new LessThan(new Constant(9), new Variable("asdf")));
+        assertEquals(l4.toString(), "9.0 < asdf");
+
+        // y < z
+        var l5 = new LessThan(new Variable("y"), new Variable("z"));
+        var evalResult5 = visitor.evaluate(l5, env);
+
+        assertEquals(evalResult5, new LessThan(new Variable("y"), new Variable("z")));
+        assertEquals(l5.toString(), "y < z");
+
+        // 5.5 < 6.5
+        var l6 = new LessThan(new Constant(5.5), new Constant(6.5));
+        var evalResult6 = visitor.evaluate(l6, env);
+
+        assertEquals(evalResult6, new True());
+        assertEquals(l6.toString(), "5.5 < 6.5");
+    }
+
+    @Test
+    void testEvaluateExpression() {
+        assertEquals(
+            1.0,
+            visitor.evaluate(
+                new Conditional(
+                    new LessThan(new Constant(5), new Constant(6)),
+                    new Scope(new Constant(1)),
+                    new Scope(new Constant(2))
+                ),
+                env
+            ).getValue(),
+            acceptableFloatError
+        );
+        assertEquals(
+            new Conditional(
+                new LessThan(new Constant(5), new Constant(6)),
+                new Scope(new Constant(1)),
+                new Scope(new Constant(2))
+            ).toString(),
+            "if 5.0 < 6.0 {1.0} else {2.0}"
+        );
+        assertEquals(
+            7.0,
+            visitor.evaluate(
+                new Conditional(
+                    new LessThan(new Constant(10), new Constant(1)),
+                    new Scope(new Constant(5)),
+                    new Scope(new Constant(7))
+                ),
+                env
+            ).getValue(),
+            acceptableFloatError
+        );
+        assertEquals(
+            new Conditional(
+                new LessThan(new Constant(10), new Constant(1)),
+                new Scope(new Constant(5)),
+                new Scope(new Constant(7))
+            ).toString(),
+            "if 10.0 < 1.0 {5.0} else {7.0}"
+        );
+    }
 
     @Test
     void succeedingTest() {

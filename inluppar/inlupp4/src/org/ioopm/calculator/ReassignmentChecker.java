@@ -3,14 +3,18 @@ package org.ioopm.calculator;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.ioopm.calculator.ast.Conditional;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.False;
 import org.ioopm.calculator.ast.atom.NamedConstant;
+import org.ioopm.calculator.ast.atom.True;
 import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
+import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
@@ -84,6 +88,12 @@ public class ReassignmentChecker implements Visitor {
     @Override
     public SymbolicExpression visit(Clear n) {
         return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Conditional n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
     @Override
@@ -180,6 +190,24 @@ public class ReassignmentChecker implements Visitor {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public SymbolicExpression visit(LessThan n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(False n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(True n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
 }

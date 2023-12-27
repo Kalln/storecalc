@@ -21,6 +21,9 @@ public abstract class SymbolicExpression {
     public boolean isConstant() {
         return false;
     }
+    public boolean isBoolean() {
+        return false;
+    }
     public boolean isNamedConstant() {
         return false;
     }
@@ -42,5 +45,9 @@ public abstract class SymbolicExpression {
 
     public double getValue() {
         throw new RuntimeException("getValue() not implemented for non constants");
+    }
+
+    public boolean isTrue() {
+        throw new RuntimeException("getValue() not implemented for non booleans");
     }
 }
