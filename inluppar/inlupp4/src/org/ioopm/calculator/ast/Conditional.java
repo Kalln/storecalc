@@ -6,7 +6,11 @@ public class Conditional extends SymbolicExpression {
     private SymbolicExpression condition;
     private SymbolicExpression ifClause;
     private SymbolicExpression elseClause;
-    public Conditional(SymbolicExpression condition, SymbolicExpression ifClause, SymbolicExpression elseClause) {
+    public Conditional(
+        SymbolicExpression condition,
+        SymbolicExpression ifClause,
+        SymbolicExpression elseClause
+    ) {
         this.condition = condition;
         this.ifClause = ifClause;
         this.elseClause = elseClause;

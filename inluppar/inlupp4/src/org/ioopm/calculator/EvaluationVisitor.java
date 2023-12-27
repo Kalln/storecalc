@@ -119,13 +119,12 @@ public class EvaluationVisitor implements Visitor {
     public SymbolicExpression visit(Conditional n) {
         var condition = n.getCondition().accept(this);
         if (condition.isBoolean()) {
-            if (condition.isTrue()) {
-                return n.getIfClause().accept(this);
-            } else {
-                return n.getElseClause().accept(this);
-            }
+            return condition.isTrue()
+                ? n.getIfClause().accept(this)
+                : n.getElseClause().accept(this);
+        } else {
+            throw new RuntimeException("Unable to evaluate condition");
         }
-        throw new RuntimeException("Unable to evaluate condition");
     }
 
     @Override

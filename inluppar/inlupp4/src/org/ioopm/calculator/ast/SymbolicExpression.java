@@ -48,6 +48,6 @@ public abstract class SymbolicExpression {
     }
 
     public boolean isTrue() {
-        throw new RuntimeException("getValue() not implemented for non booleans");
+        throw new RuntimeException("isTrue() not implemented for non booleans");
     }
 }
