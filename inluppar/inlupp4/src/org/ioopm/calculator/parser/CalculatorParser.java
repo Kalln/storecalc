@@ -41,9 +41,7 @@ public class CalculatorParser {
         "Cos",
         "Sin",
         "Exp",
-        "Log",
-        "if",
-        "else"
+        "Log"
     ));
 
     /**
@@ -249,6 +247,11 @@ public class CalculatorParser {
                 st.sval.equals(LOG)) {
 
                 result = unary();
+                }
+             
+            else if(this.st.sval.equals("if") ||
+                    this.st.sval.equals("else")) {
+                result = conditional();
             } else {
                 result = identifier();
             }
@@ -282,6 +285,106 @@ public class CalculatorParser {
             result = new Exp(primary());
         }
         return result;
+    }
+
+    private String getConditionalOperation() throws IOException {
+        this.st.nextToken(); // go to next, now we get our condition.
+        char firstHalfOperation = ((char)st.ttype);
+        this.st.nextToken();
+        char secondHalfOperation = ((char)st.ttype);
+
+        var sb = new StringBuilder();
+
+        if (firstHalfOperation == '<') {
+            sb.append(firstHalfOperation);
+            
+            if (secondHalfOperation == '=') {
+                // <=
+                sb.append(secondHalfOperation);
+            } else {
+                this.st.pushBack();
+            }
+
+        } else if (firstHalfOperation == '>') {
+            if (secondHalfOperation == '=') {
+                // >=
+                sb.append(secondHalfOperation);
+            }  else {
+                this.st.pushBack();
+            }
+
+        } else if (firstHalfOperation == '=') {
+            sb.append(firstHalfOperation);
+            if (secondHalfOperation == '=') {
+                // == 
+                sb.append(secondHalfOperation);
+            } else {
+                // wrong syntax..
+                throw new SyntaxErrorException("Not possible to assign in condition.");
+            }
+
+        } else {
+            throw new SyntaxErrorException("Unexpected symbol.");
+        }
+
+        return sb.toString();
+
+    }
+
+    private SymbolicExpression conditional() throws IOException {
+        this.st.nextToken(); // skip the if
+        var lhs = primary(); // lhs of condition
+        var operation = getConditionalOperation();
+        var rhs = primary();
+        Condition cond;
+        if (operation.equals("<")) {
+            cond = new LessThan(lhs, rhs);
+
+        } else if (operation.equals("<=")) {
+            cond = new LessThanEqual(lhs, rhs);
+
+        } else if (operation.equals(">")) {
+            cond = new MoreThan(lhs, rhs);
+
+        } else if (operation.equals(">=")) {
+            cond = new MoreThanEqual(lhs, rhs);
+
+        } else if (operation.equals("==")) {
+            cond = new Equal(lhs, rhs);
+        } else {
+            throw new SyntaxErrorException("Invalid operation.");
+        }
+        this.st.nextToken();
+        this.st.nextToken();
+        var ifScope = primary();
+
+        this.st.nextToken();
+        if (!this.st.sval.equals("else")) {
+            throw new SyntaxErrorException("Expected else");
+        }
+
+        this.st.nextToken();
+        var elseScope = primary();
+
+        return new Conditional(cond, ifScope, elseScope);
+
+/*      
+        if x < y { 42 } else { 4711 }
+        SymbolicExpression result = term();
+        this.st.nextToken();
+        while (this.st.ttype == ADDITION || this.st.ttype == SUBTRACTION) {
+            int operation = st.ttype;
+            this.st.nextToken();
+            if (operation == ADDITION) {
+                result = new Addition(result, term());
+            } else {
+                result = new Subtraction(result, term());
+            }
+            this.st.nextToken();
+        }
+        this.st.pushBack();
+        return result; */
+
     }
 
     /**

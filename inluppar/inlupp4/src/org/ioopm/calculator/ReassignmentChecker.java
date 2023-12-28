@@ -95,8 +95,9 @@ public class ReassignmentChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(Conditional n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getIfClause().accept(this);
+        n.getElseClause().accept(this);
+        return null;
     }
 
     @Override
