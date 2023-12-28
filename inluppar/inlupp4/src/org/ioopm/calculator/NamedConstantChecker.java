@@ -170,4 +170,28 @@ public class NamedConstantChecker implements Visitor {
         throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
+    @Override
+    public SymbolicExpression visit(LessThanEqual n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(MoreThan n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(MoreThanEqual n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(Equal n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
 }

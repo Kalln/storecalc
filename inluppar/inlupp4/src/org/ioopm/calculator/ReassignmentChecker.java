@@ -14,7 +14,11 @@ import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
+import org.ioopm.calculator.ast.binary.Equal;
 import org.ioopm.calculator.ast.binary.LessThan;
+import org.ioopm.calculator.ast.binary.LessThanEqual;
+import org.ioopm.calculator.ast.binary.MoreThan;
+import org.ioopm.calculator.ast.binary.MoreThanEqual;
 import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
@@ -206,6 +210,30 @@ public class ReassignmentChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(True n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(LessThanEqual n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(MoreThan n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(MoreThanEqual n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(Equal n) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
