@@ -35,7 +35,6 @@ public class ReassignmentChecker implements Visitor {
 
     private HashMap<String, Integer> assignedVariables;
 
-
     private ArrayList<String> getIllegalAssignments(HashMap<String, Integer> assignedVars) {
         ArrayList<String> IllegalAssignments = new ArrayList<>();
 
@@ -168,8 +167,8 @@ public class ReassignmentChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(Subtraction n) {
-            n.getLhs().accept(this);
-            n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
         return null;
     }
 
@@ -198,44 +197,47 @@ public class ReassignmentChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(LessThan n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(False n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(True n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(LessThanEqual n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(MoreThan n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(MoreThanEqual n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(Equal n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        return null;
     }
 
 }

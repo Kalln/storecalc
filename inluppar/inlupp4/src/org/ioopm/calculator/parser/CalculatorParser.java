@@ -41,7 +41,9 @@ public class CalculatorParser {
         "Cos",
         "Sin",
         "Exp",
-        "Log"
+        "Log",
+        "if",
+        "else"
     ));
 
     /**

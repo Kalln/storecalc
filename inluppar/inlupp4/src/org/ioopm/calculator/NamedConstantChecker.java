@@ -154,44 +154,48 @@ public class NamedConstantChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(LessThan n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(False n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(True n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(LessThanEqual n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(MoreThan n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(MoreThanEqual n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(Equal n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+        return null;
     }
 
 }
