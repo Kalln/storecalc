@@ -2,16 +2,19 @@ package org.ioopm.calculator;
 
 import java.util.Locale;
 
-import org.ioopm.calculator.ast.Environment;
+import org.ioopm.calculator.ast.Conditional;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
+import org.ioopm.calculator.ast.atom.False;
 import org.ioopm.calculator.ast.atom.NamedConstant;
+import org.ioopm.calculator.ast.atom.True;
 import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
+import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
@@ -113,6 +116,18 @@ public class EvaluationVisitor implements Visitor {
     }
 
     @Override
+    public SymbolicExpression visit(Conditional n) {
+        var condition = n.getCondition().accept(this);
+        if (condition.isBoolean()) {
+            return condition.isTrue()
+                ? n.getIfClause().accept(this)
+                : n.getElseClause().accept(this);
+        } else {
+            throw new RuntimeException("Unable to evaluate condition");
+        }
+    }
+
+    @Override
     public SymbolicExpression visit(Constant n) {
         return n;
     }
@@ -187,5 +202,27 @@ public class EvaluationVisitor implements Visitor {
         return arg.isConstant()
             ? new Constant(Math.sin(arg.getValue()))
             : n;
+    }
+
+    @Override
+    public SymbolicExpression visit(LessThan n) {
+        var lhs = n.getLhs().accept(this);
+        var rhs = n.getRhs().accept(this);
+
+        return lhs.isConstant() && rhs.isConstant()
+            ? lhs.getValue() < rhs.getValue()
+                ? new True()
+                : new False()
+            : new LessThan(lhs, rhs);
+    }
+
+    @Override
+    public SymbolicExpression visit(False n) {
+        return n;
+    }
+
+    @Override
+    public SymbolicExpression visit(True n) {
+        return n;
     }
 }

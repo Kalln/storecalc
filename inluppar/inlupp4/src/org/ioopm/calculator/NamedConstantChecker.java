@@ -2,6 +2,7 @@ package org.ioopm.calculator;
 
 import java.util.ArrayList;
 
+import org.ioopm.calculator.ast.Conditional;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.*;
@@ -45,6 +46,12 @@ public class NamedConstantChecker implements Visitor {
     @Override
     public SymbolicExpression visit(Clear n) {
         return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Conditional n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
     @Override
@@ -143,6 +150,24 @@ public class NamedConstantChecker implements Visitor {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public SymbolicExpression visit(LessThan n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(False n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public SymbolicExpression visit(True n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
 }
