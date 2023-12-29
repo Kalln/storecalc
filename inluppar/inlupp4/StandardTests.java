@@ -1007,6 +1007,38 @@ public class StandardTests {
             visitor.evaluate(c2_3, env),
             c2_4
         );
+
+        var s3 = new Sequence();
+        s3.add(new FunctionCall(new Variable("x"), List.of(new Constant(3))));
+        var f3 = new Function(
+            List.of(new Variable("x")),
+            s3
+        );
+        assertEquals(
+            "function(x)\n"
+            + "    x(3.0)\n"
+            + "end",
+            f3.toString()
+        );
+
+        var c3 = new FunctionCall(
+            f3,
+            List.of(f2)
+        );
+
+        assertEquals(
+            "function(x)\n"
+            + "    x(3.0)\n"
+            + "end(function(x)\n"
+            + "    x * 2.0\n"
+            + "end)",
+            c3.toString()
+        );
+
+        assertEquals(
+            visitor.evaluate(c3, env),
+            new Constant(6)
+        );
     }
 
     @AfterEach

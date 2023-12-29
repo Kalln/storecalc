@@ -1,6 +1,7 @@
 package org.ioopm.calculator.ast;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ioopm.calculator.Visitor;
 
@@ -19,6 +20,16 @@ public class FunctionCall extends SymbolicExpression {
 
     public List<SymbolicExpression> getArgs() {
         return args;
+    }
+
+    @Override
+    public String toString() {
+        return function.toString()
+            + "("
+            + args.stream()
+                .map(x -> x.toString())
+                .collect(Collectors.joining(", "))
+            + ")";
     }
 
     @Override

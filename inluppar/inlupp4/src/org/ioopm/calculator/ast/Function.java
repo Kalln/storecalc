@@ -49,9 +49,8 @@ public class Function extends SymbolicExpression {
             + ")\n"
             + body.stream()
                 .map(x -> x.toString())
-                .map(x -> "    " + x)
+                .map(x -> "    " + x + "\n")
                 .collect(Collectors.joining("\n"))
-            + "\n"
             + "end";
     }
 

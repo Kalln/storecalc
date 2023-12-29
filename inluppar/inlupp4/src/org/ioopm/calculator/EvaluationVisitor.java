@@ -296,7 +296,7 @@ public class EvaluationVisitor implements Visitor {
 
     @Override
     public SymbolicExpression visit(FunctionCall n) {
-        var f = n.getFunction();
+        var f = n.getFunction().accept(this);
         if (f.isFunction()) {
             var functionArgs = f.getArgNames();
             var callArgs = n.getArgs()
@@ -308,7 +308,11 @@ public class EvaluationVisitor implements Visitor {
                 throw new IllegalExpressionException("Function argument list size mismatch");
             }
 
-            if (callArgs.stream().anyMatch(x -> ! x.isConstant())) {
+            if (
+                ! callArgs.stream().allMatch(
+                    x -> x.isConstant() || x.isFunction() || x.isBoolean()
+                )
+            ) {
                 return new FunctionCall(f, callArgs);
             } else {
                 env.pushEnvironment();
