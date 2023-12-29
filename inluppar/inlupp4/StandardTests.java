@@ -21,6 +21,7 @@ import org.ioopm.calculator.ast.binary.LessThanOrEquals;
 import org.ioopm.calculator.ast.binary.GreaterThan;
 import org.ioopm.calculator.ast.binary.GreaterThanOrEquals;
 import org.ioopm.calculator.ast.binary.Multiplication;
+import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
 import org.ioopm.calculator.ast.command.Quit;
@@ -861,6 +862,59 @@ public class StandardTests {
 
         assertEquals(evall5, new True());
         assertEquals(l5.toString(), "(5.0 - 2.0) == (1.0 + 2.0)");
+
+    }
+
+    @Test
+    void testNotEquals() {
+        // 5 != 7
+        var l1 = new NotEquals(new Constant(5), new Constant(7));
+        var evall1 = visitor.evaluate(l1, env);
+
+        assertEquals(evall1, new True());
+        assertEquals(l1.toString(), "5.0 != 7.0");
+
+        // 1321 != 1000
+        var l2 = new NotEquals(new Constant(1321) , new Constant(1000));
+        var evall2 = visitor.evaluate(l2, env);
+
+        assertEquals(evall2, new True());
+        assertEquals(l2.toString(), "1321.0 != 1000.0");
+
+        // 5 != 5
+        var l3 = new NotEquals(new Constant(5), new Constant(5));
+        var evall3 = visitor.evaluate(l3, env);
+
+        assertEquals(evall3, new False());
+        assertEquals(l3.toString(), "5.0 != 5.0");
+
+        // 5 + 2 != 5 + 5
+        var l4 = new NotEquals(
+                    new Addition(
+                        new Constant(5),
+                        new Constant(2)),
+                    new Addition(
+                        new Constant(5),
+                        new Constant(5)
+                    ));
+        var evall4 = visitor.evaluate(l4, env);
+
+        assertEquals(evall4, new True());
+        assertEquals(l4.toString(), "(5.0 + 2.0) != (5.0 + 5.0)");
+
+        // 5 - 2 != 1 + 2
+        var l5 = new NotEquals(
+                        new Subtraction(
+                            new Constant(5),
+                            new Constant(2)
+                        ),
+                        new Addition(
+                            new Constant(1),
+                            new Constant(2)));
+        var evall5 = visitor.evaluate(l5, env);
+
+        assertEquals(evall5, new False());
+        assertEquals(l5.toString(), "(5.0 - 2.0) != (1.0 + 2.0)");
 
     }
 
