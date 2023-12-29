@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+
 import org.ioopm.calculator.ast.Conditional;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.IllegalExpressionException;
@@ -246,40 +248,34 @@ public class ParserTests {
     }
 
     @Test
-    void testConditional() {
-        try {
-            var ifscope = new Scope(new Constant(42));
-            var elsescope = new Scope(new Constant(4711));
+    void testConditional() throws IOException {
+        var ifscope = new Scope(new Constant(42));
+        var elsescope = new Scope(new Constant(4711));
 
-            // if x < y { 42 } else { 4711 }
-            var cond1 = new LessThan(new Variable("x"), new Variable("y"));
-            var c1 = new Conditional(cond1, ifscope, elsescope);
-            assertEquals(parser.parse("if x < y { 42 } else { 4711 }", env).toString(), c1.toString());
+        // if x < y { 42 } else { 4711 }
+        var cond1 = new LessThan(new Variable("x"), new Variable("y"));
+        var c1 = new Conditional(cond1, ifscope, elsescope);
+        assertEquals(parser.parse("if x < y { 42 } else { 4711 }", env).toString(), c1.toString());
 
-            //if x <= y { 42 } else { 4711 }
-            var cond2 = new LessThanEqual(new Variable("x"), new Variable("y"));
-            var c2 = new Conditional(cond2, ifscope, elsescope);
-            assertEquals(parser.parse("if x <= y { 42 } else { 4711 }", env).toString(), c2.toString());
+        //if x <= y { 42 } else { 4711 }
+        var cond2 = new LessThanEqual(new Variable("x"), new Variable("y"));
+        var c2 = new Conditional(cond2, ifscope, elsescope);
+        assertEquals(parser.parse("if x <= y { 42 } else { 4711 }", env).toString(), c2.toString());
 
-            // if x > y { 42 } else { 4711 }
-            var cond3 = new MoreThan(new Variable("x"), new Variable("y"));
-            var c3 = new Conditional(cond3, ifscope, elsescope);
-            assertEquals(parser.parse("if x > y { 42 } else { 4711 }", env).toString(), c3.toString());
+        // if x > y { 42 } else { 4711 }
+        var cond3 = new MoreThan(new Variable("x"), new Variable("y"));
+        var c3 = new Conditional(cond3, ifscope, elsescope);
+        assertEquals(parser.parse("if x > y { 42 } else { 4711 }", env).toString(), c3.toString());
 
-            // if x >= y { 42 } else { 4711 }
-            var cond4 = new MoreThanEqual(new Variable("x"), new Variable("y"));
-            var c4 = new Conditional(cond4, ifscope, elsescope);
-            assertEquals(parser.parse("if x >= y { 42 } else { 4711 }", env).toString(), c4.toString());
+        // if x >= y { 42 } else { 4711 }
+        var cond4 = new MoreThanEqual(new Variable("x"), new Variable("y"));
+        var c4 = new Conditional(cond4, ifscope, elsescope);
+        assertEquals(parser.parse("if x >= y { 42 } else { 4711 }", env).toString(), c4.toString());
 
-            // if x == y { 42 } else { 4711 }
-            var cond5 = new Equal(new Variable("x"), new Variable("y"));
-            var c5 = new Conditional(cond5, ifscope, elsescope);
-            assertEquals(parser.parse("if x == y { 42 } else { 4711 }", env).toString(), c5.toString());
-
-        } catch (Exception e) {
-            System.out.println(e);
-            assertTrue(false);
-        }
+        // if x == y { 42 } else { 4711 }
+        var cond5 = new Equal(new Variable("x"), new Variable("y"));
+        var c5 = new Conditional(cond5, ifscope, elsescope);
+        assertEquals(parser.parse("if x == y { 42 } else { 4711 }", env).toString(), c5.toString());
     }
 
 }

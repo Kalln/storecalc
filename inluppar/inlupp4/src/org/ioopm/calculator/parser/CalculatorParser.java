@@ -45,7 +45,7 @@ public class CalculatorParser {
 
     /**
      * Used to parse the inputted string by the Calculator program
-     * 
+     *
      * @param inputString the string used to parse
      * @param vars        the Environment in which the variables exist
      * @return a SymbolicExpression to be evaluated
@@ -63,7 +63,7 @@ public class CalculatorParser {
 
     /**
      * Checks wether the token read is a command or an assignment
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException          by nextToken() if it reads invalid input
      * @throws SyntaxErrorException if the token parsed cannot be turned into a
@@ -100,7 +100,7 @@ public class CalculatorParser {
 
     /**
      * Checks what kind of command that should be returned
-     * 
+     *
      * @return an instance of Quit, Clear or Vars depending on the token parsed
      * @throws IOException by nextToken() if it reads invalid input
      */
@@ -117,7 +117,7 @@ public class CalculatorParser {
     /**
      * Checks wether the token read is an assignment between 2 expression and
      * descend into the right hand side of '='
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException          by nextToken() if it reads invalid input
      * @throws SyntaxErrorException if the token parsed cannot be turned into a
@@ -151,7 +151,7 @@ public class CalculatorParser {
 
     /**
      * Check if valid identifier for variable and return that if so
-     * 
+     *
      * @return a SymbolicExpression that is either a named constant or a new
      *         variable
      * @throws IOException                by nextToken() if it reads invalid input
@@ -176,7 +176,7 @@ public class CalculatorParser {
     /**
      * Checks wether the token read is an addition or subtraction
      * and then continue on with the right hand side of operator
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException by nextToken() if it reads invalid input
      */
@@ -201,7 +201,7 @@ public class CalculatorParser {
      * Checks wether the token read is an Multiplication or
      * Division and then continue on with the right hand side of
      * operator
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException by nextToken() if it reads invalid input
      */
@@ -229,7 +229,7 @@ public class CalculatorParser {
      * operation is an unary operation and then continue on with
      * the right hand side of that operator else if it's a
      * number/identifier
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException          by nextToken() if it reads invalid input
      * @throws SyntaxErrorException if the token parsed cannot be turned into a
@@ -280,7 +280,7 @@ public class CalculatorParser {
     /**
      * Checks what type of Unary operation the token read is and
      * then continues with the expression that the operator holds
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException by nextToken() if it reads invalid input
      */
@@ -322,6 +322,7 @@ public class CalculatorParser {
             }
 
         } else if (firstHalfOperation == '>') {
+            sb.append(firstHalfOperation);
             if (secondHalfOperation == '=') {
                 // >=
                 sb.append(secondHalfOperation);
@@ -349,7 +350,6 @@ public class CalculatorParser {
             this.st.nextToken();
         }
 
-        // TODO for some reason > is not returned when it is the value...
         return sb.toString();
 
     }
@@ -403,7 +403,7 @@ public class CalculatorParser {
     /**
      * Checks if the token read is a number - should always be a number in this
      * method
-     * 
+     *
      * @return a SymbolicExpression to be evaluated
      * @throws IOException          by nextToken() if it reads invalid input
      * @throws SyntaxErrorException if the token parsed cannot be turned into a
