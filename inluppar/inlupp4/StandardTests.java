@@ -1,11 +1,17 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ioopm.calculator.EvaluationVisitor;
 import org.ioopm.calculator.NamedConstantChecker;
 import org.ioopm.calculator.ReassignmentChecker;
 import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.Conditional;
+import org.ioopm.calculator.ast.Function;
+import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
+import org.ioopm.calculator.ast.Sequence;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.False;
@@ -916,6 +922,123 @@ public class StandardTests {
         assertEquals(evall5, new False());
         assertEquals(l5.toString(), "(5.0 - 2.0) != (1.0 + 2.0)");
 
+    }
+
+    @Test
+    void testFunctionEquals () {
+        var s1 = new Sequence();
+        s1.add(new Multiplication(new Variable("x"), new Constant(2)));
+        var f1 = new Function(
+            List.of(new Variable("x")),
+            s1
+        );
+
+        var s2 = new Sequence();
+        s2.add(new Multiplication(new Variable("x"), new Constant(2)));
+
+        var f2 = new Function(
+            List.of(new Variable("x")),
+            s2
+        );
+        assertEquals(f1, f2);
+
+        // TODO: more tests
+    }
+
+    @Test
+    void testFunction() {
+        var s1 = new Sequence();
+        s1.add(new Assignment(new Constant(5), new Variable("x")));
+        s1.add(new Addition(new Variable("x"), new Variable("x")));
+        var f1 = new Function(new ArrayList<Variable>(), s1);
+
+        assertEquals(visitor.evaluate(f1, env), f1);
+
+        assertEquals(
+            f1.toString(),
+            "function()\n"
+            + "    5.0 = x\n"
+            + "    x + x\n"
+            + "end"
+        );
+
+        var s2 = new Sequence();
+        s2.add(new Multiplication(new Variable("x"), new Constant(2)));
+        var f2 = new Function(
+            List.of(new Variable("x")),
+            s2
+        );
+
+        assertEquals(visitor.evaluate(f2, env), f2);
+
+        assertEquals(
+            f2.toString(),
+            "function(x)\n"
+            + "    x * 2.0\n"
+            + "end"
+        );
+    }
+
+    @Test
+    void testFunctionCall() {
+        var s1 = new Sequence();
+        s1.add(new Assignment(new Constant(5), new Variable("x")));
+        s1.add(new Addition(new Variable("x"), new Variable("x")));
+        var f1 = new Function(new ArrayList<Variable>(), s1);
+        var c1 = new FunctionCall(f1, new ArrayList<SymbolicExpression>());
+
+        assertEquals(visitor.evaluate(c1, env).getValue(), 10, acceptableFloatError);
+
+        var s2 = new Sequence();
+        s2.add(new Multiplication(new Variable("x"), new Constant(2)));
+        var f2 = new Function(
+            List.of(new Variable("x")),
+            s2
+        );
+        var c2_1 = new FunctionCall(f2, List.of(new Constant(5)));
+        assertEquals(visitor.evaluate(c2_1, env).getValue(), 10, acceptableFloatError);
+
+        var c2_2 = new FunctionCall(f2, List.of(new Constant(10)));
+        assertEquals(visitor.evaluate(c2_2, env).getValue(), 20, acceptableFloatError);
+
+        var c2_3 = new FunctionCall(f2, List.of(new Addition(new Variable("x"), new Constant(5))));
+        var c2_4 = new FunctionCall(f2, List.of(new Addition(new Variable("x"), new Constant(5))));
+        assertEquals(
+            visitor.evaluate(c2_3, env),
+            c2_4
+        );
+
+        var s3 = new Sequence();
+        s3.add(new FunctionCall(new Variable("x"), List.of(new Constant(3))));
+        var f3 = new Function(
+            List.of(new Variable("x")),
+            s3
+        );
+        assertEquals(
+            "function(x)\n"
+            + "    x(3.0)\n"
+            + "end",
+            f3.toString()
+        );
+
+        var c3 = new FunctionCall(
+            f3,
+            List.of(f2)
+        );
+
+        assertEquals(
+            "function(x)\n"
+            + "    x(3.0)\n"
+            + "end(function(x)\n"
+            + "    x * 2.0\n"
+            + "end)",
+            c3.toString()
+        );
+
+        assertEquals(
+            visitor.evaluate(c3, env),
+            new Constant(6)
+        );
     }
 
     @AfterEach

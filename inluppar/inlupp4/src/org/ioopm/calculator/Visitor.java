@@ -1,6 +1,8 @@
 package org.ioopm.calculator;
 
 import org.ioopm.calculator.ast.Conditional;
+import org.ioopm.calculator.ast.Function;
+import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.False;
@@ -39,6 +41,8 @@ public interface Visitor {
     public SymbolicExpression visit(Division n);
     public SymbolicExpression visit(Exp n);
     public SymbolicExpression visit(False n);
+    public SymbolicExpression visit(Function n);
+    public SymbolicExpression visit(FunctionCall n);
     public SymbolicExpression visit(Log n);
     public SymbolicExpression visit(LessThan n);
     public SymbolicExpression visit(LessThanOrEquals n);

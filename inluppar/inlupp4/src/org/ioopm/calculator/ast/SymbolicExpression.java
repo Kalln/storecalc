@@ -1,6 +1,10 @@
 package org.ioopm.calculator.ast;
 
+import java.util.List;
+
 import org.ioopm.calculator.Visitor;
+import org.ioopm.calculator.ast.atom.Variable;
+
 
 public abstract class SymbolicExpression {
 
@@ -30,6 +34,9 @@ public abstract class SymbolicExpression {
     public boolean isVariable() {
         return false;
     }
+    public boolean isFunction() {
+        return false;
+    }
 
     /**
      * Priority that determines how paranthesis are printed.
@@ -49,5 +56,12 @@ public abstract class SymbolicExpression {
 
     public boolean isTrue() {
         throw new RuntimeException("isTrue() not implemented for non booleans");
+    }
+
+    public Sequence getBody() {
+        throw new RuntimeException("getBody() not implemented for non functions");
+    }
+    public List<Variable> getArgNames() {
+        throw new RuntimeException("getArgNames() not implemented for non functions");
     }
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.ioopm.calculator.ast.Conditional;
+import org.ioopm.calculator.ast.Function;
+import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -246,6 +248,19 @@ public class ReassignmentChecker implements Visitor {
     public SymbolicExpression visit(NotEquals n) {
         n.getLhs().accept(this);
         n.getLhs().accept(this);
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(FunctionCall n) {
+        for (var x : n.getArgs()) {
+            x.accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Function n) {
         return null;
     }
 

@@ -3,6 +3,8 @@ package org.ioopm.calculator;
 import java.util.ArrayList;
 
 import org.ioopm.calculator.ast.Conditional;
+import org.ioopm.calculator.ast.Function;
+import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.*;
@@ -203,6 +205,19 @@ public class NamedConstantChecker implements Visitor {
     public SymbolicExpression visit(NotEquals n) {
         n.getLhs().accept(this);
         n.getRhs().accept(this);
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(FunctionCall n) {
+        for (var x : n.getArgs()) {
+            x.accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(Function n) {
         return null;
     }
 

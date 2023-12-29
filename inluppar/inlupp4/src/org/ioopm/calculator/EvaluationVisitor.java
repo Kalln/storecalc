@@ -1,8 +1,11 @@
 package org.ioopm.calculator;
 
+import java.io.IOError;
 import java.util.Locale;
 
 import org.ioopm.calculator.ast.Conditional;
+import org.ioopm.calculator.ast.Function;
+import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.StackEnvironment;
 import org.ioopm.calculator.ast.SymbolicExpression;
@@ -288,6 +291,54 @@ public class EvaluationVisitor implements Visitor {
 
     @Override
     public SymbolicExpression visit(True n) {
+        return n;
+    }
+
+    @Override
+    public SymbolicExpression visit(FunctionCall n) {
+        var f = n.getFunction().accept(this);
+        if (f.isFunction()) {
+            var functionArgs = f.getArgNames();
+            var callArgs = n.getArgs()
+                .stream()
+                .map(x -> x.accept(this))
+                .toList();
+
+            if (functionArgs.size() != callArgs.size()) {
+                throw new IllegalExpressionException("Function argument list size mismatch");
+            }
+
+            if (
+                ! callArgs.stream().allMatch(
+                    x -> x.isConstant() || x.isFunction() || x.isBoolean()
+                )
+            ) {
+                return new FunctionCall(f, callArgs);
+            } else {
+                env.pushEnvironment();
+                for (var i = 0; i < functionArgs.size(); ++i) {
+                    env.put(functionArgs.get(i), callArgs.get(i));
+                }
+
+                var body = f.getBody();
+                // Default return value TODO: should we disallow empty functions?
+                SymbolicExpression result = new False();
+                for (var statement : body) {
+                    result = statement.accept(this);
+                }
+                env.popEnvironment();
+
+                return result;
+            }
+
+
+        } else {
+            throw new IllegalExpressionException("Attempt to call non-function");
+        }
+    }
+
+    @Override
+    public SymbolicExpression visit(Function n) {
         return n;
     }
 }
