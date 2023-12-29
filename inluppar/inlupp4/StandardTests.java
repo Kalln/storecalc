@@ -654,7 +654,7 @@ public class StandardTests {
         );
     }
     @Test
-    void testLessThanEqual() {
+    void testLessThanOrEquals() {
         // 5 <= 7
         var l1 = new LessThanOrEquals(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
@@ -706,7 +706,7 @@ public class StandardTests {
     }
 
     @Test
-    void testMoreThan() {
+    void testGreaterThan() {
         // 5 > 7
         var l1 = new GreaterThan(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
@@ -759,7 +759,7 @@ public class StandardTests {
     }
 
     @Test
-    void testMoreThanEqual() {
+    void testGreaterThanOrEquals() {
         // 5 >= 7
         var l1 = new GreaterThanOrEquals(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
@@ -812,7 +812,7 @@ public class StandardTests {
     }
 
     @Test
-    void testEqual() {
+    void testEquals() {
         // 5 == 7
         var l1 = new Equals(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
@@ -862,11 +862,6 @@ public class StandardTests {
         assertEquals(evall5, new True());
         assertEquals(l5.toString(), "(5.0 - 2.0) == (1.0 + 2.0)");
 
-    }
-
-    @Test
-    void succeedingTest() {
-        assertTrue(true);
     }
 
     @AfterEach

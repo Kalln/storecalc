@@ -18,7 +18,6 @@ import java.util.*;
  */
 public class CalculatorParser {
     private StreamTokenizer st;
-    private Environment vars;
     private static char MULTIPLY = '*';
     private static char ADDITION = '+';
     private static char SUBTRACTION = '-';
@@ -52,8 +51,7 @@ public class CalculatorParser {
      * @throws IOException by nextToken() if it reads invalid input
      */
     public SymbolicExpression parse(String inputString, Environment vars) throws IOException {
-        this.st = new StreamTokenizer(new StringReader(inputString)); // reads from inputString via stringreader.
-        this.vars = vars;
+        this.st = new StreamTokenizer(new StringReader(inputString)); // reads from inputString via StringReader.
         this.st.ordinaryChar('-');
         this.st.ordinaryChar('/');
         this.st.eolIsSignificant(true);
