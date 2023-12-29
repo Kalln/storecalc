@@ -15,11 +15,11 @@ import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
-import org.ioopm.calculator.ast.binary.Equal;
+import org.ioopm.calculator.ast.binary.Equals;
 import org.ioopm.calculator.ast.binary.LessThan;
-import org.ioopm.calculator.ast.binary.LessThanEqual;
-import org.ioopm.calculator.ast.binary.MoreThan;
-import org.ioopm.calculator.ast.binary.MoreThanEqual;
+import org.ioopm.calculator.ast.binary.LessThanOrEquals;
+import org.ioopm.calculator.ast.binary.GreaterThan;
+import org.ioopm.calculator.ast.binary.GreaterThanOrEquals;
 import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
@@ -514,7 +514,7 @@ public class StandardTests {
             );
             assertEquals(
                 // {{1 = x} = x} = y
-                
+
                 1.0,
                 visitor.evaluate(
                     new Assignment(
@@ -656,28 +656,28 @@ public class StandardTests {
     @Test
     void testLessThanEqual() {
         // 5 <= 7
-        var l1 = new LessThanEqual(new Constant(5), new Constant(7));
+        var l1 = new LessThanOrEquals(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
 
         assertEquals(evall1, new True());
         assertEquals(l1.toString(), "5.0 <= 7.0");
 
         // 1321 <= 1000
-        var l2 = new LessThanEqual(new Constant(1321) , new Constant(1000));
+        var l2 = new LessThanOrEquals(new Constant(1321) , new Constant(1000));
         var evall2 = visitor.evaluate(l2, env);
 
         assertEquals(evall2, new False());
         assertEquals(l2.toString(), "1321.0 <= 1000.0");
 
         // 5 <= 5
-        var l3 = new LessThanEqual(new Constant(5), new Constant(5));
+        var l3 = new LessThanOrEquals(new Constant(5), new Constant(5));
         var evall3 = visitor.evaluate(l3, env);
 
         assertEquals(evall3, new True());
         assertEquals(l3.toString(), "5.0 <= 5.0");
 
-        // 5 + 2 <= 5 + 5 
-        var l4 = new LessThanEqual(
+        // 5 + 2 <= 5 + 5
+        var l4 = new LessThanOrEquals(
                     new Addition(
                         new Constant(5),
                         new Constant(2)),
@@ -691,11 +691,11 @@ public class StandardTests {
         assertEquals(l4.toString(), "(5.0 + 2.0) <= (5.0 + 5.0)");
 
         // 5 - 2 <= 1 + 2
-        var l5 = new LessThanEqual(
+        var l5 = new LessThanOrEquals(
                         new Subtraction(
                             new Constant(5),
                             new Constant(2)
-                        ), 
+                        ),
                         new Addition(
                             new Constant(1),
                             new Constant(2)));
@@ -708,28 +708,28 @@ public class StandardTests {
     @Test
     void testMoreThan() {
         // 5 > 7
-        var l1 = new MoreThan(new Constant(5), new Constant(7));
+        var l1 = new GreaterThan(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
 
         assertEquals(evall1, new False());
         assertEquals(l1.toString(), "5.0 > 7.0");
 
         // 1321 > 1000
-        var l2 = new MoreThan(new Constant(1321) , new Constant(1000));
+        var l2 = new GreaterThan(new Constant(1321) , new Constant(1000));
         var evall2 = visitor.evaluate(l2, env);
 
         assertEquals(evall2, new True());
         assertEquals(l2.toString(), "1321.0 > 1000.0");
 
         // 5 > 5
-        var l3 = new MoreThan(new Constant(5), new Constant(5));
+        var l3 = new GreaterThan(new Constant(5), new Constant(5));
         var evall3 = visitor.evaluate(l3, env);
 
         assertEquals(evall3, new False());
         assertEquals(l3.toString(), "5.0 > 5.0");
 
-        // 5 + 2 > 5 + 5 
-        var l4 = new MoreThan(
+        // 5 + 2 > 5 + 5
+        var l4 = new GreaterThan(
                     new Addition(
                         new Constant(5),
                         new Constant(2)),
@@ -743,11 +743,11 @@ public class StandardTests {
         assertEquals(l4.toString(), "(5.0 + 2.0) > (5.0 + 5.0)");
 
         // 5 - 2 > 1 + 2
-        var l5 = new MoreThan(
+        var l5 = new GreaterThan(
                         new Subtraction(
                             new Constant(5),
                             new Constant(2)
-                        ), 
+                        ),
                         new Addition(
                             new Constant(1),
                             new Constant(2)));
@@ -761,28 +761,28 @@ public class StandardTests {
     @Test
     void testMoreThanEqual() {
         // 5 >= 7
-        var l1 = new MoreThanEqual(new Constant(5), new Constant(7));
+        var l1 = new GreaterThanOrEquals(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
 
         assertEquals(evall1, new False());
         assertEquals(l1.toString(), "5.0 >= 7.0");
 
         // 1321 >= 1000
-        var l2 = new MoreThanEqual(new Constant(1321) , new Constant(1000));
+        var l2 = new GreaterThanOrEquals(new Constant(1321) , new Constant(1000));
         var evall2 = visitor.evaluate(l2, env);
 
         assertEquals(evall2, new True());
         assertEquals(l2.toString(), "1321.0 >= 1000.0");
 
         // 5 >= 5
-        var l3 = new MoreThanEqual(new Constant(5), new Constant(5));
+        var l3 = new GreaterThanOrEquals(new Constant(5), new Constant(5));
         var evall3 = visitor.evaluate(l3, env);
 
         assertEquals(evall3, new True());
         assertEquals(l3.toString(), "5.0 >= 5.0");
 
-        // 5 + 2 >= 5 + 5 
-        var l4 = new MoreThanEqual(
+        // 5 + 2 >= 5 + 5
+        var l4 = new GreaterThanOrEquals(
                     new Addition(
                         new Constant(5),
                         new Constant(2)),
@@ -796,11 +796,11 @@ public class StandardTests {
         assertEquals(l4.toString(), "(5.0 + 2.0) >= (5.0 + 5.0)");
 
         // 5 - 2 >= 1 + 2
-        var l5 = new MoreThanEqual(
+        var l5 = new GreaterThanOrEquals(
                         new Subtraction(
                             new Constant(5),
                             new Constant(2)
-                        ), 
+                        ),
                         new Addition(
                             new Constant(1),
                             new Constant(2)));
@@ -814,28 +814,28 @@ public class StandardTests {
     @Test
     void testEqual() {
         // 5 == 7
-        var l1 = new Equal(new Constant(5), new Constant(7));
+        var l1 = new Equals(new Constant(5), new Constant(7));
         var evall1 = visitor.evaluate(l1, env);
 
         assertEquals(evall1, new False());
         assertEquals(l1.toString(), "5.0 == 7.0");
 
         // 1321 == 1000
-        var l2 = new Equal(new Constant(1321) , new Constant(1000));
+        var l2 = new Equals(new Constant(1321) , new Constant(1000));
         var evall2 = visitor.evaluate(l2, env);
 
         assertEquals(evall2, new False());
         assertEquals(l2.toString(), "1321.0 == 1000.0");
 
         // 5 == 5
-        var l3 = new Equal(new Constant(5), new Constant(5));
+        var l3 = new Equals(new Constant(5), new Constant(5));
         var evall3 = visitor.evaluate(l3, env);
 
         assertEquals(evall3, new True());
         assertEquals(l3.toString(), "5.0 == 5.0");
 
-        // 5 + 2 == 5 + 5 
-        var l4 = new Equal(
+        // 5 + 2 == 5 + 5
+        var l4 = new Equals(
                     new Addition(
                         new Constant(5),
                         new Constant(2)),
@@ -849,11 +849,11 @@ public class StandardTests {
         assertEquals(l4.toString(), "(5.0 + 2.0) == (5.0 + 5.0)");
 
         // 5 - 2 == 1 + 2
-        var l5 = new Equal(
+        var l5 = new Equals(
                         new Subtraction(
                             new Constant(5),
                             new Constant(2)
-                        ), 
+                        ),
                         new Addition(
                             new Constant(1),
                             new Constant(2)));

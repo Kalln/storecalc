@@ -340,6 +340,20 @@ public class CalculatorParser {
                 throw new SyntaxErrorException("Not possible to assign in condition.");
             }
 
+        } else if (firstHalfOperation == '!') {
+            sb.append(firstHalfOperation);
+            if (secondHalfOperation == '=') {
+                // !=
+                sb.append(secondHalfOperation);
+            } else {
+                // wrong syntax..
+                throw new SyntaxErrorException(
+                    "Unexpected symbol "
+                    + secondHalfOperation
+                    + " after '!' in condition"
+                );
+            }
+
         } else {
             throw new SyntaxErrorException("Unexpected symbol.");
         }
@@ -364,16 +378,19 @@ public class CalculatorParser {
             cond = new LessThan(lhs, rhs);
 
         } else if (operation.equals("<=")) {
-            cond = new LessThanEqual(lhs, rhs);
+            cond = new LessThanOrEquals(lhs, rhs);
 
         } else if (operation.equals(">")) {
-            cond = new MoreThan(lhs, rhs);
+            cond = new GreaterThan(lhs, rhs);
 
         } else if (operation.equals(">=")) {
-            cond = new MoreThanEqual(lhs, rhs);
+            cond = new GreaterThanOrEquals(lhs, rhs);
 
         } else if (operation.equals("==")) {
-            cond = new Equal(lhs, rhs);
+            cond = new Equals(lhs, rhs);
+
+        } else if (operation.equals("!=")) {
+            cond = new NotEquals(lhs, rhs);
         } else {
             throw new SyntaxErrorException("Invalid operation.");
         }

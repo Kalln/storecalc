@@ -172,28 +172,35 @@ public class NamedConstantChecker implements Visitor {
     }
 
     @Override
-    public SymbolicExpression visit(LessThanEqual n) {
+    public SymbolicExpression visit(LessThanOrEquals n) {
         n.getLhs().accept(this);
         n.getRhs().accept(this);
         return null;
     }
 
     @Override
-    public SymbolicExpression visit(MoreThan n) {
+    public SymbolicExpression visit(GreaterThan n) {
         n.getLhs().accept(this);
         n.getRhs().accept(this);
         return null;
     }
 
     @Override
-    public SymbolicExpression visit(MoreThanEqual n) {
+    public SymbolicExpression visit(GreaterThanOrEquals n) {
         n.getLhs().accept(this);
         n.getRhs().accept(this);
         return null;
     }
 
     @Override
-    public SymbolicExpression visit(Equal n) {
+    public SymbolicExpression visit(Equals n) {
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(NotEquals n) {
         n.getLhs().accept(this);
         n.getRhs().accept(this);
         return null;

@@ -11,12 +11,13 @@ import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
-import org.ioopm.calculator.ast.binary.Equal;
+import org.ioopm.calculator.ast.binary.Equals;
 import org.ioopm.calculator.ast.binary.LessThan;
-import org.ioopm.calculator.ast.binary.LessThanEqual;
-import org.ioopm.calculator.ast.binary.MoreThan;
-import org.ioopm.calculator.ast.binary.MoreThanEqual;
+import org.ioopm.calculator.ast.binary.LessThanOrEquals;
+import org.ioopm.calculator.ast.binary.GreaterThan;
+import org.ioopm.calculator.ast.binary.GreaterThanOrEquals;
 import org.ioopm.calculator.ast.binary.Multiplication;
+import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
 import org.ioopm.calculator.ast.command.Quit;
@@ -258,24 +259,29 @@ public class ParserTests {
         assertEquals(parser.parse("if x < y { 42 } else { 4711 }", env).toString(), c1.toString());
 
         //if x <= y { 42 } else { 4711 }
-        var cond2 = new LessThanEqual(new Variable("x"), new Variable("y"));
+        var cond2 = new LessThanOrEquals(new Variable("x"), new Variable("y"));
         var c2 = new Conditional(cond2, ifscope, elsescope);
         assertEquals(parser.parse("if x <= y { 42 } else { 4711 }", env).toString(), c2.toString());
 
         // if x > y { 42 } else { 4711 }
-        var cond3 = new MoreThan(new Variable("x"), new Variable("y"));
+        var cond3 = new GreaterThan(new Variable("x"), new Variable("y"));
         var c3 = new Conditional(cond3, ifscope, elsescope);
         assertEquals(parser.parse("if x > y { 42 } else { 4711 }", env).toString(), c3.toString());
 
         // if x >= y { 42 } else { 4711 }
-        var cond4 = new MoreThanEqual(new Variable("x"), new Variable("y"));
+        var cond4 = new GreaterThanOrEquals(new Variable("x"), new Variable("y"));
         var c4 = new Conditional(cond4, ifscope, elsescope);
         assertEquals(parser.parse("if x >= y { 42 } else { 4711 }", env).toString(), c4.toString());
 
         // if x == y { 42 } else { 4711 }
-        var cond5 = new Equal(new Variable("x"), new Variable("y"));
+        var cond5 = new Equals(new Variable("x"), new Variable("y"));
         var c5 = new Conditional(cond5, ifscope, elsescope);
         assertEquals(parser.parse("if x == y { 42 } else { 4711 }", env).toString(), c5.toString());
+
+        // if x != y { 42 } else { 4711 }
+        var cond6 = new NotEquals(new Variable("x"), new Variable("y"));
+        var c6 = new Conditional(cond6, ifscope, elsescope);
+        assertEquals(parser.parse("if x != y { 42 } else { 4711 }", env).toString(), c6.toString());
     }
 
 }

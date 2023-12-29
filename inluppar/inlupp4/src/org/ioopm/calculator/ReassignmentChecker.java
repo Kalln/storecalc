@@ -14,12 +14,13 @@ import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
-import org.ioopm.calculator.ast.binary.Equal;
+import org.ioopm.calculator.ast.binary.Equals;
 import org.ioopm.calculator.ast.binary.LessThan;
-import org.ioopm.calculator.ast.binary.LessThanEqual;
-import org.ioopm.calculator.ast.binary.MoreThan;
-import org.ioopm.calculator.ast.binary.MoreThanEqual;
+import org.ioopm.calculator.ast.binary.LessThanOrEquals;
+import org.ioopm.calculator.ast.binary.GreaterThan;
+import org.ioopm.calculator.ast.binary.GreaterThanOrEquals;
 import org.ioopm.calculator.ast.binary.Multiplication;
+import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
 import org.ioopm.calculator.ast.command.Quit;
@@ -214,28 +215,35 @@ public class ReassignmentChecker implements Visitor {
     }
 
     @Override
-    public SymbolicExpression visit(LessThanEqual n) {
+    public SymbolicExpression visit(LessThanOrEquals n) {
         n.getLhs().accept(this);
         n.getLhs().accept(this);
         return null;
     }
 
     @Override
-    public SymbolicExpression visit(MoreThan n) {
+    public SymbolicExpression visit(GreaterThan n) {
         n.getLhs().accept(this);
         n.getLhs().accept(this);
         return null;
     }
 
     @Override
-    public SymbolicExpression visit(MoreThanEqual n) {
+    public SymbolicExpression visit(GreaterThanOrEquals n) {
         n.getLhs().accept(this);
         n.getLhs().accept(this);
         return null;
     }
 
     @Override
-    public SymbolicExpression visit(Equal n) {
+    public SymbolicExpression visit(Equals n) {
+        n.getLhs().accept(this);
+        n.getLhs().accept(this);
+        return null;
+    }
+
+    @Override
+    public SymbolicExpression visit(NotEquals n) {
         n.getLhs().accept(this);
         n.getLhs().accept(this);
         return null;

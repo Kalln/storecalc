@@ -14,12 +14,13 @@ import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
-import org.ioopm.calculator.ast.binary.Equal;
+import org.ioopm.calculator.ast.binary.Equals;
 import org.ioopm.calculator.ast.binary.LessThan;
-import org.ioopm.calculator.ast.binary.LessThanEqual;
-import org.ioopm.calculator.ast.binary.MoreThan;
-import org.ioopm.calculator.ast.binary.MoreThanEqual;
+import org.ioopm.calculator.ast.binary.LessThanOrEquals;
+import org.ioopm.calculator.ast.binary.GreaterThan;
+import org.ioopm.calculator.ast.binary.GreaterThanOrEquals;
 import org.ioopm.calculator.ast.binary.Multiplication;
+import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
 import org.ioopm.calculator.ast.command.Quit;
@@ -221,7 +222,7 @@ public class EvaluationVisitor implements Visitor {
     }
 
     @Override
-    public SymbolicExpression visit(LessThanEqual n) {
+    public SymbolicExpression visit(LessThanOrEquals n) {
         var lhs = n.getLhs().accept(this);
         var rhs = n.getRhs().accept(this);
 
@@ -229,11 +230,11 @@ public class EvaluationVisitor implements Visitor {
             ? lhs.getValue() <= rhs.getValue()
                 ? new True()
                 : new False()
-            : new LessThanEqual(lhs, rhs);
+            : new LessThanOrEquals(lhs, rhs);
     }
 
     @Override
-    public SymbolicExpression visit(MoreThan n) {
+    public SymbolicExpression visit(GreaterThan n) {
         var lhs = n.getLhs().accept(this);
         var rhs = n.getRhs().accept(this);
 
@@ -241,11 +242,11 @@ public class EvaluationVisitor implements Visitor {
             ? lhs.getValue() > rhs.getValue()
                 ? new True()
                 : new False()
-            : new LessThanEqual(lhs, rhs);
+            : new LessThanOrEquals(lhs, rhs);
     }
 
     @Override
-    public SymbolicExpression visit(MoreThanEqual n) {
+    public SymbolicExpression visit(GreaterThanOrEquals n) {
         var lhs = n.getLhs().accept(this);
         var rhs = n.getRhs().accept(this);
 
@@ -253,11 +254,11 @@ public class EvaluationVisitor implements Visitor {
             ? lhs.getValue() >= rhs.getValue()
                 ? new True()
                 : new False()
-            : new LessThanEqual(lhs, rhs);
+            : new LessThanOrEquals(lhs, rhs);
     }
 
     @Override
-    public SymbolicExpression visit(Equal n) {
+    public SymbolicExpression visit(Equals n) {
         var lhs = n.getLhs().accept(this);
         var rhs = n.getRhs().accept(this);
 
@@ -265,7 +266,19 @@ public class EvaluationVisitor implements Visitor {
             ? lhs.getValue() == rhs.getValue()
                 ? new True()
                 : new False()
-            : new LessThanEqual(lhs, rhs);
+            : new LessThanOrEquals(lhs, rhs);
+    }
+
+    @Override
+    public SymbolicExpression visit(NotEquals n) {
+        var lhs = n.getLhs().accept(this);
+        var rhs = n.getRhs().accept(this);
+
+        return lhs.isConstant() && rhs.isConstant()
+            ? lhs.getValue() != rhs.getValue()
+                ? new True()
+                : new False()
+            : new LessThanOrEquals(lhs, rhs);
     }
 
     @Override

@@ -3,9 +3,9 @@ package org.ioopm.calculator.ast.binary;
 import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
-public class MoreThanEqual extends Condition {
+public class GreaterThanOrEquals extends Condition {
 
-    public MoreThanEqual(SymbolicExpression lhs, SymbolicExpression rhs) {
+    public GreaterThanOrEquals(SymbolicExpression lhs, SymbolicExpression rhs) {
         super(lhs, rhs);
     }
 
@@ -18,5 +18,5 @@ public class MoreThanEqual extends Condition {
     public SymbolicExpression accept(Visitor v) {
         return v.visit(this);
     }
-    
+
 }
