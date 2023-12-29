@@ -113,7 +113,7 @@ public class CalculatorParser {
     }
 
     /**
-     * Checks wether the token read is an assignment between 2 expression and
+     * Checks whether the token read is an assignment between 2 expression and
      * descend into the right hand side of '='
      *
      * @return a SymbolicExpression to be evaluated
@@ -172,7 +172,7 @@ public class CalculatorParser {
     }
 
     /**
-     * Checks wether the token read is an addition or subtraction
+     * Checks whether the token read is an addition or subtraction
      * and then continue on with the right hand side of operator
      *
      * @return a SymbolicExpression to be evaluated
