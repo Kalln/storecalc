@@ -210,14 +210,15 @@ public class NamedConstantChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(FunctionCall n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        for (var x : n.getArgs()) {
+            x.accept(this);
+        }
+        return null;
     }
 
     @Override
     public SymbolicExpression visit(Function n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        return null;
     }
 
 }
