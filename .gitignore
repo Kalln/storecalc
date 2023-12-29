@@ -57,3 +57,6 @@ lib/*.jar
 inluppar/inlupp3/classes
 inluppar/inlupp4/classes
 inluppar/inlupp4/tests/output.txt
+
+# vscode
+.vscode
