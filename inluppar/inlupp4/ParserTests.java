@@ -110,63 +110,85 @@ public class ParserTests {
         var mul = new Multiplication(c2, c1);
 
         try {
-            assertEquals(parser.parse("(42 + 58) * 42 - 58", env).toString(),
-                    new Multiplication(add, sub).toString());
+            assertEquals(
+                parser.parse("(42 + 58) * 42 - 58", env).toString(),
+                new Multiplication(add, sub).toString()
+            );
 
-            assertEquals(parser.parse("42 + 58 * 42 - 58", env).toString(),
-                    new Addition(c1, new Subtraction(mul, c2)).toString());
+            assertEquals(
+                parser.parse("42 + 58 * 42 - 58", env).toString(),
+                new Addition(c1, new Subtraction(mul, c2)).toString()
+            );
 
             // (Sin(3*x) * Cos(2*y)) / (a*a + b*b)
             var q1 = new Division(
-                    new Multiplication(
-                            new Sin(new Multiplication(new Constant(3), new Variable("x"))),
-                            new Cos(new Multiplication(new Constant(2), new Variable("y")))),
-                    new Addition(
-                            new Multiplication(new Variable("a"), new Variable("a")),
-                            new Multiplication(new Variable("b"), new Variable("b"))));
+                new Multiplication(
+                    new Sin(new Multiplication(new Constant(3), new Variable("x"))),
+                    new Cos(new Multiplication(new Constant(2), new Variable("y")))
+                ),
+                new Addition(
+                    new Multiplication(new Variable("a"), new Variable("a")),
+                    new Multiplication(new Variable("b"), new Variable("b"))
+                )
+            );
+
             // (4 * x * y) / (Cos(pi/4) + 2)
             var q2 = new Division(
-                    new Multiplication(
-                            new Multiplication(new Constant(4), new Variable("x")),
-                            new Variable("y")),
-                    new Addition(
-                            new Cos(
-                                    new Division(
-                                            new NamedConstant("pi", Math.PI),
-                                            new Constant(4))),
-                            new Constant(2)));
+                new Multiplication(
+                    new Multiplication(new Constant(4), new Variable("x")),
+                    new Variable("y")
+                ),
+                new Addition(
+                    new Cos(
+                        new Division(
+                            new NamedConstant("pi", Math.PI),
+                             new Constant(4)
+                        )
+                    ),
+                    new Constant(2)
+                )
+            );
+
             // Exp(-(2*z)) / Log(5*w)
+
             var q3 = new Division(
-                    new Exp(new Negation(new Multiplication(new Constant(2), new Variable("z")))),
-                    new Log(new Multiplication(new Constant(5), new Variable("w"))));
+                new Exp(new Negation(new Multiplication(new Constant(2), new Variable("z")))),
+                new Log(new Multiplication(new Constant(5), new Variable("w"))));
+
             // Sin(x)*Sin(x) / Log(x*x + 1)
             var q4 = new Division(
-                    new Multiplication(new Sin(new Variable("x")), new Sin(new Variable("x"))),
-                    new Log(new Addition(new Multiplication(new Variable("x"), new Variable("x")), new Constant(1))));
+                new Multiplication(new Sin(new Variable("x")), new Sin(new Variable("x"))),
+                new Log(new Addition(new Multiplication(new Variable("x"), new Variable("x")), new Constant(1))));
+
             // (-(p*p) + 5*q) / Cos(r)
             var q5 = new Division(
-                    new Addition(
-                            new Negation(new Multiplication(new Variable("p"), new Variable("p"))),
-                            new Multiplication(new Constant(5), new Variable("q"))),
-                    new Cos(new Variable("r")));
+                new Addition(
+                    new Negation(new Multiplication(new Variable("p"), new Variable("p"))),
+                    new Multiplication(new Constant(5), new Variable("q"))
+                ),
+                new Cos(new Variable("r"))
+            );
+
             assertEquals(
-                    parser.parse(
-                            ("(Sin(3*x) * Cos(2*y)) / (a*a + b*b)" // q1
-                                    + " - (4 * x * y) / (Cos(pi/4) + 2)" // q2
-                                    + " + Exp(-(2*z)) / Log(5*w)" // q3
-                                    + " - Sin(x)*Sin(x) / Log(x*x + 1)" // q4
-                                    + " + (-(p*p) + 5*q) / Cos(r)" // q5
-                            ),
-                            env),
+                parser.parse(
+                    ("(Sin(3*x) * Cos(2*y)) / (a*a + b*b)" // q1
+                        + " - (4 * x * y) / (Cos(pi/4) + 2)" // q2
+                        + " + Exp(-(2*z)) / Log(5*w)" // q3
+                        + " - Sin(x)*Sin(x) / Log(x*x + 1)" // q4
+                        + " + (-(p*p) + 5*q) / Cos(r)" // q5
+                    ),
+                    env),
                     new Addition(
-                            new Subtraction(
-                                    new Addition(
-                                            new Subtraction(
-                                                    q1,
-                                                    q2),
-                                            q3),
-                                    q4),
-                            q5));
+                        new Subtraction(
+                                new Addition(
+                                        new Subtraction(
+                                                q1,
+                                                q2),
+                                        q3),
+                                q4),
+                        q5
+                    )
+            );
 
         } catch (Exception e) {
             assertTrue(false);
@@ -195,20 +217,28 @@ public class ParserTests {
     void unaryParse() {
         try {
             // Sin(1/2)
-            assertTrue(parser.parse("Sin(1/2)", env).equals(
-                    new Sin(
+            assertTrue(
+                parser.parse("Sin(1/2)", env)
+                    .equals(
+                        new Sin(
                             new Division(
-                                    new Constant(1),
-                                    new Constant(2)))));
+                                new Constant(1),
+                                new Constant(2)
+                            )
+                        )
+                    )
+            );
 
             // Cos(1)
-            assertTrue(parser.parse("Cos(1)", env).equals(new Cos(new Constant(1))));
+            assertTrue(parser.parse("Cos(1)", env)
+                .equals(new Cos(new Constant(1))));
 
             // Cos(Sin(1))
-            assertTrue(parser.parse("Cos(Sin(1))", env).equals(
+            assertTrue(parser.parse("Cos(Sin(1))", env)
+                .equals(
                     new Cos(
-                            new Sin(
-                                    new Constant(1)))));
+                        new Sin(
+                            new Constant(1)))));
 
         } catch (Exception e) {
             assertTrue(false);
@@ -220,14 +250,15 @@ public class ParserTests {
     void scopeParse() {
         try {
             assertEquals(
-                    parser.parse("{1 = x} + {1 = x}", env),
-                    new Addition(
-                            new Scope(new Assignment(new Constant(1), new Variable("x"))),
-                            new Scope(new Assignment(new Constant(1), new Variable("x")))));
+                parser.parse("{1 = x} + {1 = x}", env),
+                new Addition(
+                    new Scope(new Assignment(new Constant(1), new Variable("x"))),
+                    new Scope(new Assignment(new Constant(1), new Variable("x")))));
+
             assertEquals(
                     parser.parse("{{1 = x} = x}", env),
                     new Scope(new Assignment(new Scope(new Assignment(new Constant(1), new Variable("x"))),
-                            new Variable("x"))));
+                        new Variable("x"))));
             assertEquals(
                     parser.parse("(1 = x) + {(2 + x = x) + {3 + x = x}}", env),
                     new Addition(
@@ -258,7 +289,7 @@ public class ParserTests {
         var c1 = new Conditional(cond1, ifscope, elsescope);
         assertEquals(parser.parse("if x < y { 42 } else { 4711 }", env).toString(), c1.toString());
 
-        //if x <= y { 42 } else { 4711 }
+        // if x <= y { 42 } else { 4711 }
         var cond2 = new LessThanOrEquals(new Variable("x"), new Variable("y"));
         var c2 = new Conditional(cond2, ifscope, elsescope);
         assertEquals(parser.parse("if x <= y { 42 } else { 4711 }", env).toString(), c2.toString());
