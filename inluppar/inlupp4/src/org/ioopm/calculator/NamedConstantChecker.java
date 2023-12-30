@@ -46,6 +46,19 @@ public class NamedConstantChecker implements Visitor {
     }
 
     @Override
+    public SymbolicExpression visit(FunctionDeclaration n) throws IllegalAssignmentException {
+        // A FunctionDeclaration is just a special type of Assignment
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+
+        if (n.getRhs().isNamedConstant()) {
+            // illegal assignment
+            this.FoundIllegalAssignments.add((NamedConstant) n.getRhs());
+        }
+        return null;
+    }
+
+    @Override
     public SymbolicExpression visit(Clear n) {
         return null;
     }

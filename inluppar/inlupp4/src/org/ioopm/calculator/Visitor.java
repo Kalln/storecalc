@@ -13,6 +13,7 @@ import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Equals;
+import org.ioopm.calculator.ast.binary.FunctionDeclaration;
 import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.LessThanOrEquals;
 import org.ioopm.calculator.ast.binary.GreaterThan;
@@ -43,6 +44,7 @@ public interface Visitor {
     public SymbolicExpression visit(False n);
     public SymbolicExpression visit(Function n);
     public SymbolicExpression visit(FunctionCall n);
+    public SymbolicExpression visit(FunctionDeclaration n);
     public SymbolicExpression visit(Log n);
     public SymbolicExpression visit(LessThan n);
     public SymbolicExpression visit(LessThanOrEquals n);

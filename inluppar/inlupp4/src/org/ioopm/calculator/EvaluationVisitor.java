@@ -1,6 +1,5 @@
 package org.ioopm.calculator;
 
-import java.io.IOError;
 import java.util.Locale;
 
 import org.ioopm.calculator.ast.Conditional;
@@ -18,6 +17,7 @@ import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Equals;
+import org.ioopm.calculator.ast.binary.FunctionDeclaration;
 import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.LessThanOrEquals;
 import org.ioopm.calculator.ast.binary.GreaterThan;
@@ -105,6 +105,24 @@ public class EvaluationVisitor implements Visitor {
             return lhsResult;
         } else {
             throw new RuntimeException("Right hand side was not a variable.");
+        }
+    }
+
+    @Override
+    public SymbolicExpression visit(FunctionDeclaration n) {
+        // A FunctionDeclaration is just a special type of Assignment
+        var key = n.getRhs(); // TODO: do we need a new method to get the function name i.e. "rhs"
+        var function = n.getFunction();
+        if (function.isFunction()) {
+            if (key instanceof Variable v) {
+                var lhsResult = n.getLhs().accept(this);
+                env.put(v, lhsResult);
+                return lhsResult;
+            } else {
+                throw new RuntimeException("Right hand side was not a variable.");
+            }
+        } else {
+            throw new IllegalExpressionException("Attempt to declare non-function in function declaration");
         }
     }
 

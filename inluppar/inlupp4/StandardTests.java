@@ -11,6 +11,7 @@ import org.ioopm.calculator.ast.Conditional;
 import org.ioopm.calculator.ast.Function;
 import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
+import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.Sequence;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
@@ -22,6 +23,7 @@ import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Equals;
+import org.ioopm.calculator.ast.binary.FunctionDeclaration;
 import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.LessThanOrEquals;
 import org.ioopm.calculator.ast.binary.GreaterThan;
@@ -1038,6 +1040,40 @@ public class StandardTests {
         assertEquals(
             visitor.evaluate(c3, env),
             new Constant(6)
+        );
+    }
+
+    @Test
+    void testFunctionDeclaration() {
+        var s1 = new Sequence();
+        s1.add(new Assignment(new Constant(5), new Variable("x")));
+        s1.add(new Addition(new Variable("x"), new Variable("x")));
+        var f1 = new Function(new ArrayList<Variable>(), s1);
+
+        var d1 = new FunctionDeclaration(f1, new Variable("f"));
+
+        visitor.evaluate(d1, env);
+        assertEquals(env.get(new Variable("f")), f1);
+
+        assertEquals(
+            "function f()\n"
+            + "    5.0 = x\n"
+            + "    x + x\n"
+            + "end",
+            d1.toString()
+        );
+
+        // Using a Constant instead of a Function
+        var invalid = new FunctionDeclaration(new Constant(5), new Variable("g"));
+
+        assertThrows(IllegalExpressionException.class, () -> {
+            visitor.evaluate(invalid, env);
+        });
+
+        assertEquals(
+            "function g *invalid*\n"
+            + "end",
+            invalid.toString()
         );
     }
 

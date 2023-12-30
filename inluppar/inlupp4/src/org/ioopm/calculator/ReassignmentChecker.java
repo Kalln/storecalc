@@ -17,6 +17,7 @@ import org.ioopm.calculator.ast.binary.Addition;
 import org.ioopm.calculator.ast.binary.Assignment;
 import org.ioopm.calculator.ast.binary.Division;
 import org.ioopm.calculator.ast.binary.Equals;
+import org.ioopm.calculator.ast.binary.FunctionDeclaration;
 import org.ioopm.calculator.ast.binary.LessThan;
 import org.ioopm.calculator.ast.binary.LessThanOrEquals;
 import org.ioopm.calculator.ast.binary.GreaterThan;
@@ -76,6 +77,24 @@ public class ReassignmentChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(Assignment n) throws IllegalAssignmentException {
+        n.getLhs().accept(this);
+        n.getRhs().accept(this);
+
+        // add
+        if (assignedVariables.get(n.getRhs().getName()) == null) {
+            assignedVariables.put(n.getRhs().getName(), 1);
+        } else {
+            var currentvalue = assignedVariables.get(n.getRhs().getName());
+            assignedVariables.put(n.getRhs().getName(), currentvalue + 1);
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public SymbolicExpression visit(FunctionDeclaration n) throws IllegalAssignmentException {
+        // A FunctionDeclaration is just a special type of Assignment
         n.getLhs().accept(this);
         n.getRhs().accept(this);
 
