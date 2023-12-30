@@ -236,8 +236,7 @@ public class NamedConstantChecker implements Visitor {
 
     @Override
     public SymbolicExpression visit(End n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+        return null;
     }
 
 }
