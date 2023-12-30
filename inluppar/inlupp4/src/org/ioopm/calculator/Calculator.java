@@ -1,14 +1,17 @@
 package org.ioopm.calculator;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.ioopm.calculator.ast.StackEnvironment;
+import org.ioopm.calculator.ast.Function;
 import org.ioopm.calculator.ast.IllegalExpressionException;
 import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.Variable;
+import org.ioopm.calculator.ast.binary.FunctionDeclaration;
 import org.ioopm.calculator.ast.command.*;
 import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.parser.SyntaxErrorException;
@@ -25,6 +28,10 @@ public class Calculator {
         int sucessfullyEvaluated = 0;
         int fullyEvaluated = 0;
         StackEnvironment env = new StackEnvironment();
+        HashMap<String, FunctionDeclaration> functions = new HashMap<>();
+        FunctionDeclaration buildingFunctionDeclaration = null;
+        boolean activeFunctionState = false;
+
 
         Scanner scanner = new Scanner(System.in);
 
@@ -52,11 +59,17 @@ public class Calculator {
                     } else if (result instanceof Clear r) {
                         r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
                         continue;
+                    } else if (result instanceof End e) {
+                        if (!activeFunctionState) {
+                            throw new SyntaxErrorException("Can't end a function when there is no active function.");
+                        }
+                        // save function
+                        functions.put(buildingFunctionDeclaration.getName(), buildingFunctionDeclaration);
+                        activeFunctionState = false;
                     }
                 } else {
 
                     // results is not a command, therefore we can evaluate the result.
-
 
                     var namedConstantChecker = new NamedConstantChecker();
                     var reassignmentCheck = new ReassignmentChecker();
@@ -64,6 +77,31 @@ public class Calculator {
                     var namedConstantCheckerResult = namedConstantChecker.check(result);
                     var reassignmentCheckerResult = reassignmentCheck.check(result);
                     if (reassignmentCheckerResult && namedConstantCheckerResult) {
+
+                        // result is a function declaration, should only happen ones...
+                        if (result instanceof FunctionDeclaration f) {
+                            if (activeFunctionState) { 
+                                throw new SyntaxErrorException("function can't be declared in another function.");
+                            } else {
+                                System.out.println("Function state: TRUE");
+                                activeFunctionState = true;
+    
+                                buildingFunctionDeclaration = f;
+                            }
+                            continue;
+                        }
+
+                        if (activeFunctionState) {
+                            // we will continue to add each line to current func body.. without evaluating
+                            if (buildingFunctionDeclaration.getFunction() instanceof Function f) {
+                                f.getBody().add(result);
+                            } else {
+                                throw new SyntaxErrorException("SOmething wrong happened.");
+                            }
+                           // buildingFunctionDeclaration.getFunction().getBody().add(result);
+                            continue;
+
+                        }
 
                         var evaluator = new EvaluationVisitor();
                         var evalRes = evaluator.evaluate(result, env);

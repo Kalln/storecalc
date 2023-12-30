@@ -26,6 +26,7 @@ import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
+import org.ioopm.calculator.ast.command.End;
 import org.ioopm.calculator.ast.command.Quit;
 import org.ioopm.calculator.ast.command.Vars;
 import org.ioopm.calculator.ast.unary.Cos;
@@ -358,5 +359,11 @@ public class EvaluationVisitor implements Visitor {
     @Override
     public SymbolicExpression visit(Function n) {
         return n;
+    }
+
+    @Override
+    public SymbolicExpression visit(End n) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 }
