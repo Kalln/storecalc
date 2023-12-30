@@ -287,7 +287,11 @@ public class CalculatorParser {
                 throw new SyntaxErrorException("expected ')'");
             }
         } else if (this.st.ttype == '{') {
-            this.st.nextToken();
+            while(this.st.ttype == '{') {
+                // sometimes it requires 2 or more nextToken() calls
+                // for some reason?
+                this.st.nextToken();
+            }
             result = new Scope(assignment());
             /// This captures unbalanced braces!
             if (this.st.nextToken() != '}') {
@@ -303,19 +307,64 @@ public class CalculatorParser {
                     st.sval.equals(LOG)) {
 
                 result = unary();
+            } else if (this.st.sval.equals("if") 
+                    || this.st.sval.equals("else")) {
+                    result = conditional();
             }
+            else {
+                var unknownIdentifier = this.st.sval;
+                // check the next if (, we know this is a func call.
+                this.st.nextToken();
+                this.st.pushBack();
+                if (this.st.ttype == '(') {
+                    // we got a function call to parse..
+                    // but we have to restore the token that we "skipped"
+                  this.st.sval = unknownIdentifier;
+                  result = functioncall();
+                } else {
+                    this.st.sval = unknownIdentifier;
+                    result = identifier();
 
-            else if (this.st.sval.equals("if") ||
-                    this.st.sval.equals("else")) {
-                result = conditional();
-            } else {
-                result = identifier();
+                }
             }
         } else {
             this.st.pushBack();
             result = number();
         }
         return result;
+    }
+
+    private SymbolicExpression functioncall() throws IOException {
+        var functionIdentifer = identifier();
+        this.st.nextToken();
+
+        // should be start of arguments..
+        if (this.st.ttype != '(') {
+            throw new SyntaxErrorException("Expected ( after function name.");
+        }
+        List<SymbolicExpression> functionArguments = new ArrayList<>();
+
+        this.st.nextToken();
+
+        // while we have not found ) it means that we are still collecting function arguments.
+        while (this.st.ttype != ')') {
+            functionArguments.add(assignment());
+            this.st.nextToken();
+
+            if (this.st.ttype != ',') {
+                throw new SyntaxErrorException("Expected , after argument.");
+            } else if (this.st.ttype == ')') {
+                break;
+            }
+
+            this.st.nextToken();
+        }
+
+        // TODO What should functionIdentifer be as a placeholder until we can replace it with the 
+        // correct function object. A placeholder is needed...
+        // Either this is done by the reciever where can compare with declared functions.. 
+        // but breaks seperation of concerns?
+        return new FunctionCall(functionIdentifer, functionArguments);
     }
 
     /**
@@ -418,7 +467,9 @@ public class CalculatorParser {
      *                      tokenizer can't read next token.
      */
     private SymbolicExpression conditional() throws IOException {
-        this.st.nextToken(); // skip the if
+        if (this.st.ttype == StreamTokenizer.TT_WORD) {
+            this.st.nextToken(); // skip the if
+        }
         var lhs = primary(); // lhs of condition
         var operation = getConditionalOperation();
         var rhs = primary();
