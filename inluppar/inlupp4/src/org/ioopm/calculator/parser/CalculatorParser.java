@@ -70,14 +70,19 @@ public class CalculatorParser {
     private SymbolicExpression statement() throws IOException {
         SymbolicExpression result;
         this.st.nextToken(); // kollar på nästa token som ligger på strömmen
+
         if (this.st.ttype == StreamTokenizer.TT_EOF) {
             throw new SyntaxErrorException("Error: Expected an expression");
         }
 
         if (this.st.ttype == StreamTokenizer.TT_WORD) { // vilken typ det senaste tecken vi läste in hade.
-            if (this.st.sval.equals("Quit") || this.st.sval.equals("Vars") || this.st.sval.equals("Clear")) { // sval =
-                                                                                                              // string
-                                                                                                              // Variable
+            if (this.st.sval.equals("function")) {
+                result = function();
+            }
+            else if (this.st.sval.equals("Quit") 
+            || this.st.sval.equals("Vars") 
+            || this.st.sval.equals("Clear")
+            || this.st.sval.equals("end")) { // sval = string, Variable
                 result = command();
             } else {
                 result = assignment(); // går vidare med uttrycket.
@@ -96,6 +101,42 @@ public class CalculatorParser {
         return result;
     }
 
+    private SymbolicExpression function() throws IOException {
+        // get the func name
+        this.st.nextToken(); // skip func
+        var functionIdentifier = identifier(); // this is func name
+        if (functionIdentifier instanceof Variable v) {
+            functionIdentifier = v;
+        } else {
+            throw new SyntaxErrorException("Something went wrong with identifying the function name.");
+        }
+
+        // check for (
+        this.st.nextToken();
+        if (!(this.st.ttype == '(')) {
+            throw new SyntaxErrorException("Expected '(' after function name.");
+        }
+        // get the arguments, separated by ','.
+        this.st.nextToken();
+        List<Variable> functionArguments = new ArrayList<>();
+
+        while (this.st.ttype == StreamTokenizer.TT_WORD) {
+            functionArguments.add((Variable) identifier());
+            this.st.nextToken();
+            if (this.st.ttype == ',') {
+                this.st.nextToken();
+            } else if (this.st.ttype == ')') {
+                // we done......
+                break;
+            } else {
+                throw new SyntaxErrorException("Expected ',' between arguments.");
+            }
+        }
+
+        // return the declarated function.
+        return new FunctionDeclaration(new Function(functionArguments, new Sequence()), functionIdentifier);
+    }
+
     /**
      * Checks what kind of command that should be returned
      *
@@ -107,8 +148,10 @@ public class CalculatorParser {
             return Quit.instance();
         } else if (this.st.sval.equals("Clear")) {
             return Clear.instance();
-        } else {
+        } else if (this.st.sval.equals("Vars")) {
             return Vars.instance();
+        } else {
+            return End.instance();
         }
     }
 
@@ -356,16 +399,24 @@ public class CalculatorParser {
             throw new SyntaxErrorException("Unexpected symbol.");
         }
 
-        while (this.st.ttype == '<' ||
-                this.st.ttype == '>' ||
-                this.st.ttype == '=') {
+        while (this.st.ttype == '<'
+            || this.st.ttype == '>'
+            || this.st.ttype == '='
+        ) {
             this.st.nextToken();
         }
 
         return sb.toString();
 
     }
-
+    /**
+     * When the token "if" is read this function is called to parse the
+     * conditional statement completely.
+     * 
+     * @return              SymbolicExpression to be evaluated.
+     * @throws IOException  If the wrong syntax is used. I.E. when stream-
+     *                      tokenizer can't read next token.
+     */
     private SymbolicExpression conditional() throws IOException {
         this.st.nextToken(); // skip the if
         var lhs = primary(); // lhs of condition
@@ -393,7 +444,6 @@ public class CalculatorParser {
             throw new SyntaxErrorException("Invalid operation.");
         }
 
-        //
         while (this.st.ttype != '{') {
             this.st.nextToken();
         }

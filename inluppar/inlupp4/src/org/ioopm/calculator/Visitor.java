@@ -22,6 +22,7 @@ import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
+import org.ioopm.calculator.ast.command.End;
 import org.ioopm.calculator.ast.command.Quit;
 import org.ioopm.calculator.ast.command.Vars;
 import org.ioopm.calculator.ast.unary.Cos;
@@ -61,4 +62,5 @@ public interface Visitor {
     public SymbolicExpression visit(True n);
     public SymbolicExpression visit(Variable n);
     public SymbolicExpression visit(Vars n);
+    public SymbolicExpression visit(End n);
 }
