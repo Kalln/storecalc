@@ -352,7 +352,7 @@ public class EvaluationVisitor implements Visitor {
 
 
         } else {
-            throw new IllegalExpressionException("Attempt to call non-function");
+            throw new IllegalExpressionException("Attempt to call non-function " + f);
         }
     }
 

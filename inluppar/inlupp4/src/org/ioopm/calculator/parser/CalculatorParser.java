@@ -18,6 +18,7 @@ import java.util.*;
  */
 public class CalculatorParser {
     private StreamTokenizer st;
+    private Environment env;
     private static char MULTIPLY = '*';
     private static char ADDITION = '+';
     private static char SUBTRACTION = '-';
@@ -52,6 +53,7 @@ public class CalculatorParser {
      */
     public SymbolicExpression parse(String inputString, Environment vars) throws IOException {
         this.st = new StreamTokenizer(new StringReader(inputString)); // reads from inputString via StringReader.
+        this.env = vars;
         this.st.ordinaryChar('-');
         this.st.ordinaryChar('/');
         this.st.eolIsSignificant(true);
@@ -79,8 +81,8 @@ public class CalculatorParser {
             if (this.st.sval.equals("function")) {
                 result = function();
             }
-            else if (this.st.sval.equals("Quit") 
-            || this.st.sval.equals("Vars") 
+            else if (this.st.sval.equals("Quit")
+            || this.st.sval.equals("Vars")
             || this.st.sval.equals("Clear")
             || this.st.sval.equals("end")) { // sval = string, Variable
                 result = command();
@@ -121,7 +123,7 @@ public class CalculatorParser {
         List<Variable> functionArguments = new ArrayList<>();
 
         while (this.st.ttype == StreamTokenizer.TT_WORD) {
-            functionArguments.add((Variable) identifier());
+            functionArguments.add((Variable) identifier()); //TODO: don't like this cast...
             this.st.nextToken();
             if (this.st.ttype == ',') {
                 this.st.nextToken();
@@ -133,7 +135,7 @@ public class CalculatorParser {
             }
         }
 
-        // return the declarated function.
+        // return the declared function.
         return new FunctionDeclaration(new Function(functionArguments, new Sequence()), functionIdentifier);
     }
 
@@ -307,7 +309,7 @@ public class CalculatorParser {
                     st.sval.equals(LOG)) {
 
                 result = unary();
-            } else if (this.st.sval.equals("if") 
+            } else if (this.st.sval.equals("if")
                     || this.st.sval.equals("else")) {
                     result = conditional();
             }
@@ -351,20 +353,25 @@ public class CalculatorParser {
             functionArguments.add(assignment());
             this.st.nextToken();
 
-            if (this.st.ttype != ',') {
-                throw new SyntaxErrorException("Expected , after argument.");
-            } else if (this.st.ttype == ')') {
+            if (this.st.ttype == ')') {
                 break;
+            } else if (this.st.ttype != ',') {
+                throw new SyntaxErrorException("Expected , after argument.");
             }
 
             this.st.nextToken();
         }
 
-        // TODO What should functionIdentifer be as a placeholder until we can replace it with the 
+        // TODO What should functionIdentifer be as a placeholder until we can replace it with the
         // correct function object. A placeholder is needed...
-        // Either this is done by the reciever where can compare with declared functions.. 
+        // Either this is done by the reciever where can compare with declared functions..
         // but breaks seperation of concerns?
-        return new FunctionCall(functionIdentifer, functionArguments);
+        if (functionIdentifer.isVariable()) {
+            var function = env.get(functionIdentifer);
+            return new FunctionCall(function != null ? function : functionIdentifer, functionArguments);
+        } else {
+            throw new SyntaxErrorException("Malformed function call");
+        }
     }
 
     /**
@@ -461,7 +468,7 @@ public class CalculatorParser {
     /**
      * When the token "if" is read this function is called to parse the
      * conditional statement completely.
-     * 
+     *
      * @return              SymbolicExpression to be evaluated.
      * @throws IOException  If the wrong syntax is used. I.E. when stream-
      *                      tokenizer can't read next token.
