@@ -289,7 +289,6 @@ public class CalculatorParser {
                 throw new SyntaxErrorException("expected ')'");
             }
         } else if (this.st.ttype == '{') {
-
             this.st.nextToken();
 
             result = new Scope(assignment());
