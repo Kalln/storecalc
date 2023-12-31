@@ -289,11 +289,9 @@ public class CalculatorParser {
                 throw new SyntaxErrorException("expected ')'");
             }
         } else if (this.st.ttype == '{') {
-            while(this.st.ttype == '{') {
-                // sometimes it requires 2 or more nextToken() calls
-                // for some reason?
-                this.st.nextToken();
-            }
+
+            this.st.nextToken();
+
             result = new Scope(assignment());
             /// This captures unbalanced braces!
             if (this.st.nextToken() != '}') {
@@ -487,17 +485,29 @@ public class CalculatorParser {
         } else if (operation.equals("<=")) {
             cond = new LessThanOrEquals(lhs, rhs);
 
+            // TODO: ugly hack but it seems to work
+            this.st.nextToken();
+
         } else if (operation.equals(">")) {
             cond = new GreaterThan(lhs, rhs);
 
         } else if (operation.equals(">=")) {
             cond = new GreaterThanOrEquals(lhs, rhs);
 
+            // TODO: ugly hack but it seems to work
+            this.st.nextToken();
+
         } else if (operation.equals("==")) {
             cond = new Equals(lhs, rhs);
 
+            // TODO: ugly hack but it seems to work
+            this.st.nextToken();
+
         } else if (operation.equals("!=")) {
             cond = new NotEquals(lhs, rhs);
+
+            // TODO: ugly hack but it seems to work
+            this.st.nextToken();
         } else {
             throw new SyntaxErrorException("Invalid operation.");
         }
