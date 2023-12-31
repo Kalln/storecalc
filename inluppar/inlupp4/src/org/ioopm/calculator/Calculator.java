@@ -28,16 +28,16 @@ public class Calculator {
         int sucessfullyEvaluated = 0;
         int fullyEvaluated = 0;
         StackEnvironment env = new StackEnvironment();
-        HashMap<String, FunctionDeclaration> functions = new HashMap<>();
         FunctionDeclaration buildingFunctionDeclaration = null;
         boolean activeFunctionState = false;
-
 
         Scanner scanner = new Scanner(System.in);
 
         while(true) {
+            if (activeFunctionState) {
+                System.out.print(">");
+            }
             System.out.print("> ");
-
 
             try {
                 String input = scanner.nextLine();
