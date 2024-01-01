@@ -28,16 +28,16 @@ public class Calculator {
         int sucessfullyEvaluated = 0;
         int fullyEvaluated = 0;
         StackEnvironment env = new StackEnvironment();
-        HashMap<String, FunctionDeclaration> functions = new HashMap<>();
         FunctionDeclaration buildingFunctionDeclaration = null;
         boolean activeFunctionState = false;
-
 
         Scanner scanner = new Scanner(System.in);
 
         while(true) {
+            if (activeFunctionState) {
+                System.out.print(">");
+            }
             System.out.print("> ");
-
 
             try {
                 String input = scanner.nextLine();
@@ -45,30 +45,29 @@ public class Calculator {
                 expressionEntered++;
 
                 // Since commands can't be evaluated, we have to check that if the result is a command first before evaluating.
-                if (result.isCommand()) {
-
-                    // all commands have their own run methods, that do their own operation.
-                    if (result instanceof Quit r) {
-                        r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
-                        // Breaks the while loop.
-                        break;
-                    }
-                    else if (result instanceof Vars r) {
-                        System.out.println(env);
-                        continue;
-                    } else if (result instanceof Clear r) {
-                        r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
-                        continue;
-                    } else if (result instanceof End e) {
+                // all commands have their own run methods, that do their own operation.
+                if (result instanceof Quit r) {
+                    r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+                    // Breaks the while loop.
+                    break;
+                }
+                else if (result instanceof Vars r) {
+                    System.out.println(env);
+                    continue;
+                } else if (result instanceof Clear r) {
+                    r.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+                    continue;
+                } else {
+                    var functionEnd = false;
+                    if (result instanceof End e) {
                         if (!activeFunctionState) {
                             throw new SyntaxErrorException("Can't end a function when there is no active function.");
                         }
                         // save function
-                        functions.put(buildingFunctionDeclaration.getName(), buildingFunctionDeclaration);
+                        result = buildingFunctionDeclaration;
                         activeFunctionState = false;
+                        functionEnd = true;
                     }
-                } else {
-
                     // results is not a command, therefore we can evaluate the result.
 
                     var namedConstantChecker = new NamedConstantChecker();
@@ -79,13 +78,13 @@ public class Calculator {
                     if (reassignmentCheckerResult && namedConstantCheckerResult) {
 
                         // result is a function declaration, should only happen ones...
-                        if (result instanceof FunctionDeclaration f) {
-                            if (activeFunctionState) { 
+                        if (result instanceof FunctionDeclaration f && ! functionEnd) {
+                            if (activeFunctionState) {
                                 throw new SyntaxErrorException("function can't be declared in another function.");
                             } else {
                                 System.out.println("Function state: TRUE");
                                 activeFunctionState = true;
-    
+
                                 buildingFunctionDeclaration = f;
                             }
                             continue;
