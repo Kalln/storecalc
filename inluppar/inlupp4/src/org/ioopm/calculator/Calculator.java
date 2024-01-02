@@ -1,7 +1,6 @@
 package org.ioopm.calculator;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -13,7 +12,6 @@ import org.ioopm.calculator.ast.SymbolicExpression;
 import org.ioopm.calculator.ast.atom.Constant;
 import org.ioopm.calculator.ast.atom.Variable;
 import org.ioopm.calculator.ast.binary.FunctionDeclaration;
-import org.ioopm.calculator.ast.command.*;
 import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.parser.SyntaxErrorException;
 

@@ -1,7 +1,5 @@
 package org.ioopm.calculator.ast.command;
 
-import java.util.Map;
-
 import org.ioopm.calculator.Visitor;
 import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
