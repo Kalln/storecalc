@@ -5,25 +5,25 @@ import org.ioopm.calculator.ast.Environment;
 import org.ioopm.calculator.ast.SymbolicExpression;
 
 public class Quit extends Command {
-
     private static final Quit theInstance = new Quit();
     private Quit() {}
     public static Quit instance() { return theInstance; }
 
     @Override
     public void run(Environment env, int expressionsEntered, int sucessfullyEvaluated, int fullyEvaluated) {
-        String endingOfProgram = """
-                -------------------------------------------------------
-                Total expressions entered: %d.
-                Successfully evaluated expression: %d.
-                Fully evaluated expression. %d
-                -------------------------------------------------------
+        System.out.println("""
+            -------------------------------------------------------
+            Total expressions entered: %d.
+            Successfully evaluated expression: %d.
+            Fully evaluated expression. %d
+            -------------------------------------------------------
 
-                Closing calculator...
+            Closing calculator...
 
-                -------------------------------------------------------
-                """.formatted(expressionsEntered, sucessfullyEvaluated, fullyEvaluated);
-        System.out.println(endingOfProgram);
+            -------------------------------------------------------
+            """.formatted(expressionsEntered, sucessfullyEvaluated, fullyEvaluated)
+        );
+        System.exit(0);
     }
 
     @Override

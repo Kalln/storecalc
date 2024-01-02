@@ -64,4 +64,7 @@ public abstract class SymbolicExpression {
     public List<Variable> getArgNames() {
         throw new RuntimeException("getArgNames() not implemented for non functions");
     }
+    public void run(Environment env, int expressionsEntered, int sucessfullyEvaluated, int fullyEvaluated) {
+        throw new RuntimeException("run() not implemented for non commands");
+    }
 }
