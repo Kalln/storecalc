@@ -112,7 +112,7 @@ public class EvaluationVisitor implements Visitor {
     @Override
     public SymbolicExpression visit(FunctionDeclaration n) {
         // A FunctionDeclaration is just a special type of Assignment
-        var key = n.getRhs(); // TODO: do we need a new method to get the function name i.e. "rhs"
+        var key = n.getRhs();
         var function = n.getFunction();
         if (function.isFunction()) {
             if (key instanceof Variable v) {
