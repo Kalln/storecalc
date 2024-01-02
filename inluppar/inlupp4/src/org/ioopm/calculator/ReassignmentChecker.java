@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.ioopm.calculator.ast.Conditional;
+import org.ioopm.calculator.ast.End;
 import org.ioopm.calculator.ast.Function;
 import org.ioopm.calculator.ast.FunctionCall;
 import org.ioopm.calculator.ast.IllegalAssignmentException;
@@ -26,7 +27,6 @@ import org.ioopm.calculator.ast.binary.Multiplication;
 import org.ioopm.calculator.ast.binary.NotEquals;
 import org.ioopm.calculator.ast.binary.Subtraction;
 import org.ioopm.calculator.ast.command.Clear;
-import org.ioopm.calculator.ast.command.End;
 import org.ioopm.calculator.ast.command.Quit;
 import org.ioopm.calculator.ast.command.Vars;
 import org.ioopm.calculator.ast.unary.Cos;

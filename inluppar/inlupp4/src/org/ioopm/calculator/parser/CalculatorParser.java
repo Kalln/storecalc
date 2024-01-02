@@ -80,12 +80,14 @@ public class CalculatorParser {
         if (this.st.ttype == StreamTokenizer.TT_WORD) { // vilken typ det senaste tecken vi läste in hade.
             if (this.st.sval.equals("function")) {
                 result = function();
-            }
-            else if (this.st.sval.equals("Quit")
-            || this.st.sval.equals("Vars")
-            || this.st.sval.equals("Clear")
-            || this.st.sval.equals("end")) { // sval = string, Variable
-                result = command();
+            } else if ( this.st.sval.equals("end")){
+                result = new End();
+            } else if (
+                this.st.sval.equals("Quit")
+                || this.st.sval.equals("Vars")
+                || this.st.sval.equals("Clear")
+            ) { // sval = string, Variable
+                    result = command();
             } else {
                 result = assignment(); // går vidare med uttrycket.
             }
@@ -143,17 +145,14 @@ public class CalculatorParser {
      * Checks what kind of command that should be returned
      *
      * @return an instance of Quit, Clear or Vars depending on the token parsed
-     * @throws IOException by nextToken() if it reads invalid input
      */
-    private SymbolicExpression command() throws IOException {
+    private SymbolicExpression command() {
         if (this.st.sval.equals("Quit")) {
             return Quit.instance();
         } else if (this.st.sval.equals("Clear")) {
             return Clear.instance();
-        } else if (this.st.sval.equals("Vars")) {
-            return Vars.instance();
         } else {
-            return End.instance();
+            return Vars.instance();
         }
     }
 
