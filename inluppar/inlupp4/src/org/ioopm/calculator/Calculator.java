@@ -16,6 +16,131 @@ import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.parser.SyntaxErrorException;
 
 public class Calculator {
+    CalculatorParser calcParser;
+    int expressionEntered;
+    int sucessfullyEvaluated;
+    int fullyEvaluated;
+    boolean activeFunctionState;
+    StackEnvironment env;
+    FunctionDeclaration buildingFunctionDeclaration;
+
+    public Calculator() {
+        this.calcParser = new CalculatorParser();
+        this.expressionEntered = 0;
+        this.sucessfullyEvaluated = 0;
+        this.fullyEvaluated = 0;
+        this.activeFunctionState = false;
+        this.env = new StackEnvironment();
+        this.buildingFunctionDeclaration = null;
+    }
+
+    public void run() throws SyntaxErrorException {
+        
+        // prompt
+        System.out.print(activeFunctionState ? ">> " : "> ");
+
+        SymbolicExpression result = null;
+        // get user input and parse.
+        try {
+            String input = getUserInput();
+            result = parseString(input);
+            expressionEntered++;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        if (result.isCommand()) {
+            result.run(env, expressionEntered, sucessfullyEvaluated, fullyEvaluated);
+            return;
+        }
+
+        var functionEnd = false;
+        if (result instanceof End) {
+            if (!activeFunctionState) {
+                throw new SyntaxErrorException("Can't end a function when there is no active function.");
+            }
+            // save function
+            result = buildingFunctionDeclaration;
+            activeFunctionState = false;
+            functionEnd = true;
+        }
+
+        PreEvaluationChecker checkerResult = new PreEvaluationChecker(result);
+
+        if (checkerResult.ExpressionNotOK()) {
+            if (!checkerResult.namedConstantCheckerResult) {
+                System.out.println(checkerResult.namedConstantChecker);
+            } else {
+                System.out.println(checkerResult.ReassignmentChecker);
+            }
+            return;
+        }
+
+
+        // TODO abstract
+        
+        // result is a function declaration, should only happen ones.
+        if (result instanceof FunctionDeclaration f && ! functionEnd) {
+            if (activeFunctionState) {
+                throw new SyntaxErrorException("function can't be declared in another function.");
+            } else {
+                System.out.println("Function state: TRUE");
+                activeFunctionState = true;
+
+                buildingFunctionDeclaration = f;
+            }
+            return;
+        }
+        if (activeFunctionState) {
+            // we will continue to add each line to current func body.. without evaluating
+            if (buildingFunctionDeclaration.getFunction() instanceof Function f) {
+                f.getBody().add(result);
+            } else {
+                throw new SyntaxErrorException("SOmething wrong happened.");
+            }
+            // buildingFunctionDeclaration.getFunction().getBody().add(result);
+            return;
+
+        }
+        var evaluator = new EvaluationVisitor();
+        var evalRes = evaluator.evaluate(result, env);
+        sucessfullyEvaluated++;
+
+        // ans variable will keep the last successfully evaluated expression.
+        // this is done by saving 'ans' as a variable in the environment.
+        env.put(new Variable("ans"), evalRes);
+
+        // Check if the result is a constant, this would mean that we have fully evaluated a expression and can add it to the statistics.
+        if (evalRes instanceof Constant) {
+            fullyEvaluated++;
+        }
+    }
+    // evaluate
+    
+
+    
+    
+
+    private SymbolicExpression parseString(String input) {
+        try {
+            this.expressionEntered++;
+            return this.calcParser.parse(input, this.env);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    private String getUserInput() {
+        try {
+            var scanner = new Scanner(System.in);
+            return scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
     public static void main(String[] args) throws IOException, SyntaxErrorException, IllegalExpressionException {
 
@@ -56,13 +181,9 @@ public class Calculator {
                             functionEnd = true;
                         }
                         // results is not a command, therefore we can evaluate the result.
-
-                        var namedConstantChecker = new NamedConstantChecker();
-                        var reassignmentCheck = new ReassignmentChecker();
-
-                        var namedConstantCheckerResult = namedConstantChecker.check(result);
-                        var reassignmentCheckerResult = reassignmentCheck.check(result);
-                        if (reassignmentCheckerResult && namedConstantCheckerResult) {
+                        
+                        PreEvaluationChecker preChecker = new PreEvaluationChecker(result);
+                        if (!preChecker.ExpressionNotOK()) {
 
                             // result is a function declaration, should only happen ones...
                             if (result instanceof FunctionDeclaration f && ! functionEnd) {
@@ -84,7 +205,6 @@ public class Calculator {
                                 } else {
                                     throw new SyntaxErrorException("SOmething wrong happened.");
                                 }
-                            // buildingFunctionDeclaration.getFunction().getBody().add(result);
                                 continue;
 
                             }
@@ -104,10 +224,10 @@ public class Calculator {
 
 
                             System.out.println(evalRes);
-                        } else if (!namedConstantCheckerResult) {
-                            System.out.println(namedConstantChecker);
+                        } else if (preChecker.namedConstantCheckerResult) {
+                            System.out.println(preChecker.namedConstantChecker);
                         } else {
-                            System.out.println(reassignmentCheck);
+                            System.out.println(preChecker.ReassignmentChecker);
                         }
 
                     }
