@@ -1,7 +1,8 @@
 all:
 	javac -d classes -sourcepath src src/org/ioopm/calculator/Calculator.java
+	javac -d classes -sourcepath src src/org/ioopm/calculator/Test.java
 
-test: all
+inputoutputtest: all
 	java -cp classes org.ioopm.calculator.Calculator < tests/input.txt > tests/output.txt
 	diff tests/output.txt tests/expected_output.txt
 	java -cp classes org.ioopm.calculator.Calculator < tests/input_2.txt > tests/output_2.txt
@@ -11,8 +12,10 @@ test: all
 run: all
 	java -cp classes org.ioopm.calculator.Calculator
 
-runtest:
+runtest: all
 	java -cp classes org.ioopm.calculator.Test
+
+test: inputoutputtest runtest
 
 clean:
 	rm -rf classes
