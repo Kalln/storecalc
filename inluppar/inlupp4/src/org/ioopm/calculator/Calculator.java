@@ -64,7 +64,6 @@ public class Calculator {
                                 if (activeFunctionState) {
                                     throw new SyntaxErrorException("function can't be declared in another function.");
                                 } else {
-                                    System.out.println("Function state: TRUE");
                                     activeFunctionState = true;
 
                                     buildingFunctionDeclaration = f;
