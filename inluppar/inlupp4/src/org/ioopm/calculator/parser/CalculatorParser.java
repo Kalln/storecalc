@@ -125,7 +125,12 @@ public class CalculatorParser {
         List<Variable> functionArguments = new ArrayList<>();
 
         while (this.st.ttype == StreamTokenizer.TT_WORD) {
-            functionArguments.add((Variable) identifier()); //TODO: don't like this cast...
+            var PossibleVariable = identifier();
+            if (PossibleVariable instanceof Variable va) {
+                functionArguments.add(va);
+            } else {
+                throw new SyntaxErrorException("Expected a varible name.");
+            }
             this.st.nextToken();
             if (this.st.ttype == ',') {
                 this.st.nextToken();
@@ -358,10 +363,6 @@ public class CalculatorParser {
             this.st.nextToken();
         }
 
-        // TODO What should functionIdentifer be as a placeholder until we can replace it with the
-        // correct function object. A placeholder is needed...
-        // Either this is done by the reciever where can compare with declared functions..
-        // but breaks seperation of concerns?
         if (functionIdentifer.isVariable()) {
             var function = env.get(functionIdentifer);
             return new FunctionCall(function != null ? function : functionIdentifer, functionArguments);
@@ -396,6 +397,11 @@ public class CalculatorParser {
         return result;
     }
 
+    /**
+     * Retrieves the operetation that has been prompted for the conditional.
+     * @return string - the conditional that was parsed.
+     * @throws IOException if '<', '>', '<=', '>=', '!=', '==' was NOT read.
+     */
     private String getConditionalOperation() throws IOException {
         this.st.nextToken(); // go to next, now we get our condition.
         char firstHalfOperation = ((char) st.ttype);
@@ -477,14 +483,12 @@ public class CalculatorParser {
         var operation = getConditionalOperation();
         var rhs = primary();
         Condition cond;
+
         if (operation.equals("<")) {
             cond = new LessThan(lhs, rhs);
 
         } else if (operation.equals("<=")) {
             cond = new LessThanOrEquals(lhs, rhs);
-
-            // TODO: ugly hack but it seems to work
-            this.st.nextToken();
 
         } else if (operation.equals(">")) {
             cond = new GreaterThan(lhs, rhs);
@@ -492,22 +496,18 @@ public class CalculatorParser {
         } else if (operation.equals(">=")) {
             cond = new GreaterThanOrEquals(lhs, rhs);
 
-            // TODO: ugly hack but it seems to work
-            this.st.nextToken();
-
         } else if (operation.equals("==")) {
             cond = new Equals(lhs, rhs);
-
-            // TODO: ugly hack but it seems to work
-            this.st.nextToken();
 
         } else if (operation.equals("!=")) {
             cond = new NotEquals(lhs, rhs);
 
-            // TODO: ugly hack but it seems to work
-            this.st.nextToken();
         } else {
             throw new SyntaxErrorException("Invalid operation.");
+        }
+        
+        if (operation.endsWith("=")) {
+            this.st.nextToken();
         }
 
         while (this.st.ttype != '{') {

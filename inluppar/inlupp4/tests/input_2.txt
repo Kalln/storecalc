@@ -1,0 +1,10 @@
+function factorial(n)
+    n - 1.0 = m
+    if n > 1.0 {factorial(m) * n} else {1.0}
+end
+function gcd(a, b)
+    b - a = ba
+    a - b = ab
+    if a == b {a} else {if a < b {gcd(a, ba)} else {gcd(ab, b)}}
+end
+gcd(factorial(6), factorial(7))
