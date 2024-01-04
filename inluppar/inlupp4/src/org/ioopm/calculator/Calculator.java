@@ -16,7 +16,6 @@ import org.ioopm.calculator.parser.CalculatorParser;
 import org.ioopm.calculator.parser.SyntaxErrorException;
 
 public class Calculator {
-
     public static void main(String[] args) throws IOException, SyntaxErrorException, IllegalExpressionException {
 
         // Initialize variables for statistics and create the CalculatorParser that will parse the input.
@@ -56,13 +55,9 @@ public class Calculator {
                             functionEnd = true;
                         }
                         // results is not a command, therefore we can evaluate the result.
-
-                        var namedConstantChecker = new NamedConstantChecker();
-                        var reassignmentCheck = new ReassignmentChecker();
-
-                        var namedConstantCheckerResult = namedConstantChecker.check(result);
-                        var reassignmentCheckerResult = reassignmentCheck.check(result);
-                        if (reassignmentCheckerResult && namedConstantCheckerResult) {
+                        
+                        PreEvaluationChecker preChecker = new PreEvaluationChecker(result);
+                        if (!preChecker.ExpressionNotOK()) {
 
                             // result is a function declaration, should only happen ones...
                             if (result instanceof FunctionDeclaration f && ! functionEnd) {
@@ -84,7 +79,6 @@ public class Calculator {
                                 } else {
                                     throw new SyntaxErrorException("SOmething wrong happened.");
                                 }
-                            // buildingFunctionDeclaration.getFunction().getBody().add(result);
                                 continue;
 
                             }
@@ -104,10 +98,10 @@ public class Calculator {
 
 
                             System.out.println(evalRes);
-                        } else if (!namedConstantCheckerResult) {
-                            System.out.println(namedConstantChecker);
+                        } else if (preChecker.namedConstantCheckerResult) {
+                            System.out.println(preChecker.namedConstantChecker);
                         } else {
-                            System.out.println(reassignmentCheck);
+                            System.out.println(preChecker.ReassignmentChecker);
                         }
 
                     }
