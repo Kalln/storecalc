@@ -1,5 +1,5 @@
 # IOOPM Calculator
-Created By: Mauritz Hamrin Sverredal & Karl Widborg Kortelainen
+Created By: Mauritz H. S. & Karl Widborg Kortelainen
 
 
 ## Running the program

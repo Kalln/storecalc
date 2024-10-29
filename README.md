@@ -1,4 +1,6 @@
-# Studentrepo på IOOPM
+# Course work
 
-* Organisera dina filer i den uppenbara katalogstrukturen. 
-* Se till att inte checka in skräp i ditt repo. 
+This repository contains coursework during a course.
+
+inlupp 1 + 2: Is a store with a cart feature written in C.
+inlupp 3 + 4: Is a calculator that uses the visitors pattern to parse the user input in Java.

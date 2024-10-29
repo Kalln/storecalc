@@ -1,0 +1,660 @@
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Enter title of product:
+Enter description:
+Enter price:
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+------------------------------
+Title: item0
+Description: desc0
+Shelves (total: 0):
+Price: 0,0
+------------------------------
+------------------------------
+Title: item1
+Description: desc1
+Shelves (total: 0):
+Price: 0,17
+------------------------------
+------------------------------
+Title: item10
+Description: desc10
+Shelves (total: 0):
+Price: 1,70
+------------------------------
+------------------------------
+Title: item11
+Description: desc11
+Shelves (total: 0):
+Price: 1,87
+------------------------------
+------------------------------
+Title: item12
+Description: desc12
+Shelves (total: 0):
+Price: 2,4
+------------------------------
+------------------------------
+Title: item13
+Description: desc13
+Shelves (total: 0):
+Price: 2,21
+------------------------------
+------------------------------
+Title: item14
+Description: desc14
+Shelves (total: 0):
+Price: 2,38
+------------------------------
+------------------------------
+Title: item15
+Description: desc15
+Shelves (total: 0):
+Price: 2,55
+------------------------------
+------------------------------
+Title: item16
+Description: desc16
+Shelves (total: 0):
+Price: 2,72
+------------------------------
+------------------------------
+Title: item17
+Description: desc17
+Shelves (total: 0):
+Price: 2,89
+------------------------------
+------------------------------
+Title: item18
+Description: desc18
+Shelves (total: 0):
+Price: 3,6
+------------------------------
+------------------------------
+Title: item19
+Description: desc19
+Shelves (total: 0):
+Price: 3,23
+------------------------------
+------------------------------
+Title: item2
+Description: desc2
+Shelves (total: 0):
+Price: 0,34
+------------------------------
+------------------------------
+Title: item20
+Description: desc20
+Shelves (total: 0):
+Price: 3,40
+------------------------------
+------------------------------
+Title: item21
+Description: desc21
+Shelves (total: 0):
+Price: 3,57
+------------------------------
+------------------------------
+Title: item22
+Description: desc22
+Shelves (total: 0):
+Price: 3,74
+------------------------------
+------------------------------
+Title: item23
+Description: desc23
+Shelves (total: 0):
+Price: 3,91
+------------------------------
+------------------------------
+Title: item24
+Description: desc24
+Shelves (total: 0):
+Price: 4,8
+------------------------------
+------------------------------
+Title: item3
+Description: desc3
+Shelves (total: 0):
+Price: 0,51
+------------------------------
+------------------------------
+Title: item4
+Description: desc4
+Shelves (total: 0):
+Price: 0,68
+------------------------------
+Continue? (Y/N)
+
+------------------------------
+Title: item5
+Description: desc5
+Shelves (total: 0):
+Price: 0,85
+------------------------------
+------------------------------
+Title: item6
+Description: desc6
+Shelves (total: 0):
+Price: 1,2
+------------------------------
+------------------------------
+Title: item7
+Description: desc7
+Shelves (total: 0):
+Price: 1,19
+------------------------------
+------------------------------
+Title: item8
+Description: desc8
+Shelves (total: 0):
+Price: 1,36
+------------------------------
+------------------------------
+Title: item9
+Description: desc9
+Shelves (total: 0):
+Price: 1,53
+------------------------------
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Exit? (Y/N)

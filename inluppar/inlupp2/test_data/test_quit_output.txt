@@ -1,0 +1,17 @@
+Choose option:
+[A]dd merch
+[L]ist merch
+[D]elete merch
+[E]dit merch
+[S]how stock
+Re[P]lenish stock
+[C]reate cart
+[R]emove cart
+[+]Add to cart
+[-]Remove from cart
+[=]Calculate cart cost
+Check[O]ut
+[U]ndo
+[-]Remove from cart
+
+Exit? (Y/N)
